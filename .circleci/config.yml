@@ -9,7 +9,7 @@ jobs:
           node-version: latest
       - run: node --version
 orbs:
-  node: circleci/node@12.16.6
+  node: circleci/node@2.0.2
 version: 2.1
 workflows:
   test_my_app:
