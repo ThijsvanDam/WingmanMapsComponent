@@ -9,6 +9,8 @@ jobs:
       - restore_cache:
           key: WMC-{{ .Branch }}-{{ checksum "package.json" }}
       - run: npm install
+      - run: npm -v
+      - run: npm install -g npm@latest
       - save_cache:
           key: WMC-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
