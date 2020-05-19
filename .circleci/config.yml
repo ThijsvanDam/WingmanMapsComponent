@@ -7,8 +7,8 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm install npm@latest
-      - run: npm install angular-cli@latest
+      - run: sudo npm install npm@latest -g
+      - run: sudo npm install angular-cli@latest -g
       - run: ng test
       - run: ng e2e
       # - run: xvfb-run -a npm run test -- --single-run --no-progress --browser=ChromeNoSandbox
