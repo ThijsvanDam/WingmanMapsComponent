@@ -8,5 +8,7 @@ jobs:
       - checkout
       - run: npm install
       - run: sudo npm install npm@latest -g
+      - run: npm -v
+      - run: node -v
       - run: xvfb-run -a npm run test -- --single-run --no-progress --browser=ChromeNoSandbox
       - run: xvfb-run -a npm run e2e -- --no-progress --config=protractor-ci.conf.js
