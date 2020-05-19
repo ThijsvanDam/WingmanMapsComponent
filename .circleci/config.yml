@@ -1,4 +1,6 @@
-version: 2
+version: 2.1
+orbs:
+  angular: okode/angular@1.0.59
 jobs:
   build:
     working_directory: ~/my-project
