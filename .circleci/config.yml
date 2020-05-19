@@ -9,11 +9,11 @@ jobs:
       - restore_cache:
           key: WMC-{{ .Branch }}-{{ checksum "package.json" }}
       - run: npm install
-      - run: npm -v
-      - run: sudo npm install -g npm@latest
       - save_cache:
           key: WMC-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - "node_modules"
-      - run: xvfb-run -a npm run test -- --single-run --no-progress --browser=ChromeNoSandbox
-      - run: xvfb-run -a npm run e2e -- --no-progress --config=protractor-ci.conf.js
+      - run: ng test
+      - run: ng e2e
+      # - run: xvfb-run -a npm run test -- --single-run --no-progress --browser=ChromeNoSandbox
+      # - run: xvfb-run -a npm run e2e -- --no-progress --config=protractor-ci.conf.js
