@@ -1,59 +1,13 @@
-version: 2
-jobs:
-  build-job:
-    docker:
-      -image: circleci/node:10.8.0
-    
-      working_directory: ~/repo
-    
-    steps:
-      - checkout
-      - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
-      - run: yarn install
-      - run: yarn run build
-    
-      - save_cache:
-        paths:
-          - node_modules
-          - dist
-          - package.json
-          - firebase.json
-          - .firebaserc
-        key: v1-dist-{{ "package.json" }}
-      
-      - run: yarn run test:unit
-  
-  deploy-job:
-    docker:
-      -image: circleci/node:10.8.0
-    working-directory: ~/repo
-    
-    steps:
-      - restore_cache:
-        keys:
-          - v1-dist-{{ "package.json" }}
-      - run:
-          name: show directory
-          command: pwd
-      - run:
-          name: Install Firebase
-          command: npm install --save-dev firebase-tools
-      - run:
-          name: look in direectory
-          command: ls -ltr
-      - run:
-          name: Deploy master to firebase
-          command: npm run firebase-deploy -- --token=$FIREBASE_DEPLOY_TOKEN
-
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+# Use a package of configuration called an orb.
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+# Orchestrate or schedule a set of jobs
 workflows:
-  version: 2
-    - build-job
-    - deploy-job
-      requires:
-          -build-job
-        filters:
-          branches:
-            only: master
+  # Name the workflow "welcome"
+  welcome:
+    # Run the welcome/run job in its own container
+    jobs:
+      - welcome/run
