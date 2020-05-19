@@ -9,8 +9,8 @@ jobs:
       - restore_cache:
           key: WMC-{{ .Branch }}-{{ checksum "package.json" }}
       - run: npm install
-      - run: npm install npm@latest -g
-      - run: npm install angular-cli@latest -g
+      - run: npm install npm@latest
+      - run: npm install angular-cli@latest
       - run: ls
       - save_cache:
           key: WMC-{{ .Branch }}-{{ checksum "package.json" }}
