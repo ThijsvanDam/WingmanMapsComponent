@@ -39,7 +39,7 @@ jobs:
           key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }} 
 
       # run tests!
-      - run: npm run test -- --single-run --no-progress --browser=ChromeNoSandbox
+      - run: xvfb-run -a npm run test -- --single-run --no-progress --browser=ChromeNoSandbox
 
   deploy-job:
        docker:
