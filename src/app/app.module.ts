@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DynamicMapComponent } from './dynamic-map/dynamic-map.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DynamicMapComponent
   ],
   imports: [
     BrowserModule,
