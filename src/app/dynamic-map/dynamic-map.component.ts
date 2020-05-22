@@ -1,6 +1,7 @@
-import * as Map from './LeafletMap';
+import { LeafletMap } from './LeafletMap';
 import { Component, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-dynamic-map',
@@ -9,14 +10,34 @@ import * as L from 'leaflet';
 })
 export class DynamicMapComponent implements AfterViewInit {
   private map;
+  private currentlySelectedFlight;
 
-  constructor() { }
+
+  constructor() { 
+    this.currentlySelectedFlight = environment.flightJson[0];
+  }
 
   ngAfterViewInit(): void {
-    this.map = new Map.LeafletMap([39.8282, -98.5795], 3);
-    this.map.addTileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      );
+
+    this.map = new LeafletMap();
+
+    this.map.addTileLayer('streetMap', {
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    });
+    this.map.addTileLayer('topoMap', {
+      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    });
+
   }
+
+  public handleAllAirstrips() {
+    this.map.showAllAirstrips();
+  }
+
+  public handleRelevantAirstrips() {
+    this.map.showRelevantAirstrips(this.currentlySelectedFlight);
+  }
+
 }
