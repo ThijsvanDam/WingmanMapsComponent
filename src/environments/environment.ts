@@ -2,8 +2,17 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const airstrips = require('../assets/json/airstrips.json');
+const flights = require('../assets/json/flights.json');
+
 export const environment = {
-  production: false
+  production: false,
+  airstripJson: airstrips,
+  flightJson: flights,
+  marker: {
+    airstrip_image: '../../assets/airstrip_3.png',
+    waypoint_image: '../../assets/waypoint.jpg'
+  }
 };
 
 /*
