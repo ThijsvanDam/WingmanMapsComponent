@@ -64,7 +64,7 @@ export class LeafletMap {
 
     this.showAirstrips(airstripsArray);
   }
-
+ 
   private showAirstrips(airstrips){
     if (this.currentAirstripsGroup) {
       this.map.removeLayer(this.currentAirstripsGroup);
