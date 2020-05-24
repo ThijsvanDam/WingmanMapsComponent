@@ -14,17 +14,17 @@ export class DynamicMapComponent implements AfterViewInit {
 
 
   constructor() { 
-    this.currentlySelectedFlight = environment.flightJson[0];
+    this.currentlySelectedFlight = environment.flightJson[1];
   }
 
   ngAfterViewInit(): void {
 
     this.map = new LeafletMap();
 
-    this.map.addTileLayer('streetMap', {
-      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    });
+    // this.map.addTileLayer('streetMap', {
+    //   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    // });
     this.map.addTileLayer('topoMap', {
       url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'

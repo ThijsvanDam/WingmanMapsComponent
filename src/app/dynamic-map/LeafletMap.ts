@@ -38,39 +38,28 @@ export class LeafletMap {
       popupAnchor: [20, 0]
     });
 
-    this.addAirstrips();
-  }
-
-  public showAllAirstrips() {
-
+    this.showAllAirstrips();
   }
 
   public showRelevantAirstrips(flight) {
-    
-  }
+    const relevantAirstripIds = [];
 
-  public addAirstrips() {
-
-    // Map all relevant data of the airstrip to the airstripArray
-    const airstripsArray = environment.airstripJson.map(airstrip => {
-      return L.marker(
-        // Set the position of the marker to the position of the airstrip
-        [airstrip.position.latDeg, airstrip.position.longDeg],
-        // The icon is an airstrip or a waypoint according to the value of waypointOnly
-        { icon: Boolean(airstrip.waypointOnly) ? this.waypointIcon : this.airstripIcon }
-        // Bind a popup with the airstrip name to the marker
-      ).bindPopup(`This should be airstrip ${airstrip.name}`);
+    flight.legs.forEach(leg => {
+      relevantAirstripIds.push(leg.startId);
+      relevantAirstripIds.push(leg.destinationId);
     });
 
-    this.showAirstrips(airstripsArray);
+    const relevantAirstrips = environment.airstripJson.filter(airstrip => {
+      return relevantAirstripIds.indexOf(airstrip.airstripId) > -1;
+    });
+
+    const relevantAirstripMarkers = this.createAirstripMarkerList(relevantAirstrips);
+    this.showAirstrips(relevantAirstripMarkers);
   }
- 
-  private showAirstrips(airstrips){
-    if (this.currentAirstripsGroup) {
-      this.map.removeLayer(this.currentAirstripsGroup);
-    }
-    this.currentAirstripsGroup = L.layerGroup(airstrips);
-    this.map.addLayer(this.currentAirstripsGroup);
+
+  public showAllAirstrips(){
+    const airstripMarkers = this.createAirstripMarkerList(environment.airstripJson);
+    this.showAirstrips(airstripMarkers);
   }
 
 
@@ -87,5 +76,27 @@ export class LeafletMap {
     });
 
     tiles.addTo(this.map);
+  }
+
+  private createAirstripMarkerList(airstrips) {
+    // Map all relevant data of the airstrip to the airstripArray
+    const airstripsArray = airstrips.map(airstrip => {
+      return L.marker(
+        // Set the position of the marker to the position of the airstrip
+        [airstrip.position.latDeg, airstrip.position.longDeg],
+        // The icon is an airstrip or a waypoint according to the value of waypointOnly
+        { icon: Boolean(airstrip.waypointOnly) ? this.waypointIcon : this.airstripIcon }
+        // Bind a popup with the airstrip name to the marker
+      ).bindPopup(`This should be airstrip ${airstrip.name}`);
+    });
+    return airstripsArray;
+  }
+
+  private showAirstrips(airstrips){
+    if (this.currentAirstripsGroup) {
+      this.map.removeLayer(this.currentAirstripsGroup);
+    }
+    this.currentAirstripsGroup = L.layerGroup(airstrips);
+    this.map.addLayer(this.currentAirstripsGroup);
   }
 }
