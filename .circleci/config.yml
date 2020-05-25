@@ -42,14 +42,12 @@ jobs:
       # - run: npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
 workflows:
   version: 2
-  test:
+  build_and_deploy:
     jobs:
       - test
-  deploy:
-    filter:
-      branches:
-        only:
-          - develop
-          - master
-    jobs:
-      - deploy
+      - deploy:
+        filter:
+          branches:
+            only:
+              - development
+              - master
