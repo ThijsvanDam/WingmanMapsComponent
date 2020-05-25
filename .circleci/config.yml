@@ -57,8 +57,8 @@ workflows:
     jobs:
       - test
       - deploy:
-        filters:
-          branches:
-            only:
-              - development
-              - master
+          filters:
+            branches:
+              only:
+                - development
+                - master
