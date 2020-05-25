@@ -21,7 +21,12 @@ jobs:
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
       - run:
           name: Build
-          command: npm build
+          command: npm run-script build
+      - run:
+          name: Check if dist directory exists
+          command: ls
+          command: ls dist
+          command: ls dist WingmanMapsComponent
       - run: 
           name: Firebase Deploy
           command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
