@@ -1,14 +1,12 @@
 version: 2
 jobs:
-  build:
+  test:
+    branches:
     working_directory: ~/my-project
     docker:
       - image: circleci/node:10-browsers
     steps:
       - checkout
-      # - run:
-      #     name: "Setup Fireman environmental variable"
-      #     command: echo 'export FIREMAN_APPID="1:880336818009:web:b89f08b1123018094b4648"' >> $BASH_ENV
       - restore_cache:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run: 
@@ -19,6 +17,24 @@ jobs:
           paths:
             - "node_modules"
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
+  deploy:
+      only:
+        - develop
+        - master
+    working_directory: ~/my-project
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - run: 
+          name: Install dependencies (npm install)
+          command: npm install
+      - save_cache:
+          key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - "node_modules"
       - run:
           name: Build
           command: npm run-script build
