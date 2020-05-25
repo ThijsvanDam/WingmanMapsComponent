@@ -21,7 +21,7 @@ jobs:
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
       - run:
           name: Build
-          command: ng build
+          command: npm build
       - run: 
           name: Firebase Deploy
           command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
