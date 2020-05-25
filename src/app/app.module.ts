@@ -1,3 +1,5 @@
+import { MatButtonModule } from '@angular/material/button';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -8,6 +10,7 @@ import { DynamicMapComponent } from './dynamic-map/dynamic-map.component';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,7 +19,8 @@ import { environment } from 'src/environments/environment';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
