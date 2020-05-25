@@ -17,4 +17,5 @@ jobs:
           paths:
             - "node_modules"
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
+      - run: firebase deploy
       # - run: npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
