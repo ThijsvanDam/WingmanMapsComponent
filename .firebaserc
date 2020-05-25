@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "wingman-e1de4"
+  },
+  "targets": {
+    "wingman-e1de4": {
+      "hosting": {
+        "WingmanMapsComponent": [
+          "wingman-e1de4"
+        ]
+      }
+    }
+  }
+}

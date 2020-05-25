@@ -12,8 +12,7 @@ export class DynamicMapComponent implements AfterViewInit {
   private map;
   private currentlySelectedFlight;
 
-
-  constructor() { 
+  constructor() {
     this.currentlySelectedFlight = environment.flightJson[1];
   }
 

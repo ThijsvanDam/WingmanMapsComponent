@@ -2,8 +2,6 @@ import * as L from 'leaflet';
 import { TitleCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
-import { MapIcon } from './MapIcon';
-
 export class LeafletMap {
 
 
@@ -43,6 +41,7 @@ export class LeafletMap {
 
   public showRelevantAirstrips(flight) {
     const relevantAirstripIds = [];
+    console.log(flight.route);
 
     flight.legs.forEach(leg => {
       relevantAirstripIds.push(leg.startId);
