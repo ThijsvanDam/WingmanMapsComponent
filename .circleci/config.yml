@@ -15,6 +15,7 @@ jobs:
           paths:
             - "node_modules"
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
+      - run: npm run lint
   deploy:
     working_directory: ~/my-project
     docker:

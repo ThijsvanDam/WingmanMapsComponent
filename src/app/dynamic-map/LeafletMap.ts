@@ -18,8 +18,8 @@ export class LeafletMap {
 
   constructor(center: [number, number] = [39.8282, -98.5795], zoom: number = 3) {
     this.map = L.map('map', {
-      center: center,
-      zoom: zoom
+      center,
+      zoom
     });
 
     this.airstripIcon = L.icon({
