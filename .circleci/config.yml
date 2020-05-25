@@ -6,16 +6,23 @@ jobs:
       - image: circleci/node:10-browsers
     steps:
       - checkout
-      - run:
-          name: "Setup Fireman environmental variable"
-          command: echo 'export FIREMAN_APPID="1:880336818009:web:b89f08b1123018094b4648"' >> $BASH_ENV
+      # - run:
+      #     name: "Setup Fireman environmental variable"
+      #     command: echo 'export FIREMAN_APPID="1:880336818009:web:b89f08b1123018094b4648"' >> $BASH_ENV
       - restore_cache:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
-      - run: npm install
+      - run: 
+          name: Install dependencies (npm install)
+          command: npm install
       - save_cache:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - "node_modules"
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
-      - run: firebase deploy
+      - run:
+          name: Build
+          command: ng build
+      - run: 
+          name: Firebase Deploy
+          command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
       # - run: npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
