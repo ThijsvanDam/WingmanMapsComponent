@@ -1,4 +1,4 @@
-import { LeafletMap } from './LeafletMap';
+import { LeafletMap } from './leaflet-map';
 import { Component, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
 import { environment } from 'src/environments/environment';
@@ -20,14 +20,15 @@ export class DynamicMapComponent implements AfterViewInit {
 
     this.map = new LeafletMap();
 
-    // this.map.addTileLayer('streetMap', {
-    //   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    // });
     this.map.addTileLayer('topoMap', {
       url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
+    
+            // this.map.addTileLayer('streetMap', {
+            //   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            // });
 
   }
 

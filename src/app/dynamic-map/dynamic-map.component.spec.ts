@@ -22,4 +22,6 @@ describe('DynamicMapComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  
 });
