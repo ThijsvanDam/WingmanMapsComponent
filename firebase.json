@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "WingmanMapsComponent",
+      "public": "dist/WingmanMapsComponent",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}

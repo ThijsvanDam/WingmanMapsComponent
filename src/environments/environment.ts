@@ -1,9 +1,29 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+declare var require: any;
+const airstrips = require('../assets/json/airstrips.json');
+const flights = require('../assets/json/flights.json');
+
 
 export const environment = {
-  production: false
+  production: false,
+  airstripJson: airstrips,
+  flightJson: flights,
+  marker: {
+    airstrip_image: '../../assets/airstrip.png',
+    waypoint_image: '../../assets/waypoint.jpg'
+  },
+  firebase: {
+    apiKey: 'AIzaSyAiYFmYvJzvxK3DPzvwvI2CuUEChRFC5O4',
+    authDomain: 'wingman-e1de4.firebaseapp.com',
+    databaseURL: 'https://wingman-e1de4.firebaseio.com',
+    projectId: 'wingman-e1de4',
+    storageBucket: 'wingman-e1de4.appspot.com',
+    messagingSenderId: '880336818009',
+    appId: '1:880336818009:web:b89f08b1123018094b4648',
+    measurementId: 'G-91LWD5EJ2F'
+  },
 };
 
 /*

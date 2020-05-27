@@ -1,6 +1,5 @@
-version: 2
 jobs:
-  build:
+  test:
     working_directory: ~/my-project
     docker:
       - image: circleci/node:10-browsers
@@ -8,10 +7,51 @@ jobs:
       - checkout
       - restore_cache:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
-      - run: npm install
+      - run: 
+          name: Install dependencies (npm install)
+          command: npm install
       - save_cache:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - "node_modules"
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
+      - run: npm run lint
+  deploy:
+    working_directory: ~/my-project
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - run: 
+          name: Install dependencies (npm install)
+          command: npm install
+      - save_cache:
+          key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - "node_modules"
+      - run:
+          name: Build
+          command: npm run-script build
+      - run:
+          name: Check if dist directory exists
+          command: ls && ls dist && ls dist/WingmanMapsComponent
+      - run: 
+          name: Firebase Deploy
+          command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
       # - run: npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
+  deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only:
+                - development
+                - master
