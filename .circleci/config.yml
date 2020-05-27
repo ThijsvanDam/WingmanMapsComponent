@@ -50,6 +50,8 @@ workflows:
   deploy:
     jobs:
       - deploy:
+          requires:
+              - test
           filters:
             branches:
               only:
