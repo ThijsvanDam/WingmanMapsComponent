@@ -2,25 +2,22 @@ import * as L from 'leaflet';
 import { TitleCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
-export class LeafletMap {
-  private map;
+export class WingmanMap {
+  private _map;
 
   // Everything considering layers of the map
-  private baseLayers = {};
-  private attributions = {};
+  private _baseLayers = {};
+  private _attributions = {};
 
   // Everything considering markers
-  private markers = {};
-  private currentAirstripsGroup;
-  private icons;
+  private _markers = {};
+  private _currentAirstripsGroup;
+  private _icons;
 
-  constructor(center: [number, number] = [-9.141666, 148.383331], zoom: number = 3) {
-    this.map = L.map('map', {
-      center,
-      zoom
-    });
+  constructor(leafletMap) {
+    this._map = leafletMap;
 
-    this.icons = {
+    this._icons = {
       airstrip: L.icon({
         iconUrl: environment.marker.airstrip_image,
         iconSize: [20, 20],
@@ -41,12 +38,17 @@ export class LeafletMap {
 
   public showRelevantAirstrips(flight) {
     // Gathers the airstrips IDs from the legs
-    const relevantAirstripIds = [];
+    let relevantAirstripIds = [];
     flight.legs.forEach(leg => {
       relevantAirstripIds.push(leg.startId);
       relevantAirstripIds.push(leg.destinationId);
     });
 
+    // Filter duplicate ID's
+    relevantAirstripIds = relevantAirstripIds.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+    
     // Get only the relevant airstrip info
     const relevantAirstrips = environment.airstripJson.filter(airstrip => {
       return relevantAirstripIds.indexOf(airstrip.airstripId) > -1;
@@ -64,27 +66,17 @@ export class LeafletMap {
     this.showAirstrips(airstripMarkers);
   }
 
-
-  public addAttribution(name, attribution) {
-    // Add attribution to list so it can still be easily gathered
-    this.attributions[name] = this.attributions;
-  }
-
   public addTileLayer(name, layer) {
     // Create leaflet layer
     const tiles = L.tileLayer(layer.url, {
       maxZoom: 19,
-      attribution: this.attributions[layer.attribution]
+      attribution: layer.attribution
     });
 
     // Keeping layer reference so it can be removed later
-    this.baseLayers[name] = tiles;
+    this._baseLayers[name] = tiles;
 
-    tiles.addTo(this.map);
-  }
-
-  public getMap(){
-    return this.map;
+    tiles.addTo(this._map);
   }
 
   private createAirstripMarkerList(airstrips) {
@@ -94,7 +86,7 @@ export class LeafletMap {
         // Set the position of the marker to the position of the airstrip
         [airstrip.position.latDeg, airstrip.position.longDeg],
         // The icon is an airstrip or a waypoint according to the value of waypointOnly
-        { icon: Boolean(airstrip.waypointOnly) ? this.icons.waypoint : this.icons.airstrip }
+        { icon: Boolean(airstrip.waypointOnly) ? this._icons.waypoint : this._icons.airstrip }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(`This should be airstrip ${airstrip.name}`);
     });
@@ -103,12 +95,12 @@ export class LeafletMap {
 
   private showAirstrips(airstrips) {
     // Remove the current marker layer
-    if (this.currentAirstripsGroup) {
-      this.map.removeLayer(this.currentAirstripsGroup);
+    if (this._currentAirstripsGroup) {
+      this._map.removeLayer(this._currentAirstripsGroup);
     }
 
     // Add the marker layer to the map and save the layer to the LeafletMap.
-    this.currentAirstripsGroup = L.layerGroup(airstrips);
-    this.map.addLayer(this.currentAirstripsGroup);
+    this._currentAirstripsGroup = L.layerGroup(airstrips);
+    this._map.addLayer(this._currentAirstripsGroup);
   }
 }

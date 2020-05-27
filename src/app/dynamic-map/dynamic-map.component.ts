@@ -1,7 +1,9 @@
-import { LeafletMap } from './leaflet-map';
 import { Component, AfterViewInit } from '@angular/core';
-import * as L from 'leaflet';
+
 import { environment } from 'src/environments/environment';
+
+import { WingmanMap } from './leaflet-map';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-dynamic-map',
@@ -9,35 +11,46 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./dynamic-map.component.scss']
 })
 export class DynamicMapComponent implements AfterViewInit {
-  private map;
-  private currentlySelectedFlight;
+  private _currentlySelectedFlight;
+  private _map;
 
   constructor() {
-    this.currentlySelectedFlight = environment.flightJson[1];
+    this._currentlySelectedFlight = environment.flightJson[1];
   }
 
-  ngAfterViewInit(): void {
-
-    this.map = new LeafletMap();
-
-    this.map.addTileLayer('topoMap', {
-      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  ngAfterViewInit(): void {  
+    let map = L.map('map', {
+      center: [-9.141666, 148.383331],
+      zoom: 3
     });
-    
-            // this.map.addTileLayer('streetMap', {
-            //   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            // });
+      
+      this.map = map;
+      
+      this.map.addTileLayer('topoMap', {
+        url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      });
+  }
 
+  public set map(leafletMap){
+    this._map = new WingmanMap(leafletMap);
+  }
+
+  public set selectedFlight(flight){
+    this._currentlySelectedFlight = flight;
+  }
+  
+
+  public get map(){
+    return this._map;
   }
 
   public handleAllAirstrips() {
-    this.map.showAllAirstrips();
+    this._map.showAllAirstrips();
   }
 
   public handleRelevantAirstrips() {
-    this.map.showRelevantAirstrips(this.currentlySelectedFlight);
+    this._map.showRelevantAirstrips(this._currentlySelectedFlight);
   }
 
 }
