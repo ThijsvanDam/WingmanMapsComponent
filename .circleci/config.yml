@@ -44,11 +44,12 @@ jobs:
 
 workflows:
   version: 2
-  test:
+  # test:
+  #   jobs:
+  #     - test
+  test_and_deploy:
     jobs:
       - test
-  deploy:
-    jobs:
       - deploy:
           requires:
               - test
