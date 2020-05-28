@@ -11,6 +11,8 @@ class MockLeafletMap {
   addLayer() { }
 
   removeLayer() { }
+
+  addTileLayer() {}
 }
 
 class Marker { }

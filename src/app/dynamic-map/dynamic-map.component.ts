@@ -19,17 +19,15 @@ export class DynamicMapComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const map = L.map('map', {
+    this.map = L.map('map', {
       center: [-9.141666, 148.383331],
       zoom: 3
     });
 
-    this.privateMap = map;
-
-    this.privateMap.addTileLayer('topoMap', {
-        url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      });
+    this.map.addTileLayer('topoMap', {
+      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    });
   }
 
   public set map(leafletMap){
