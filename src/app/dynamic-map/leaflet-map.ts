@@ -3,21 +3,21 @@ import { TitleCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
 export class WingmanMap {
-  private _map;
+  private map;
 
   // Everything considering layers of the map
-  private _baseLayers = {};
-  private _attributions = {};
+  private baseLayers = {};
+  private attributions = {};
 
   // Everything considering markers
-  private _markers = {};
-  private _currentAirstripsGroup;
-  private _icons;
+  private markers = {};
+  private currentAirstripsGroup;
+  private icons;
 
   constructor(leafletMap) {
-    this._map = leafletMap;
+    this.map = leafletMap;
 
-    this._icons = {
+    this.icons = {
       airstrip: L.icon({
         iconUrl: environment.marker.airstrip_image,
         iconSize: [20, 20],
@@ -48,7 +48,7 @@ export class WingmanMap {
     relevantAirstripIds = relevantAirstripIds.filter((value, index, self) => {
       return self.indexOf(value) === index;
     });
-    
+
     // Get only the relevant airstrip info
     const relevantAirstrips = environment.airstripJson.filter(airstrip => {
       return relevantAirstripIds.indexOf(airstrip.airstripId) > -1;
@@ -74,9 +74,9 @@ export class WingmanMap {
     });
 
     // Keeping layer reference so it can be removed later
-    this._baseLayers[name] = tiles;
+    this.baseLayers[name] = tiles;
 
-    tiles.addTo(this._map);
+    tiles.addTo(this.map);
   }
 
   private createAirstripMarkerList(airstrips) {
@@ -86,7 +86,7 @@ export class WingmanMap {
         // Set the position of the marker to the position of the airstrip
         [airstrip.position.latDeg, airstrip.position.longDeg],
         // The icon is an airstrip or a waypoint according to the value of waypointOnly
-        { icon: Boolean(airstrip.waypointOnly) ? this._icons.waypoint : this._icons.airstrip }
+        { icon: Boolean(airstrip.waypointOnly) ? this.icons.waypoint : this.icons.airstrip }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(`This should be airstrip ${airstrip.name}`);
     });
@@ -95,12 +95,12 @@ export class WingmanMap {
 
   private showAirstrips(airstrips) {
     // Remove the current marker layer
-    if (this._currentAirstripsGroup) {
-      this._map.removeLayer(this._currentAirstripsGroup);
+    if (this.currentAirstripsGroup) {
+      this.map.removeLayer(this.currentAirstripsGroup);
     }
 
     // Add the marker layer to the map and save the layer to the LeafletMap.
-    this._currentAirstripsGroup = L.layerGroup(airstrips);
-    this._map.addLayer(this._currentAirstripsGroup);
+    this.currentAirstripsGroup = L.layerGroup(airstrips);
+    this.map.addLayer(this.currentAirstripsGroup);
   }
 }

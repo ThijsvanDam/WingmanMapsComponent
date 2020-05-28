@@ -11,46 +11,45 @@ import * as L from 'leaflet';
   styleUrls: ['./dynamic-map.component.scss']
 })
 export class DynamicMapComponent implements AfterViewInit {
-  private _currentlySelectedFlight;
-  private _map;
+  private currentlySelectedFlight;
+  private privateMap;
 
   constructor() {
-    this._currentlySelectedFlight = environment.flightJson[1];
+    this.currentlySelectedFlight = environment.flightJson[1];
   }
 
-  ngAfterViewInit(): void {  
-    let map = L.map('map', {
+  ngAfterViewInit(): void {
+    const map = L.map('map', {
       center: [-9.141666, 148.383331],
       zoom: 3
     });
-      
-      this.map = map;
-      
-      this.map.addTileLayer('topoMap', {
+
+    this.privateMap = map;
+
+    this.privateMap.addTileLayer('topoMap', {
         url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       });
   }
 
   public set map(leafletMap){
-    this._map = new WingmanMap(leafletMap);
+    this.privateMap = new WingmanMap(leafletMap);
+  }
+
+  public get map(){
+    return this.privateMap;
   }
 
   public set selectedFlight(flight){
-    this._currentlySelectedFlight = flight;
-  }
-  
-
-  public get map(){
-    return this._map;
+    this.currentlySelectedFlight = flight;
   }
 
   public handleAllAirstrips() {
-    this._map.showAllAirstrips();
+    this.privateMap.showAllAirstrips();
   }
 
   public handleRelevantAirstrips() {
-    this._map.showRelevantAirstrips(this._currentlySelectedFlight);
+    this.privateMap.showRelevantAirstrips(this.currentlySelectedFlight);
   }
 
 }
