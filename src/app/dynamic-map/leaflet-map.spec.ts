@@ -18,9 +18,6 @@ class Marker { }
 
 describe('WingmanMap', () => {
 
-  const map: WingmanMap;
-
-
   beforeEach(() => {
 
   });
