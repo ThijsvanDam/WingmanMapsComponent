@@ -21,8 +21,11 @@ export class DynamicMapComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
-    this.map = new LeafletMap();
+    
+    this.map = L.map('map', {
+      center: [-9.141666, 148.383331],
+      zoom: 3
+    });
 
     this.map.addTileLayer('streetMap', {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
