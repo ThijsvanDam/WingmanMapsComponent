@@ -29,7 +29,7 @@ export class MarkerList {
   }
 
 
-  private createAirstripMarkerList(airstrips) {
+  public createAirstripMarkerList(airstrips) {
     // Map all relevant data of the airstrip to the airstripArray
     const airstripsArray = airstrips.map(airstrip => {
       const marker = L.marker(
