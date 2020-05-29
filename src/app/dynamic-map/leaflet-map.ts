@@ -98,12 +98,12 @@ export class WingmanMap {
   public addBaseMap(mapName, leafletBaseLayer){
     this.baseMaps[mapName] = leafletBaseLayer;
 
-    if(this.mapControl === undefined){
+    if (this.mapControl === undefined){
       const layerObject = {};
       layerObject[mapName] = leafletBaseLayer;
       this.mapControl = L.control.layers(layerObject, undefined).addTo(this.map);
     }else{
-      this.mapControl.addBaseLayer(leafletBaseLayer, mapName)
+      this.mapControl.addBaseLayer(leafletBaseLayer, mapName);
     }
 
     // L.control.layers(this.baseMaps, this.overlayMaps).addTo(this.map);
