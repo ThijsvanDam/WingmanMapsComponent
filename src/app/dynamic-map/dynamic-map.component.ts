@@ -29,6 +29,12 @@ export class DynamicMapComponent implements AfterViewInit {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
 
+    const owmApi = '669d6d341ee2ac57f0fe2b2218038297';
+    const weatherMap = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${owmApi}`, {
+      attribution: 'OpenWeatherMap'
+    });
+    this.map.addOverlayMap('Clouds', weatherMap);
+
     this.map.addBaseMap('Topographic map', baseMap);
   }
 
