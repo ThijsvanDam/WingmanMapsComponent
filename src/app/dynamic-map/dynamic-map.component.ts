@@ -28,7 +28,8 @@ export class DynamicMapComponent implements AfterViewInit {
     });
 
     this.map.addTileLayer('streetMap', {
-      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      // url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
   }
