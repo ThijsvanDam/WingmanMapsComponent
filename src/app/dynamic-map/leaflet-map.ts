@@ -98,23 +98,23 @@ export class WingmanMap {
   public addBaseMap(mapName, leafletBaseLayer){
     this.baseMaps[mapName] = leafletBaseLayer;
 
-    if(this.mapControl == undefined){
+    if(this.mapControl === undefined){
       const layerObject = {};
-      layerObject[mapName] = leafletBaseLayer; 
+      layerObject[mapName] = leafletBaseLayer;
       this.mapControl = L.control.layers(layerObject, undefined).addTo(this.map);
     }else{
       this.mapControl.addBaseLayer(leafletBaseLayer, mapName)
     }
-    
+
     // L.control.layers(this.baseMaps, this.overlayMaps).addTo(this.map);
   }
 
   public addOverlayMap(mapName, leafletOverlayMap){
     this.overlayMaps[mapName] = leafletOverlayMap;
-    
-    if(this.mapControl == undefined){
+
+    if (this.mapControl === undefined){
       const layerObject = {};
-      layerObject[mapName] = leafletOverlayMap; 
+      layerObject[mapName] = leafletOverlayMap;
       this.mapControl = L.control.layers(undefined, layerObject).addTo(this.map);
     }else{
       this.mapControl.addOverlay(leafletOverlayMap, mapName);
