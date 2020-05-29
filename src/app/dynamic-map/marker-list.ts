@@ -39,17 +39,10 @@ export class MarkerList {
         { icon: Boolean(airstrip.waypointOnly) ? this.icons.waypoint : this.icons.airstrip }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(this.generateMarkerPopup(airstrip));
+
       marker.on('mouseover', function(e) {
         this.openPopup();
       });
-      // marker.on('popupopen', function(e){
-      //   // document.getElementById("textArea").value = this.textAreaValue;
-      // })
-      // marker.on('popupclose', function(e){
-      //   // TODO: Add preservation of notes.
-      //   // let popupContent : ElementRef = e.popup.getElement();
-      //   // this.textAreaValue = document.getElementById("textArea").value;
-      // });
       return marker;
     });
     return airstripsArray;
@@ -64,8 +57,7 @@ export class MarkerList {
       This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
       Avgas is <b>` + (airstrip.avgasAvailable ? 'available' : 'unavailable') + `<br>
       </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available' : 'unavailable') + `</b>.<br>
-      Notes: <br>
-      <textarea id='textArea' (input)='markerFeedback()'></textarea>
+      ` + (Notes: ${airstrip.notes})`
     </p>`;
 
     return markerContent;
