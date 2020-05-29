@@ -105,8 +105,6 @@ export class WingmanMap {
     }else{
       this.mapControl.addBaseLayer(leafletBaseLayer, mapName);
     }
-
-    // L.control.layers(this.baseMaps, this.overlayMaps).addTo(this.map);
   }
 
   public addOverlayMap(mapName, leafletOverlayMap){
