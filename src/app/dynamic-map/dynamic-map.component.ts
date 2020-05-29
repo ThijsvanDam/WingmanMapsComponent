@@ -52,12 +52,20 @@ export class DynamicMapComponent implements AfterViewInit {
       attribution: 'OpenWeatherMap'
     });
 
+    // NOTE: This is only for europe and part of north africa. (Also a little on south/north america)
+    // https://www.arcgis.com/home/webmap/viewer.html?useExisting=1&layers=1b243539f4514b6ba35e7d995890db1d 
+    // arcGIS has a hillshading map that is world wide.
+    const hillshadingMap = L.tileLayer(`http://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png	`, {
+      attribution: 'OpenWeatherMap'
+    });
+
     this.map.addBaseMap('Topographic map', baseMap);
     this.map.addBaseMap('Sat map', secondBaseMap);
     this.map.addOverlayMap('Clouds', cloudsOverlay);
     this.map.addOverlayMap('Precipitation', precipitationMap);
     this.map.addOverlayMap('Wind speed', windspeedMap);
     this.map.addOverlayMap('Temperature', temperatureMap);
+    this.map.addOverlayMap('Hillshading', hillshadingMap);
   }
 
   public set map(leafletMap) {
