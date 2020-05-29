@@ -1,7 +1,8 @@
+
+import { LeafletMap } from './LeafletMap';
 import { Component, AfterViewInit } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
-
 import { WingmanMap } from './leaflet-map';
 import * as L from 'leaflet';
 
@@ -14,18 +15,17 @@ export class DynamicMapComponent implements AfterViewInit {
   private currentlySelectedFlight;
   private privateMap;
 
+
   constructor() {
-    this.currentlySelectedFlight = environment.flightJson[1];
+    this.currentlySelectedFlight = environment.flightJson[0];
   }
 
   ngAfterViewInit(): void {
-    this.map = L.map('map', {
-      center: [-9.141666, 148.383331],
-      zoom: 3
-    });
 
-    this.map.addTileLayer('topoMap', {
-      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    this.map = new LeafletMap();
+
+    this.map.addTileLayer('streetMap', {
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
   }

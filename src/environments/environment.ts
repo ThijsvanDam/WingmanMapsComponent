@@ -5,7 +5,6 @@ declare var require: any;
 const airstrips = require('../assets/json/airstrips.json');
 const flights = require('../assets/json/flights.json');
 
-
 export const environment = {
   production: false,
   airstripJson: airstrips,
