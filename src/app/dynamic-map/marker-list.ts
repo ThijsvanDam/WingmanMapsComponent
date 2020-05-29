@@ -1,4 +1,3 @@
-
 import * as L from 'leaflet';
 import { environment } from 'src/environments/environment';
 import { ElementRef } from '@angular/core';
@@ -43,12 +42,13 @@ export class MarkerList {
       marker.on('mouseover', function(e) {
         this.openPopup();
       });
+      marker.on('popupopen', function(e){
+        document.getElementById("textArea").value = this.textAreaValue;
+      })
       marker.on('popupclose', function(e){
         // TODO: Add preservation of notes.
-        let popupContent : ElementRef = e.popup.getElement();
-
-
-        console.log(popupContent);
+        // let popupContent : ElementRef = e.popup.getElement();
+        this.textAreaValue = document.getElementById("textArea").value;
       });
       return marker;
     });
@@ -61,11 +61,11 @@ export class MarkerList {
     let markerContent = `
     <h3>${airstrip.name} (${airstrip.displayName})</h3>
     <p>
-      This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` maf base.<br>
+      This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
       Avgas is <b>` + (airstrip.avgasAvailable ? 'available' : 'unavailable') + `<br>
       </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available' : 'unavailable') + `</b>.<br>
       Notes: <br>
-      <textarea id='textArea'></textarea>
+      <textarea id='textArea' (input)='markerFeedback()'></textarea>
     </p>`;
 
     return markerContent;
