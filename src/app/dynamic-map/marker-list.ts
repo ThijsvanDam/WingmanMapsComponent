@@ -42,14 +42,14 @@ export class MarkerList {
       marker.on('mouseover', function(e) {
         this.openPopup();
       });
-      marker.on('popupopen', function(e){
-        document.getElementById("textArea").value = this.textAreaValue;
-      })
-      marker.on('popupclose', function(e){
-        // TODO: Add preservation of notes.
-        // let popupContent : ElementRef = e.popup.getElement();
-        this.textAreaValue = document.getElementById("textArea").value;
-      });
+      // marker.on('popupopen', function(e){
+      //   // document.getElementById("textArea").value = this.textAreaValue;
+      // })
+      // marker.on('popupclose', function(e){
+      //   // TODO: Add preservation of notes.
+      //   // let popupContent : ElementRef = e.popup.getElement();
+      //   // this.textAreaValue = document.getElementById("textArea").value;
+      // });
       return marker;
     });
     return airstripsArray;
