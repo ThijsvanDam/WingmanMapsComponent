@@ -19,7 +19,7 @@ export class WingmanMap {
     this.map = leafletMap;
 
     this.markerList = new MarkerList();
-    
+
     // As a default, show all airstrips
     this.showAllAirstrips();
   }

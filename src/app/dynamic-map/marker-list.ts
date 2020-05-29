@@ -58,7 +58,7 @@ export class MarkerList {
   private generateMarkerPopup(airstrip) {
     const type = airstrip.waypointOnly ? 'waypoint' : 'airstrip';
 
-    let markerContent = `
+    const markerContent = `
     <h3>${airstrip.name} (${airstrip.displayName})</h3>
     <p>
       This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
