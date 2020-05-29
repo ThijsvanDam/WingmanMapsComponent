@@ -1,9 +1,11 @@
+import { CachedTileLayer } from '@yaga/leaflet-cached-tile-layer';
 import { Component, AfterViewInit } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
 
 import { WingmanMap } from './leaflet-map';
 import * as L from 'leaflet';
+
 
 @Component({
   selector: 'app-dynamic-map',
@@ -24,21 +26,29 @@ export class DynamicMapComponent implements AfterViewInit {
       zoom: 3
     });
 
-    this.map.addTileLayer('topoMap', {
-      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    const cachedTiles = new CachedTileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
+
+    this.map.addBaseMap('Topographic map', cachedTiles);
+
+    const owm_api = '669d6d341ee2ac57f0fe2b2218038297';
+    const cachedAwm = new CachedTileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${owm_api}`, {
+      attribution: 'OpenWeatherMap'
+    });
+    this.map.addOverlayMap('Clouds', cachedAwm);
+
   }
 
-  public set map(leafletMap){
+  public set map(leafletMap) {
     this.privateMap = new WingmanMap(leafletMap);
   }
 
-  public get map(){
+  public get map() {
     return this.privateMap;
   }
 
-  public set selectedFlight(flight){
+  public set selectedFlight(flight) {
     this.currentlySelectedFlight = flight;
   }
 

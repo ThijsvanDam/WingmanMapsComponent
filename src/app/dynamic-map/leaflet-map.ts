@@ -2,17 +2,21 @@ import * as L from 'leaflet';
 import { TitleCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
+
 export class WingmanMap {
   private map;
 
   // Everything considering layers of the map
-  private baseLayers = {};
   private attributions = {};
+  private overlayMaps = {};
+  private baseMaps = {};
 
   // Everything considering markers
   private markers = {};
   private currentAirstripsGroup;
   private icons;
+
+  private mapControl;
 
   constructor(leafletMap) {
     this.map = leafletMap;
@@ -66,19 +70,6 @@ export class WingmanMap {
     this.showAirstrips(airstripMarkers);
   }
 
-  public addTileLayer(name, layer) {
-    // Create leaflet layer
-    const tiles = L.tileLayer(layer.url, {
-      maxZoom: 19,
-      attribution: layer.attribution
-    });
-
-    // Keeping layer reference so it can be removed later
-    this.baseLayers[name] = tiles;
-
-    tiles.addTo(this.map);
-  }
-
   private createAirstripMarkerList(airstrips) {
     // Map all relevant data of the airstrip to the airstripArray
     const airstripsArray = airstrips.map(airstrip => {
@@ -103,4 +94,32 @@ export class WingmanMap {
     this.currentAirstripsGroup = L.layerGroup(airstrips);
     this.map.addLayer(this.currentAirstripsGroup);
   }
+
+  public addBaseMap(mapName, leafletBaseLayer){
+    this.baseMaps[mapName] = leafletBaseLayer;
+
+    if(this.mapControl == undefined){
+      const layerObject = {};
+      layerObject[mapName] = leafletBaseLayer; 
+      this.mapControl = L.control.layers(layerObject, undefined).addTo(this.map);
+    }else{
+      this.mapControl.addBaseLayer(leafletBaseLayer, mapName)
+    }
+    
+    // L.control.layers(this.baseMaps, this.overlayMaps).addTo(this.map);
+  }
+
+  public addOverlayMap(mapName, leafletOverlayMap){
+    this.overlayMaps[mapName] = leafletOverlayMap;
+    
+    if(this.mapControl == undefined){
+      const layerObject = {};
+      layerObject[mapName] = leafletOverlayMap; 
+      this.mapControl = L.control.layers(undefined, layerObject).addTo(this.map);
+    }else{
+      this.mapControl.addOverlay(leafletOverlayMap, mapName);
+    }
+  }
+
+
 }
