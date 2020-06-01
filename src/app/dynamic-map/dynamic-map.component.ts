@@ -1,12 +1,13 @@
-
-import { CachedTileLayer } from '@yaga/leaflet-cached-tile-layer';
-
 import { Component, AfterViewInit } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
 
 import { WingmanMap } from './leaflet-map';
+
 import * as L from 'leaflet';
+import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
+import 'src/assets/javascript/pouchdb.js';
+
 
 
 @Component({
@@ -28,17 +29,22 @@ export class DynamicMapComponent implements AfterViewInit {
       zoom: 3
     });
 
-    const baseMap = new CachedTileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    const baseMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      useCache: true,
+      crossOrigin: true,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
 
     const owmApi = '669d6d341ee2ac57f0fe2b2218038297';
-    const weatherMap = new CachedTileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${owmApi}`, {
+    const weatherMap = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${owmApi}`, {
+      useCache: true,
+      crossOrigin: true,
       attribution: 'OpenWeatherMap'
     });
-    this.map.addOverlayMap('Clouds', weatherMap);
 
+    // Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
     this.map.addBaseMap('Topographic map', baseMap);
+    this.map.addOverlayMap('Clouds', weatherMap);
   }
 
   public set map(leafletMap) {
