@@ -57,7 +57,7 @@ export class MarkerList {
       This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
       Avgas is <b>` + (airstrip.avgasAvailable ? 'available' : 'unavailable') + `<br>
       </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available' : 'unavailable') + `</b>.<br>
-      ` + (Notes: ${airstrip.notes})`
+      ` + (airstrip.notes ? `Notes: ${airstrip.notes}` : ``) + `
     </p>`;
 
     return markerContent;
