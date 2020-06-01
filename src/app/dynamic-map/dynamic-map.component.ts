@@ -5,10 +5,10 @@ import { environment } from 'src/environments/environment';
 import { WingmanMap } from './leaflet-map';
 
 import * as L from 'leaflet';
+
+// Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
 import 'src/assets/javascript/pouchdb.js';
-
-
 
 @Component({
   selector: 'app-dynamic-map',
