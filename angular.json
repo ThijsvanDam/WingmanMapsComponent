@@ -32,6 +32,7 @@
               "src/styles.scss"
             ],
             "scripts": [
+              "src/assets/javascript/pouchdb.js"
             ]
           },
           "configurations": {
