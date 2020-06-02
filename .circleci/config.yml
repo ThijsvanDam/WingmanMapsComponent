@@ -14,8 +14,15 @@ jobs:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - "node_modules"
-      - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
-      - run: npm run lint
+      - run: 
+          name: Build project
+          command: npm run start
+      - run: 
+          name: Run tests
+          command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
+      - run: 
+          name: Run linting
+          command: npm run lint
   deploy:
     working_directory: ~/my-project
     docker:
