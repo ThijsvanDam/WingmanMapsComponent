@@ -1,5 +1,10 @@
 {
   "extends": "tslint:recommended",
+  "linterOptions": {
+    "exclude": [
+      "assets"
+    ]
+  },
   "rules": {
     "align": {
       "options": [

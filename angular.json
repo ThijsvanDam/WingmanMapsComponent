@@ -85,6 +85,11 @@
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
+          
+          "codeCoverageExclude": [
+            "src/assets/javascript/L.TileLayer.PouchDBCached.js",
+            "src/assets/javascript/pouchdb.js"
+          ],
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
