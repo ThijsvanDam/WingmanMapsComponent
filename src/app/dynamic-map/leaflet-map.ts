@@ -3,7 +3,7 @@ import * as L from 'leaflet';
 import { TitleCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
-
+ 
 export class WingmanMap {
   private map;
 
