@@ -85,12 +85,11 @@
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
-          
-          "codeCoverageExclude": [
-            "src/assets/javascript/L.TileLayer.PouchDBCached.js",
-            "src/assets/javascript/pouchdb.js"
-          ],
           "options": {
+            "codeCoverageExclude": [
+              "src/assets/javascript/L.TileLayer.PouchDBCached.js",
+              "src/assets/javascript/pouchdb.js"
+            ],
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
@@ -104,7 +103,9 @@
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/javascript/pouchdb.js"
+            ]
           }
         },
         "lint": {

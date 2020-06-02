@@ -31,8 +31,6 @@ describe('DynamicMapComponent', () => {
     fixture.detectChanges();
   });
 
-
-
   it('should set the WingmanMap', () => {
 
     const wingmanMap = new LeafletMapMock();

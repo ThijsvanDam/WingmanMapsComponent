@@ -3,7 +3,6 @@ import * as L from 'leaflet';
 import { TitleCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
- 
 export class WingmanMap {
   private map;
 
@@ -106,8 +105,6 @@ export class WingmanMap {
     }else{
       this.mapControl.addBaseLayer(leafletBaseLayer, mapName);
     }
-
-    // L.control.layers(this.baseMaps, this.overlayMaps).addTo(this.map);
   }
 
   public addOverlayMap(mapName, leafletOverlayMap){
@@ -121,6 +118,4 @@ export class WingmanMap {
       this.mapControl.addOverlay(leafletOverlayMap, mapName);
     }
   }
-
-
 }

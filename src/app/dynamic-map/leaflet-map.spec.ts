@@ -6,13 +6,23 @@ import { DynamicMapComponent } from './dynamic-map.component';
 
 
 
+class Map{
+  _on() {}
+}
+
 class MockLeafletMap {
+
+  _map = new Map();
 
   addLayer() { }
 
   removeLayer() { }
 
   addTileLayer() {}
+
+  addOverlay() {}
+
+  addBaseLayer() {}
 }
 
 class Marker { }
@@ -133,4 +143,5 @@ describe('WingmanMap', () => {
     wingmanMap.showRelevantAirstrips(flightJson);
     expect(spyMarkerList).toHaveBeenCalledWith(airstrips);
   });
+
 });
