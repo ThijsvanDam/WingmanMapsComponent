@@ -1,13 +1,11 @@
-import { WingmanDataService } from './wingman-data.service';
 import { Component, AfterViewInit } from '@angular/core';
-
-
-import { WingmanMap } from './wingman-map';
-
-import * as L from 'leaflet';
 
 // Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
+import * as L from 'leaflet';
+
+import { WingmanDataService } from '../services/wingman-data.service';
+import { WingmanMap } from './wingman-map';
 
 @Component({
   selector: 'app-dynamic-map',
@@ -18,7 +16,7 @@ export class DynamicMapComponent implements AfterViewInit {
   private currentlySelectedFlight;
   private privateMap : L.Map;
 
-  constructor(private wingmanDataService? : WingmanDataService) {
+  constructor(private wingmanDataService : WingmanDataService) {
   }
 
   ngAfterViewInit(): void {

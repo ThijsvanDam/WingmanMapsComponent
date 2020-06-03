@@ -2,6 +2,10 @@ import * as L from 'leaflet';
 
 import { environment } from 'src/environments/environment';
 
+let WMap = L.Map.extend({
+
+})
+
 
 export class WingmanMap {
   private map;

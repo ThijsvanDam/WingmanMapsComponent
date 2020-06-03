@@ -1,13 +1,13 @@
-import { MatButtonModule } from '@angular/material/button';
-
 import { BrowserModule } from '@angular/platform-browser';
+import { AngularFireModule } from '@angular/fire';
 import { NgModule } from '@angular/core';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DynamicMapComponent } from './dynamic-map/dynamic-map.component';
+import { WingmanDataService } from './services/wingman-data.service';
 
-import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 
 
@@ -21,7 +21,9 @@ import { environment } from 'src/environments/environment';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase)
   ],
-  providers: [],
+  providers: [
+    WingmanDataService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
