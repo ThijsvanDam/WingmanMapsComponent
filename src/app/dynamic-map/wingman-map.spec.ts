@@ -1,9 +1,10 @@
-import { async } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { } from 'jasmine';
 
-import { WingmanMap } from './leaflet-map';
+import { WingmanMap } from './wingman-map';
 import { DynamicMapComponent } from './dynamic-map.component';
 
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 
 class Map{
@@ -29,9 +30,20 @@ class Marker { }
 
 
 describe('WingmanMap', () => {
+  
+  let injector: TestBed;
+  let httpMock: HttpTestingController;
+
 
   beforeEach(() => {
 
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [GithubApiService]
+    });
+    injector = getTestBed();
+    service = injector.get(GithubApiService);
+    httpMock = injector.get(HttpTestingController);
   });
 
   it('should create markers and show the markers when showAllAirstrips is called', () => {
@@ -142,6 +154,10 @@ describe('WingmanMap', () => {
 
     wingmanMap.showRelevantAirstrips(flightJson);
     expect(spyMarkerList).toHaveBeenCalledWith(airstrips);
+  });
+
+  it('should load cached tiles when they are already loaded once', () => {
+    
   });
 
 });

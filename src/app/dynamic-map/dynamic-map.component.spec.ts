@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DynamicMapComponent } from './dynamic-map.component';
-import { WingmanMap } from './leaflet-map';
+import { WingmanMap } from './wingman-map';
 import * as L from 'leaflet';
 import { environment } from 'src/environments/environment';
 

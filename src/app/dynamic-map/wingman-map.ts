@@ -1,7 +1,7 @@
 import * as L from 'leaflet';
 
-import { TitleCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
+
 
 export class WingmanMap {
   private map;
@@ -54,9 +54,7 @@ export class WingmanMap {
     });
 
     // Get only the relevant airstrip info
-    const relevantAirstrips = environment.airstripJson.filter(airstrip => {
-      return relevantAirstripIds.indexOf(airstrip.airstripId) > -1;
-    });
+    const relevantAirstrips = ;
 
     // Create the marker list and show them on the screen
     const relevantAirstripMarkers = this.createAirstripMarkerList(relevantAirstrips);
@@ -96,9 +94,13 @@ export class WingmanMap {
   }
 
   public addBaseMap(mapName, leafletBaseLayer){
+    // Remember the base map locally 
     this.baseMaps[mapName] = leafletBaseLayer;
 
+    // The layer has to be added to a mapControl,
+    // if this doesnt exists yet, create it!
     if (this.mapControl === undefined){
+      // The control layer requires this to be an object with name:object
       const layerObject = {};
       layerObject[mapName] = leafletBaseLayer;
       this.mapControl = L.control.layers(layerObject, undefined).addTo(this.map);
@@ -108,9 +110,13 @@ export class WingmanMap {
   }
 
   public addOverlayMap(mapName, leafletOverlayMap){
+    // Remember the overlay locally 
     this.overlayMaps[mapName] = leafletOverlayMap;
 
+    // The layer has to be added to a mapControl,
+    // if this doesnt exists yet, create it!
     if (this.mapControl === undefined){
+      // The control layer requires this to be an object with name:object
       const layerObject = {};
       layerObject[mapName] = leafletOverlayMap;
       this.mapControl = L.control.layers(undefined, layerObject).addTo(this.map);

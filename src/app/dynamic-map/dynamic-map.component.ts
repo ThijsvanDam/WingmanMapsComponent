@@ -1,8 +1,8 @@
+import { WingmanDataService } from './wingman-data.service';
 import { Component, AfterViewInit } from '@angular/core';
 
-import { environment } from 'src/environments/environment';
 
-import { WingmanMap } from './leaflet-map';
+import { WingmanMap } from './wingman-map';
 
 import * as L from 'leaflet';
 
@@ -16,13 +16,13 @@ import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
 })
 export class DynamicMapComponent implements AfterViewInit {
   private currentlySelectedFlight;
-  private privateMap;
+  private privateMap : L.Map;
 
-  constructor() {
-    this.currentlySelectedFlight = environment.flightJson[1];
+  constructor(private wingmanDataService? : WingmanDataService) {
   }
 
   ngAfterViewInit(): void {
+
     this.map = L.map('map', {
       center: [-9.141666, 148.383331],
       zoom: 3
@@ -65,5 +65,4 @@ export class DynamicMapComponent implements AfterViewInit {
   public handleRelevantAirstrips() {
     this.privateMap.showRelevantAirstrips(this.currentlySelectedFlight);
   }
-
 }
