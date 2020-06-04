@@ -10,13 +10,29 @@ import { environment } from './../../environments/environment';
 
 @Injectable()
 export class WingmanMapService {
-
-  constructor(private dataService: WingmanDataService) { }
-
+  public icons;
   private privateMap: WingmanMap;
 
   private currentlySelectedFlight: Flight;
   private currentAirstripsGroup: L.LayerGroup;
+
+  constructor(private dataService: WingmanDataService) {
+
+    this.icons = {
+      airstrip: L.icon({
+        iconUrl: environment.marker.airstrip_image,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10]
+      }),
+      waypoint: L.icon({
+        iconUrl: environment.marker.waypoint_image,
+        iconSize: [30, 30],
+        iconAnchor: [-10, 0],
+        popupAnchor: [0, 0]
+      })
+    };
+  }
 
   public initializeMap(mapId) {
     this.map = new WingmanMap(this.dataService, mapId, {
@@ -69,14 +85,13 @@ export class WingmanMapService {
     // It is possible for the selected flight to not be set.
     if (this.currentlySelectedFlight === undefined){
       console.log('No flight selected!');
-      return;
+      return 0;
     }
 
     this.currentlySelectedFlight.legs.forEach(leg => {
       relevantAirstripIds.push(leg.startId);
       relevantAirstripIds.push(leg.destinationId);
     });
-
 
     // Filter duplicate ID's
     relevantAirstripIds = relevantAirstripIds.filter((value, index, self) => {
@@ -103,8 +118,8 @@ export class WingmanMapService {
   }
 
   private createAirstripMarkerList(airstrips) {
-    const waypointIcon = this.privateMap.icons.waypoint;
-    const airstripIcon = this.privateMap.icons.airstrip;
+    const waypointIcon = this.icons.waypoint;
+    const airstripIcon = this.icons.airstrip;
 
     // Map all relevant data of the airstrip to the airstripArray
     const airstripsArray = airstrips.map(airstrip => {

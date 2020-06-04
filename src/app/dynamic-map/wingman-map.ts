@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 
-// Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
-// import * as L from 'leaflet';
 import { Map, Icon, MapOptions, Control, LayerGroup, Marker } from 'leaflet';
 
+// Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
 
 import { WingmanDataService } from './../services/wingman-data.service';
@@ -19,27 +18,10 @@ export class WingmanMap extends Map {
   // Everything considering markers
   private markers = {};
 
-  public icons;
-
   private mapControl;
 
   constructor(private dataService: WingmanDataService, mapId: string, options?: MapOptions) {
     super(mapId, options);
-
-    this.icons = {
-      airstrip: new Icon({
-        iconUrl: environment.marker.airstrip_image,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-        popupAnchor: [0, -10]
-      }),
-      waypoint: new Icon({
-        iconUrl: environment.marker.waypoint_image,
-        iconSize: [30, 30],
-        iconAnchor: [-10, 0],
-        popupAnchor: [0, 0]
-      })
-    };
   }
 
   public addBaseMap(mapName, leafletBaseLayer){
