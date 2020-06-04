@@ -1,15 +1,39 @@
+import { Injectable } from '@angular/core';
+
+// Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import * as L from 'leaflet';
+import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
+
+import { WingmanDataService } from './../services/wingman-data.service';
 
 import { environment } from 'src/environments/environment';
 
-let WMap = L.Map.extend({
+// let WMap = L.Map.extend({
+//   attributions: {},
 
-})
+//   showRelevantAirstrips (flight) {
+//     // Gathers the airstrips IDs from the legs
+//     let relevantAirstripIds = [];
+//     flight.legs.forEach(leg => {
+//       relevantAirstripIds.push(leg.startId);
+//       relevantAirstripIds.push(leg.destinationId);
+//     });
 
+//     // Filter duplicate ID's
+//     relevantAirstripIds = relevantAirstripIds.filter((value, index, self) => {
+//       return self.indexOf(value) === index;
+//     });
+
+//     // Get only the relevant airstrip info
+//     const relevantAirstrips = ;
+
+//     // Create the marker list and show them on the screen
+//     const relevantAirstripMarkers = this.createAirstripMarkerList(relevantAirstrips);
+//     this.showAirstrips(relevantAirstripMarkers);
+//   },
+// });
 
 export class WingmanMap {
-  private map;
-
   // Everything considering layers of the map
   private attributions = {};
   private overlayMaps = {};
@@ -22,8 +46,7 @@ export class WingmanMap {
 
   private mapControl;
 
-  constructor(leafletMap) {
-    this.map = leafletMap;
+  constructor(private leafletMap: L.Map, private dataService: WingmanDataService) {
 
     this.icons = {
       airstrip: L.icon({
@@ -44,8 +67,7 @@ export class WingmanMap {
     this.showAllAirstrips();
   }
 
-  public showRelevantAirstrips(flight) {
-    // Gathers the airstrips IDs from the legs
+  public showRelevantAirstrips(flight) {    // Gathers the airstrips IDs from the legs
     let relevantAirstripIds = [];
     flight.legs.forEach(leg => {
       relevantAirstripIds.push(leg.startId);
@@ -58,7 +80,7 @@ export class WingmanMap {
     });
 
     // Get only the relevant airstrip info
-    const relevantAirstrips = ;
+    const relevantAirstrips = this.dataService.getAirstripsByIdList(relevantAirstripIds);
 
     // Create the marker list and show them on the screen
     const relevantAirstripMarkers = this.createAirstripMarkerList(relevantAirstrips);
@@ -68,7 +90,7 @@ export class WingmanMap {
   public showAllAirstrips() {
     // The public method for showing all airstrips,
     // gathering them from the environmentally set airstrip json
-    const airstripMarkers = this.createAirstripMarkerList(environment.airstripJson);
+    const airstripMarkers = this.createAirstripMarkerList(this.dataService.getAllAirstrips());
     this.showAirstrips(airstripMarkers);
   }
 
@@ -89,12 +111,12 @@ export class WingmanMap {
   private showAirstrips(airstrips) {
     // Remove the current marker layer
     if (this.currentAirstripsGroup) {
-      this.map.removeLayer(this.currentAirstripsGroup);
+      this.leafletMap.removeLayer(this.currentAirstripsGroup);
     }
 
     // Add the marker layer to the map and save the layer to the LeafletMap.
     this.currentAirstripsGroup = L.layerGroup(airstrips);
-    this.map.addLayer(this.currentAirstripsGroup);
+    this.leafletMap.addLayer(this.currentAirstripsGroup);
   }
 
   public addBaseMap(mapName, leafletBaseLayer){
@@ -107,7 +129,7 @@ export class WingmanMap {
       // The control layer requires this to be an object with name:object
       const layerObject = {};
       layerObject[mapName] = leafletBaseLayer;
-      this.mapControl = L.control.layers(layerObject, undefined).addTo(this.map);
+      this.mapControl = L.control.layers(layerObject, undefined).addTo(this.leafletMap);
     }else{
       this.mapControl.addBaseLayer(leafletBaseLayer, mapName);
     }
@@ -123,7 +145,7 @@ export class WingmanMap {
       // The control layer requires this to be an object with name:object
       const layerObject = {};
       layerObject[mapName] = leafletOverlayMap;
-      this.mapControl = L.control.layers(undefined, layerObject).addTo(this.map);
+      this.mapControl = L.control.layers(undefined, layerObject).addTo(this.leafletMap);
     }else{
       this.mapControl.addOverlay(leafletOverlayMap, mapName);
     }

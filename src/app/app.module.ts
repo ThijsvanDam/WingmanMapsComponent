@@ -4,8 +4,13 @@ import { NgModule } from '@angular/core';
 
 
 import { AppRoutingModule } from './app-routing.module';
+
+// Components
 import { AppComponent } from './app.component';
 import { DynamicMapComponent } from './dynamic-map/dynamic-map.component';
+
+// Services
+import { WingmanMapService } from './services/wingman-map.service';
 import { WingmanDataService } from './services/wingman-data.service';
 
 import { environment } from 'src/environments/environment';
@@ -22,7 +27,8 @@ import { environment } from 'src/environments/environment';
     AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [
-    WingmanDataService
+    WingmanDataService,
+    WingmanMapService
   ],
   bootstrap: [AppComponent]
 })

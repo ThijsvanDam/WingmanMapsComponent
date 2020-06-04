@@ -1,10 +1,13 @@
+import { Injectable } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
 
-const airstrips = require('../assets/json/airstrips.json');
-const flights = require('../assets/json/flights.json');
-const airplanes = require('../assets/json/airplanes.json');
+declare var require: any;
+const airstrips = require('../../assets/json/airstrips.json');
+const flights = require('../../assets/json/flights.json');
+const airplanes = require('../../assets/json/airplanes.json');
 
+@Injectable()
 export class WingmanDataService {
 
     // Get all the flights from the assets/json folder.
