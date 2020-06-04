@@ -12,9 +12,9 @@ export class WingmanMapService {
 
   constructor(private dataService: WingmanDataService) { }
 
-  private currentlySelectedFlight;
   private privateMap: WingmanMap;
-
+  
+  private currentlySelectedFlight;
   private currentAirstripsGroup;
 
   public initializeMap(mapId) {
