@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import * as L from 'leaflet';
 
+import { Flight } from './../shared/models/flight.model';
 import { WingmanDataService } from './wingman-data.service';
 import { WingmanMap } from '../dynamic-map/wingman-map';
 
@@ -14,8 +15,8 @@ export class WingmanMapService {
 
   private privateMap: WingmanMap;
 
-  private currentlySelectedFlight;
-  private currentAirstripsGroup;
+  private currentlySelectedFlight: Flight;
+  private currentAirstripsGroup: L.LayerGroup;
 
   public initializeMap(mapId) {
     this.map = new WingmanMap(this.dataService, mapId, {
@@ -64,6 +65,13 @@ export class WingmanMapService {
 
   public showRelevantAirstrips() {    // Gathers the airstrips IDs from the legs
     let relevantAirstripIds = [];
+
+    // It is possible for the selected flight to not be set.
+    if (this.currentlySelectedFlight === undefined){
+      console.log('No flight selected!');
+      return;
+    }
+
     this.currentlySelectedFlight.legs.forEach(leg => {
       relevantAirstripIds.push(leg.startId);
       relevantAirstripIds.push(leg.destinationId);

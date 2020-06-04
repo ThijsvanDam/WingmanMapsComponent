@@ -17,7 +17,7 @@ export class DynamicMapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.mapService.initializeMap('map');
-    this.mapService.selectedFlight = this.dataService.getFirstFlight;
+    this.mapService.selectedFlight = this.dataService.getFirstFlight();
     this.mapService.showAllAirstrips();
   }
 
