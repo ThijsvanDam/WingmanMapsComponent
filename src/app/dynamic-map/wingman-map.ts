@@ -15,16 +15,17 @@ export class WingmanMap extends Map {
   private attributions = {};
   private overlayMaps = {};
   private baseMaps = {};
-
   // Everything considering markers
   private markers = {};
+
+  private iconList = {};
 
   private mapControl;
 
   constructor(private dataService: WingmanDataService, mapId: string, options?: MapOptions) {
     super(mapId, options);
 
-    this.icons = {
+    this.iconList = {
       airstrip: new Icon({
         iconUrl: environment.marker.airstrip_image,
         iconSize: [20, 20],
@@ -40,12 +41,12 @@ export class WingmanMap extends Map {
     };
   }
 
-  public get icons(){
-    return this.icons;
+  public set icons(iconList){
+    this.icons = iconList;
   }
 
-  public set icons(icons){
-    this.icons = icons;
+  public get icons(){
+    return this.iconList;
   }
 
   public addBaseMap(mapName, leafletBaseLayer){

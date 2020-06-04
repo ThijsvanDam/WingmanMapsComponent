@@ -13,7 +13,7 @@ export class WingmanMapService {
   constructor(private dataService: WingmanDataService) { }
 
   private privateMap: WingmanMap;
-  
+
   private currentlySelectedFlight;
   private currentAirstripsGroup;
 
@@ -95,13 +95,16 @@ export class WingmanMapService {
   }
 
   private createAirstripMarkerList(airstrips) {
+    const waypointIcon = this.privateMap.icons.waypoint;
+    const airstripIcon = this.privateMap.icons.airstrip;
+
     // Map all relevant data of the airstrip to the airstripArray
     const airstripsArray = airstrips.map(airstrip => {
       return L.marker(
         // Set the position of the marker to the position of the airstrip
         [airstrip.position.latDeg, airstrip.position.longDeg],
         // The icon is an airstrip or a waypoint according to the value of waypointOnly
-        { icon: Boolean(airstrip.waypointOnly) ? this.privateMap.icons.waypoint : this.privateMap.icons.airstrip }
+        { icon: Boolean(airstrip.waypointOnly) ? waypointIcon : airstripIcon }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(`This should be airstrip ${airstrip.name}`);
     });
