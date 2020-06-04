@@ -10,17 +10,18 @@ import { environment } from './../../environments/environment';
 @Injectable()
 export class WingmanMapService {
 
-  constructor(private dataService: WingmanDataService){ }
+  constructor(private dataService: WingmanDataService) { }
 
   private currentlySelectedFlight;
   private privateMap: WingmanMap;
 
-  public initializeMap(mapId){
+  private currentAirstripsGroup;
+
+  public initializeMap(mapId) {
     this.map = new WingmanMap(this.dataService, mapId, {
       center: [-9.141666, 148.383331],
       zoom: 3
     });
-
     this.addLayers();
   }
 
@@ -36,7 +37,7 @@ export class WingmanMapService {
     this.currentlySelectedFlight = flight;
   }
 
-  private addLayers(){
+  private addLayers() {
     const baseMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
       useCache: true,
       crossOrigin: true,
@@ -55,10 +56,56 @@ export class WingmanMapService {
   }
 
   public showAllAirstrips() {
-    this.privateMap.showAllAirstrips();
+    // The public method for showing all airstrips,
+    // gathering them from the environmentally set airstrip json
+    const airstripMarkers = this.createAirstripMarkerList(this.dataService.getAllAirstrips());
+    this.showAirstrips(airstripMarkers);
   }
 
-  public showRelevantAirstrips() {
-    this.privateMap.showRelevantAirstrips(this.currentlySelectedFlight);
+  public showRelevantAirstrips() {    // Gathers the airstrips IDs from the legs
+    let relevantAirstripIds = [];
+    this.currentlySelectedFlight.legs.forEach(leg => {
+      relevantAirstripIds.push(leg.startId);
+      relevantAirstripIds.push(leg.destinationId);
+    });
+
+
+    // Filter duplicate ID's
+    relevantAirstripIds = relevantAirstripIds.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+
+    // Get only the relevant airstrip info
+    const relevantAirstrips = this.dataService.getAirstripsByIdList(relevantAirstripIds);
+
+    // Create the marker list and show them on the screen
+    const relevantAirstripMarkers = this.createAirstripMarkerList(relevantAirstrips);
+    this.showAirstrips(relevantAirstripMarkers);
   }
+
+  private showAirstrips(airstrips) {
+    // Remove the current marker layer
+    if (this.currentAirstripsGroup) {
+      this.privateMap.removeLayer(this.currentAirstripsGroup);
+    }
+
+    // Add the marker layer to the map and save the layer to the LeafletMap.
+    this.currentAirstripsGroup = L.layerGroup(airstrips);
+    this.map.addLayer(this.currentAirstripsGroup);
+  }
+
+  private createAirstripMarkerList(airstrips) {
+    // Map all relevant data of the airstrip to the airstripArray
+    const airstripsArray = airstrips.map(airstrip => {
+      return L.marker(
+        // Set the position of the marker to the position of the airstrip
+        [airstrip.position.latDeg, airstrip.position.longDeg],
+        // The icon is an airstrip or a waypoint according to the value of waypointOnly
+        { icon: Boolean(airstrip.waypointOnly) ? this.privateMap.icons.waypoint : this.privateMap.icons.airstrip }
+        // Bind a popup with the airstrip name to the marker
+      ).bindPopup(`This should be airstrip ${airstrip.name}`);
+    });
+    return airstripsArray;
+  }
+
 }

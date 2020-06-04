@@ -18,8 +18,6 @@ export class WingmanMap extends Map {
 
   // Everything considering markers
   private markers = {};
-  private currentAirstripsGroup;
-  private icons;
 
   private mapControl;
 
@@ -40,62 +38,14 @@ export class WingmanMap extends Map {
         popupAnchor: [0, 0]
       })
     };
-
-    // As a default, show all airstrips
-    this.showAllAirstrips();
   }
 
-  public showRelevantAirstrips(flight) {    // Gathers the airstrips IDs from the legs
-    let relevantAirstripIds = [];
-    flight.legs.forEach(leg => {
-      relevantAirstripIds.push(leg.startId);
-      relevantAirstripIds.push(leg.destinationId);
-    });
-
-
-    // Filter duplicate ID's
-    relevantAirstripIds = relevantAirstripIds.filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-
-    // Get only the relevant airstrip info
-    const relevantAirstrips = this.dataService.getAirstripsByIdList(relevantAirstripIds);
-
-    // Create the marker list and show them on the screen
-    const relevantAirstripMarkers = this.createAirstripMarkerList(relevantAirstrips);
-    this.showAirstrips(relevantAirstripMarkers);
+  public get icons(){
+    return this.icons;
   }
 
-  public showAllAirstrips() {
-    // The public method for showing all airstrips,
-    // gathering them from the environmentally set airstrip json
-    const airstripMarkers = this.createAirstripMarkerList(this.dataService.getAllAirstrips());
-    this.showAirstrips(airstripMarkers);
-  }
-
-  private createAirstripMarkerList(airstrips) {
-    // Map all relevant data of the airstrip to the airstripArray
-    const airstripsArray = airstrips.map(airstrip => {
-      return new Marker(
-        // Set the position of the marker to the position of the airstrip
-        [airstrip.position.latDeg, airstrip.position.longDeg],
-        // The icon is an airstrip or a waypoint according to the value of waypointOnly
-        { icon: Boolean(airstrip.waypointOnly) ? this.icons.waypoint : this.icons.airstrip }
-        // Bind a popup with the airstrip name to the marker
-      ).bindPopup(`This should be airstrip ${airstrip.name}`);
-    });
-    return airstripsArray;
-  }
-
-  private showAirstrips(airstrips) {
-    // Remove the current marker layer
-    if (this.currentAirstripsGroup) {
-      this.removeLayer(this.currentAirstripsGroup);
-    }
-
-    // Add the marker layer to the map and save the layer to the LeafletMap.
-    this.currentAirstripsGroup = new LayerGroup(airstrips);
-    this.addLayer(this.currentAirstripsGroup);
+  public set icons(icons){
+    this.icons = icons;
   }
 
   public addBaseMap(mapName, leafletBaseLayer){
@@ -113,6 +63,7 @@ export class WingmanMap extends Map {
       this.mapControl.addBaseLayer(leafletBaseLayer, mapName);
     }
   }
+
 
   public addOverlayMap(mapName, leafletOverlayMap){
     // Remember the overlay locally
