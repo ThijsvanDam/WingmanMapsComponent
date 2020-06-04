@@ -16,16 +16,16 @@ export class WingmanMapService {
   private privateMap: WingmanMap;
 
   public initializeMap(mapId){
-    this.map = new WingmanMap(L.map(mapId, {
+    this.map = new WingmanMap(this.dataService, mapId, {
       center: [-9.141666, 148.383331],
       zoom: 3
-    }), this.dataService);
+    });
 
     this.addLayers();
   }
 
-  public set map(leafletMap: WingmanMap) {
-    this.privateMap = leafletMap;
+  public set map(wingmanMap) {
+    this.privateMap = wingmanMap;
   }
 
   public get map() {
