@@ -1,9 +1,9 @@
+import { WingmanMapService } from './../services/wingman-map.service';
 import { Component, AfterViewInit } from '@angular/core';
 
+import { WingmanDataService } from '../services/wingman-data.service';
+import { WingmanMap } from './wingman-map';
 import { environment } from 'src/environments/environment';
-
-import { WingmanMap } from './leaflet-map';
-import * as L from 'leaflet';
 
 @Component({
   selector: 'app-dynamic-map',
@@ -11,43 +11,21 @@ import * as L from 'leaflet';
   styleUrls: ['./dynamic-map.component.scss']
 })
 export class DynamicMapComponent implements AfterViewInit {
-  private currentlySelectedFlight;
-  private privateMap;
 
-  constructor() {
-    this.currentlySelectedFlight = environment.flightJson[1];
+  constructor(private dataService: WingmanDataService, private mapService: WingmanMapService) {
   }
 
   ngAfterViewInit(): void {
-    this.map = L.map('map', {
-      center: [-9.141666, 148.383331],
-      zoom: 3
-    });
-
-    this.map.addTileLayer('topoMap', {
-      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    });
-  }
-
-  public set map(leafletMap){
-    this.privateMap = new WingmanMap(leafletMap);
-  }
-
-  public get map(){
-    return this.privateMap;
-  }
-
-  public set selectedFlight(flight){
-    this.currentlySelectedFlight = flight;
+    this.mapService.initializeMap('map');
+    this.mapService.selectedFlight = this.dataService.getFirstFlight();
+    this.mapService.showAllAirstrips();
   }
 
   public handleAllAirstrips() {
-    this.privateMap.showAllAirstrips();
+    this.mapService.showAllAirstrips();
   }
 
   public handleRelevantAirstrips() {
-    this.privateMap.showRelevantAirstrips(this.currentlySelectedFlight);
+    this.mapService.showRelevantAirstrips();
   }
-
 }
