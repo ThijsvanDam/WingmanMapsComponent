@@ -88,7 +88,8 @@
           "options": {
             "codeCoverageExclude": [
               "src/assets/javascript/L.TileLayer.PouchDBCached.js",
-              "src/assets/javascript/pouchdb.js"
+              "src/assets/javascript/pouchdb.js",
+              "src/app/shared/exceptions/no-flight-selected.exception.js"
             ],
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
