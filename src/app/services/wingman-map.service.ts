@@ -124,15 +124,33 @@ export class WingmanMapService {
 
     // Map all relevant data of the airstrip to the airstripArray
     const airstripMarkerArray = airstrips.map(airstrip => {
-      return L.marker(
+      const marker = L.marker(
         // Set the position of the marker to the position of the airstrip
         [airstrip.position.latDeg, airstrip.position.longDeg],
         // The icon is an airstrip or a waypoint according to the value of waypointOnly
         { icon: Boolean(airstrip.waypointOnly) ? waypointIcon : airstripIcon }
         // Bind a popup with the airstrip name to the marker
-      ).bindPopup(`This should be airstrip ${airstrip.name}`);
+      ).bindPopup(this.generateMarkerPopupContent(airstrip));
+      marker.on('mouseover', function(e) {
+        this.openPopup();
+      });
+      return marker;
     });
     return airstripMarkerArray;
   }
 
+  private generateMarkerPopupContent(airstrip) {
+    const type = airstrip.waypointOnly ? 'waypoint' : 'airstrip';
+
+    const markerContent = `
+    <h3>${airstrip.name} (${airstrip.displayName})</h3>
+    <p>
+      This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
+      Avgas is <b>` + (airstrip.avgasAvailable ? 'available' : 'unavailable') + `<br>
+      </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available' : 'unavailable') + `</b>.<br>
+      ` + (airstrip.notes ? `Notes: ${airstrip.notes}` : ``) + `
+    </p>`;
+
+    return markerContent;
+  }
 }

@@ -1,3 +1,4 @@
+import { MarkerList } from './marker-list';
 import { Injectable } from '@angular/core';
 
 import { Map, Icon, MapOptions, Control, LayerGroup, Marker } from 'leaflet';
@@ -16,12 +17,13 @@ export class WingmanMap extends Map {
   private baseMaps = {};
 
   // Everything considering markers
-  private markers = {};
+  private markerList: MarkerList;
 
   private mapControl;
 
   constructor(private dataService: WingmanDataService, mapId: string, options?: MapOptions) {
     super(mapId, options);
+    this.markerList = new MarkerList();
   }
 
   public addBaseMap(mapName, leafletBaseLayer){
@@ -39,7 +41,6 @@ export class WingmanMap extends Map {
       this.mapControl.addBaseLayer(leafletBaseLayer, mapName);
     }
   }
-
 
   public addOverlayMap(mapName, leafletOverlayMap){
     // Remember the overlay locally
