@@ -14,6 +14,12 @@ jobs:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - "node_modules"
+      - run:
+          name: Add useCache to the leaflet TileLayerOptions
+          command: |
+            cd node_modules/@types/leaflet
+            LINENUMBER=$(($(awk '/interface TileLayerOptions/{ print NR; exit }' index.d.ts)+1))i
+            sed -i "$LINENUMBER useCache?: boolean;" index.d.ts
       - run: 
           name: Build project
           command: npm run start
