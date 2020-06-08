@@ -29,8 +29,8 @@ export class WingmanMapService {
       waypoint: L.icon({
         iconUrl: environment.marker.waypoint_image,
         iconSize: [30, 30],
-        iconAnchor: [-10, 0],
-        popupAnchor: [0, 0]
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -15]
       })
     };
   }
@@ -56,6 +56,10 @@ export class WingmanMapService {
     this.currentlySelectedFlight = flight;
   }
 
+  public get selectedFlight(){
+    return this.currentlySelectedFlight;
+  }
+
   private addLayers() {
     const OWM_KEY = environment.api_keys.openweathermap;
 
@@ -65,13 +69,13 @@ export class WingmanMapService {
       crossOrigin: true,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
-    
+
     const satelliteMap = L.tileLayer(`http://{s}.sat.owm.io/sql/{z}/{x}/{y}/?appid=${OWM_KEY}&overzoom=true&op=rgb&from=cloudless&select=b4,b3,b2`, {
       attribution: 'vane?'
     });
-    
+
     // Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
-    this.map.addBaseMap('Topographic map', topographicMap);
+    this.map.addBaseMap('Topographic map', topographicMap, {enable: true});
     this.map.addBaseMap('Sat map', satelliteMap);
 
     // Add all overla maps:
@@ -99,7 +103,7 @@ export class WingmanMapService {
     });
 
     // Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
-    this.map.addOverlayMap('Clouds', cloudsOverlay);
+    this.map.addOverlayMap('Clouds', cloudsOverlay, {enable: true});
     this.map.addOverlayMap('Precipitation', precipitationOverlay);
     this.map.addOverlayMap('Wind speed', windspeedOverlay);
     this.map.addOverlayMap('Temperature', temperatureOverlay);
@@ -113,31 +117,53 @@ export class WingmanMapService {
     this.showAirstrips(airstripMarkers);
   }
 
-  public showRelevantAirstrips(): void {    // Gathers the airstrips IDs from the legs
-    let relevantAirstripIds = [];
+  public showRelevantAirstrips(): void {
 
     // It is possible for the selected flight to not be set.
-    if (this.currentlySelectedFlight === undefined){
+    if (this.currentlySelectedFlight === undefined) {
       throw new NoFlightSelectedException();
     }
 
-    this.currentlySelectedFlight.legs.forEach(leg => {
-      relevantAirstripIds.push(leg.startId);
-      relevantAirstripIds.push(leg.destinationId);
-    });
-
-    // Filter duplicate ID's
-    relevantAirstripIds = relevantAirstripIds.filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-
-    // Get only the relevant airstrip info
-    const relevantAirstrips = this.dataService.getAirstripsByIdList(relevantAirstripIds);
+    const relevantAirstrips = this.dataService.getAirstripsByFlight(this.currentlySelectedFlight);
 
     // Create the marker list and show them on the screen
     const relevantAirstripMarkers = this.createAirstripMarkerList(relevantAirstrips);
     this.showAirstrips(relevantAirstripMarkers);
   }
+
+  public plotFlight() {
+    // It is possible for the selected flight to not be set.
+    if (this.currentlySelectedFlight === undefined) {
+      throw new NoFlightSelectedException();
+    }
+
+    const airstrips = this.dataService.getAirstripsByFlight(this.currentlySelectedFlight);
+
+    const latLngList = [];
+
+    airstrips.forEach(airstrip => {
+      latLngList.push(Object.values(airstrip.position));
+    });
+    this.drawPolyLine(this.privateMap, latLngList as [[number, number]]);
+  }
+
+  public drawPolyLine(map: WingmanMap, latLngList: [[number, number]]) {
+    const flightPolygon = L.polygon(latLngList, { color: 'red' }).addTo(map);
+    const padding = 100;
+    // map.panTo(flightPolygon.getBounds().getCenter());
+    map.fitBounds(flightPolygon.getBounds(), { padding: new L.Point(padding, padding)});
+
+    // .on('moveend', (e) => {
+    //   map.fitBounds(flightPolygon.getBounds());
+    // });
+    
+    // console.log(flight);
+  }
+
+  // public drawLine(map: WingmanMap, latlng: [number, number]){
+  //   const leafletLatLng = L.latLng(latlng[0], latlng[1]);
+  //   L.draw(latlng, {color: 'red'});
+  // })
 
   private showAirstrips(airstripMarkers: L.Marker[]): void {
     // Remove the current marker layer
@@ -163,7 +189,7 @@ export class WingmanMapService {
         { icon: Boolean(airstrip.waypointOnly) ? waypointIcon : airstripIcon }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(this.generateMarkerPopupContent(airstrip));
-      marker.on('mouseover', function(e) {
+      marker.on('mouseover', function (e) {
         this.openPopup();
       });
       return marker;
@@ -185,4 +211,5 @@ export class WingmanMapService {
 
     return markerContent;
   }
+
 }

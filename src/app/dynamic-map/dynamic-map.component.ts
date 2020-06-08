@@ -11,14 +11,19 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./dynamic-map.component.scss']
 })
 export class DynamicMapComponent implements AfterViewInit {
+  currentFlightName: string;
 
   constructor(private dataService: WingmanDataService, private mapService: WingmanMapService) {
+    this.mapService.selectedFlight = this.dataService.getFlightbyId('FPG034737');
+    this.currentFlightName = this.mapService.selectedFlight.flightId;
   }
+
+
 
   ngAfterViewInit(): void {
     this.mapService.initializeMap('map');
-    this.mapService.selectedFlight = this.dataService.getFirstFlight();
-    this.mapService.showAllAirstrips();
+    this.mapService.showRelevantAirstrips();
+    this.mapService.plotFlight();
   }
 
   public handleAllAirstrips() {
