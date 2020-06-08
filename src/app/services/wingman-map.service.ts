@@ -65,11 +65,11 @@ export class WingmanMapService {
       crossOrigin: true,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
-    
+
     const satelliteMap = L.tileLayer(`http://{s}.sat.owm.io/sql/{z}/{x}/{y}/?appid=${OWM_KEY}&overzoom=true&op=rgb&from=cloudless&select=b4,b3,b2`, {
       attribution: 'vane?'
     });
-    
+
     // Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
     this.map.addBaseMap('Topographic map', topographicMap);
     this.map.addBaseMap('Sat map', satelliteMap);
