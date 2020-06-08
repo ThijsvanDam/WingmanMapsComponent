@@ -128,6 +128,8 @@ describe('Wingman map service', () => {
   });
 
   it('Should call showAirstrips with correct AirstripMarkers with a given flight', () => {
+    // This is all the flight data needed by the function,
+    // calling showRelevantAirstrips will not need more data.
     mapService.selectedFlight = {
       flightId: 'F1',
       legs: [
@@ -212,6 +214,8 @@ describe('Wingman map service', () => {
   });
 
   it('Filter the airstripIDs of a given flight correctly', () => {
+    // This is all the flight data needed by the function,
+    // calling showRelevantAirstrips will not need more data.
     mapService.selectedFlight = {
       flightId: 'F1',
       legs: [
