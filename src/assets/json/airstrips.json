@@ -2811,7 +2811,8 @@
     "meetingTimeAdvance": null,
     "avgasAvailable": false,
     "jetA1Available": false,
-    "departureTaxApplies": false
+    "departureTaxApplies": false,
+    "notes": "De meeste airstrips zijn niet zo hoog als deze. Kijk dus uit."
   },
   {
     "airstripId": "AS000132",

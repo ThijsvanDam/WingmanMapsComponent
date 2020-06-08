@@ -18,7 +18,7 @@ module.exports = function (config) {
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, './coverage/WingmanMapsComponent'),
       reports: ['html', 'lcovonly', 'text-summary'],
-      fixWebpackSourcePaths: true
+      fixWebpackSourcePaths: true,
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
@@ -27,10 +27,10 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['ChromeHeadless'],
     customLaunchers: {
-        ChromeHeadlessNoSandbox: {
-          base: 'ChromeHeadless',
-          flags: ['--no-sandbox']
-        }
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
     },
     singleRun: false,
     restartOnFileChange: true
