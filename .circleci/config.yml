@@ -22,7 +22,7 @@ jobs:
             sed -i "$LINENUMBER useCache?: boolean;" index.d.ts
       - run: 
           name: Build project
-          command: npm run start
+          command: npm run-script build
       - run: 
           name: Run tests
           command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
