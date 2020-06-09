@@ -8,5 +8,10 @@
   <button color="primary" (click)="handleAllAirstrips()">Show all</button>
   <button color="primary" (click)="handleRelevantAirstrips()">Show relevant</button>
 </p>
-<h1>{{ currentFlightName }} is de huidig geselecteerde vlucht! </h1>
+
+ 
+
+<h1><select (change)="option(selectField.value)" #selectField>
+    <option *ngFor="let flightName of allFlights">{{flightName}}</option>
+  </select> is de huidig geselecteerde vlucht! </h1>
 

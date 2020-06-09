@@ -24,6 +24,10 @@ export class WingmanDataService {
         })[0];
     }
 
+    getAllFlightNames(){
+        return flights.map(x => x.flightId);
+    }
+
     // Get all the airstrips from the assets/json folder.
     getAllAirstrips() {
         return airstrips;

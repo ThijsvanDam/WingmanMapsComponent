@@ -17,19 +17,21 @@ import { environment } from 'src/environments/environment';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    DynamicMapComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase)
-  ],
-  providers: [
-    WingmanDataService,
-    WingmanMapService
-  ],
-  bootstrap: [AppComponent]
+   declarations: [
+      AppComponent,
+      DynamicMapComponent
+   ],
+   imports: [
+      BrowserModule,
+      AppRoutingModule,
+      AngularFireModule.initializeApp(environment.firebase)
+   ],
+   providers: [
+      WingmanDataService,
+      WingmanMapService
+   ],
+   bootstrap: [
+      AppComponent
+   ]
 })
 export class AppModule { }

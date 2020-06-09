@@ -12,10 +12,12 @@ import { environment } from 'src/environments/environment';
 })
 export class DynamicMapComponent implements AfterViewInit {
   currentFlightName: string;
+  allFlights: string[];
 
   constructor(private dataService: WingmanDataService, private mapService: WingmanMapService) {
-    this.mapService.selectedFlight = this.dataService.getFlightbyId('FPG034737');
+    this.mapService.selectedFlight = this.dataService.getFlightbyId('FPG034671');
     this.currentFlightName = this.mapService.selectedFlight.flightId;
+    this.allFlights = this.dataService.getAllFlightNames();
   }
 
 
@@ -32,5 +34,11 @@ export class DynamicMapComponent implements AfterViewInit {
 
   public handleRelevantAirstrips() {
     this.mapService.showRelevantAirstrips();
+  }
+
+  public option(selectedFlight) {
+    this.mapService.selectedFlight = this.dataService.getFlightbyId(selectedFlight);
+    this.mapService.showRelevantAirstrips();
+    this.mapService.plotFlight();
   }
 }

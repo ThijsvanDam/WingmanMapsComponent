@@ -1,3 +1,4 @@
+import { Leg } from './../shared/models/leg.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Injectable } from '@angular/core';
 
@@ -16,6 +17,7 @@ export class WingmanMapService {
 
   private currentlySelectedFlight: Flight;
   private currentAirstripsGroup: L.LayerGroup;
+  private currentlyPlottedFlight: any;
 
   constructor(private dataService: WingmanDataService) {
 
@@ -56,7 +58,7 @@ export class WingmanMapService {
     this.currentlySelectedFlight = flight;
   }
 
-  public get selectedFlight(){
+  public get selectedFlight() {
     return this.currentlySelectedFlight;
   }
 
@@ -74,9 +76,19 @@ export class WingmanMapService {
       attribution: 'vane?'
     });
 
+    const blackWhiteMap = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+      attribution: ''
+    });
+
+    const watercolor = L.tileLayer('http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg	', {
+      attribution: ''
+    });
+
     // Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
-    this.map.addBaseMap('Topographic map', topographicMap, {enable: true});
+    this.map.addBaseMap('Topographic map', topographicMap, { enable: true });
     this.map.addBaseMap('Sat map', satelliteMap);
+    this.map.addBaseMap('Black white', blackWhiteMap);
+    this.map.addBaseMap('Water color', watercolor);
 
     // Add all overla maps:
     const cloudsOverlay = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {
@@ -103,7 +115,7 @@ export class WingmanMapService {
     });
 
     // Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
-    this.map.addOverlayMap('Clouds', cloudsOverlay, {enable: true});
+    this.map.addOverlayMap('Clouds', cloudsOverlay);
     this.map.addOverlayMap('Precipitation', precipitationOverlay);
     this.map.addOverlayMap('Wind speed', windspeedOverlay);
     this.map.addOverlayMap('Temperature', temperatureOverlay);
@@ -144,19 +156,57 @@ export class WingmanMapService {
     airstrips.forEach(airstrip => {
       latLngList.push(Object.values(airstrip.position));
     });
-    this.drawPolyLine(this.privateMap, latLngList as [[number, number]]);
+    this.drawRoute(this.privateMap, latLngList as [[number, number]], this.currentlySelectedFlight.legs);
   }
 
-  public drawPolyLine(map: WingmanMap, latLngList: [[number, number]]) {
-    const flightPolygon = L.polygon(latLngList, { color: 'red' }).addTo(map);
+  private drawRoute(map: WingmanMap, latLngList: [[number, number]], legList: Leg[]) {
+    if (this.currentlyPlottedFlight !== undefined) {
+      this.privateMap.removeLayer(this.currentlyPlottedFlight);
+    }
+
+    const legLines: L.Polyline[] = [];
+    latLngList.forEach(latLng => {
+    });
+
+    for (let i = 0; i < latLngList.length - 1; i++) {
+
+      const leg = L.polyline([latLngList[i], latLngList[i + 1]]);
+      leg.bindPopup(this.getLegPopupContent(legList[i]));
+      leg.on('mouseover', function(e) {
+        this.openPopup();
+      });
+      legLines.push(leg);
+    }
+    const padding = 100;
+    this.currentlyPlottedFlight = new L.FeatureGroup(legLines).addTo(map);
+    map.fitBounds(this.currentlyPlottedFlight.getBounds(), { padding: new L.Point(padding, padding) });
+
+  }
+
+  private getLegPopupContent(leg: Leg){
+    return `
+      Take off time:
+      Meeting time: <b>${leg.meetingTime}</b><br>
+      Landing time: <b>${leg.landingTime}</b><br>
+      Seats taken: <b>${leg.seatsTaken}/${leg.maxSeats}</b><br>
+      Leg duration: <b>${leg.seatsTaken}/${leg.maxSeats}</b><br>
+    `;
+  }
+
+  private drawPolygon(map: WingmanMap, latLngList: [[number, number]]) {
+    if (this.currentlyPlottedFlight !== undefined) {
+      this.privateMap.removeLayer(this.currentlyPlottedFlight);
+    }
+
+    this.currentlyPlottedFlight = L.polygon(latLngList, { color: 'red' }).addTo(map);
     const padding = 100;
     // map.panTo(flightPolygon.getBounds().getCenter());
-    map.fitBounds(flightPolygon.getBounds(), { padding: new L.Point(padding, padding)});
+    map.fitBounds(this.currentlyPlottedFlight.getBounds(), { padding: new L.Point(padding, padding) });
 
     // .on('moveend', (e) => {
     //   map.fitBounds(flightPolygon.getBounds());
     // });
-    
+
     // console.log(flight);
   }
 

@@ -4,7 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 
 const routes: Routes = [
-  { path: 'map', component: DynamicMapComponent}
+  { path: 'map', component: DynamicMapComponent},
+  { path: '', redirectTo: '/map', pathMatch: 'full'}
 ];
 
 @NgModule({
