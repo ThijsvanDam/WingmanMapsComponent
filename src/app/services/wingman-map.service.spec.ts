@@ -51,7 +51,9 @@ describe('Wingman map service', () => {
 
     const markerList = [
       L.marker([latValue, longValue], { icon: mapService.icons.airstrip })
-        .bindPopup(`This should be airstrip Mt Hagen`)
+        .bindPopup(`This should be airstrip Mt Hagen`).on('mouseover', function(e){
+          this.openPopup();
+        })
     ];
 
     mapService.showAllAirstrips();
@@ -155,16 +157,24 @@ describe('Wingman map service', () => {
       L.marker([10, 20], { icon: mapService.icons.airstrip })
         .bindPopup(`This should be airstrip Mt Hagen`),
       L.marker([20, 30], { icon: mapService.icons.waypoint })
-        .bindPopup(`This should be airstrip Mindirisjk`),
+        .bindPopup(`This should be airstrip Mt Hagen`),
       L.marker([-20, 50], { icon: mapService.icons.airstrip })
-        .bindPopup(`This should be airstrip Quatar`),
+        .bindPopup(`This should be airstrip Mt Hagen`),
       L.marker([-1, 3], { icon: mapService.icons.airstrip })
-        .bindPopup(`This should be airstrip Minsk`),
+        .bindPopup(`This should be airstrip Mt Hagen`),
     ];
+
+    expectedMarkerList.forEach(marker => {
+      marker.on('mouseover', function(e) {
+        this.openPopup();
+      });
+    });
 
 
     const idListSpy = dataServiceSpy.getAirstripsByIdList = jasmine.createSpy();
     idListSpy.and.returnValue(returnRelevantAirstrips);
+
+    const generateMarkerPopupContentSpy = spyOn<any>(mapService, 'generateMarkerPopupContent').and.returnValue('This should be airstrip Mt Hagen');
 
     const showAirstripsSpy = spyOn<any>(mapService, 'showAirstrips');
 

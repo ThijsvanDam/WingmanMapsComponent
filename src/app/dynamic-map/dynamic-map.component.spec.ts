@@ -66,7 +66,7 @@ describe('DynamicMapComponent: ', () => {
         expect(initializeMapSpy).not.toHaveBeenCalled();
         expect(getFirstFlightSpy).not.toHaveBeenCalled();
 
-        component.ngAfterViewInit();
+        // component.ngAfterViewInit();
 
         expect(showAllAirstripsSpy).toHaveBeenCalled();
         expect(initializeMapSpy).toHaveBeenCalled();
