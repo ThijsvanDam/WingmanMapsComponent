@@ -37,6 +37,7 @@ export class WingmanMap extends Map {
     }
   }
 
+
   public addOverlayMap(mapName, leafletOverlayMap){
     // Remember the overlay locally
     this.overlayMaps[mapName] = leafletOverlayMap;
