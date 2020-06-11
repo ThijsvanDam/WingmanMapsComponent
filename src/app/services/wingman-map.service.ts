@@ -67,7 +67,6 @@ export class WingmanMapService {
 
     // Add all base maps:
     const topographicMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-      useCache: true,
       crossOrigin: true,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
@@ -136,7 +135,7 @@ export class WingmanMapService {
       throw new NoFlightSelectedException();
     }
 
-    const relevantAirstrips = this.dataService.getAirstripsByFlight(this.currentlySelectedFlight);
+    const relevantAirstrips = this.dataService.getAirstripsByFlight(this.currentlySelectedFlight, true);
 
     // Create the marker list and show them on the screen
     const relevantAirstripMarkers = this.createAirstripMarkerList(relevantAirstrips);
@@ -149,48 +148,42 @@ export class WingmanMapService {
       throw new NoFlightSelectedException();
     }
 
-    const airstrips = this.dataService.getAirstripsByFlight(this.currentlySelectedFlight);
+    const airstripsPairs: [[Airstrip, Airstrip]] = this.dataService.getLegAirstripPairByFlight(this.currentlySelectedFlight);
 
     const latLngList = [];
 
-    airstrips.forEach(airstrip => {
-      latLngList.push(Object.values(airstrip.position));
-    });
-    this.drawRoute(this.privateMap, latLngList as [[number, number]], this.currentlySelectedFlight.legs);
+    const positionPairs = airstripsPairs.map(pair => [Object.values(pair[0].position), Object.values(pair[1].position)]);
+
+    // airstrips.forEach(airstrip => {
+    //   latLngList.push(Object.values(airstrip.position));
+    // });
+
+    this.drawRoute(this.privateMap, positionPairs as [[[number, number]]], this.currentlySelectedFlight.legs);
   }
 
-  private drawRoute(map: WingmanMap, latLngList: [[number, number]], legList: Leg[]) {
+  private drawRoute(map: WingmanMap, positionPairs: [[[number, number]]], legList: Leg[]) {
     if (this.currentlyPlottedFlight !== undefined) {
       this.privateMap.removeLayer(this.currentlyPlottedFlight);
     }
 
     const legLines: L.Polyline[] = [];
-    latLngList.forEach(latLng => {
-    });
-
-    for (let i = 0; i < latLngList.length - 1; i++) {
-
-      const leg = L.polyline([latLngList[i], latLngList[i + 1]]);
-      leg.bindPopup(this.getLegPopupContent(legList[i]));
+    positionPairs.forEach((pair, index) => {
+      const leg = L.polyline(pair);
+      
+      leg.bindPopup(this.getLegPopupContent(legList[index]));
       leg.on('mouseover', function(e) {
         this.openPopup();
       });
       legLines.push(leg);
-    }
+    });
+
+    // for (let i = 0; i < latLngList.length - 1; i++) {
+
+    // }
     const padding = 100;
     this.currentlyPlottedFlight = new L.FeatureGroup(legLines).addTo(map);
     map.fitBounds(this.currentlyPlottedFlight.getBounds(), { padding: new L.Point(padding, padding) });
 
-  }
-
-  private getLegPopupContent(leg: Leg){
-    return `
-      Take off time:
-      Meeting time: <b>${leg.meetingTime}</b><br>
-      Landing time: <b>${leg.landingTime}</b><br>
-      Seats taken: <b>${leg.seatsTaken}/${leg.maxSeats}</b><br>
-      Leg duration: <b>${leg.seatsTaken}/${leg.maxSeats}</b><br>
-    `;
   }
 
   private drawPolygon(map: WingmanMap, latLngList: [[number, number]]) {
@@ -200,20 +193,9 @@ export class WingmanMapService {
 
     this.currentlyPlottedFlight = L.polygon(latLngList, { color: 'red' }).addTo(map);
     const padding = 100;
-    // map.panTo(flightPolygon.getBounds().getCenter());
+
     map.fitBounds(this.currentlyPlottedFlight.getBounds(), { padding: new L.Point(padding, padding) });
-
-    // .on('moveend', (e) => {
-    //   map.fitBounds(flightPolygon.getBounds());
-    // });
-
-    // console.log(flight);
   }
-
-  // public drawLine(map: WingmanMap, latlng: [number, number]){
-  //   const leafletLatLng = L.latLng(latlng[0], latlng[1]);
-  //   L.draw(latlng, {color: 'red'});
-  // })
 
   private showAirstrips(airstripMarkers: L.Marker[]): void {
     // Remove the current marker layer
@@ -248,18 +230,44 @@ export class WingmanMapService {
   }
 
   private generateMarkerPopupContent(airstrip) {
-    const type = airstrip.waypointOnly ? 'waypoint' : 'airstrip';
+    let markerContent = '';
 
-    const markerContent = `
-    <h3>${airstrip.name} (${airstrip.displayName})</h3>
-    <p>
+    markerContent += `<h3>${airstrip.name} (${airstrip.displayName})</h3>`;
+    markerContent += `<p>`;
+
+    if(airstrip.waypointOnly){
+      markerContent += 'This is a marker!';
+    }else{
+      markerContent += `
       This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
       Avgas is <b>` + (airstrip.avgasAvailable ? 'available' : 'unavailable') + `<br>
       </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available' : 'unavailable') + `</b>.<br>
-      ` + (airstrip.notes ? `Notes: ${airstrip.notes}` : ``) + `
-    </p>`;
+      ` + (airstrip.notes ? `Notes: ${airstrip.notes}` : ``);
+    }
 
+    markerContent += `</p>`;
     return markerContent;
   }
 
+  private getLegPopupContent(leg: Leg){
+    const meetingTime = new Date(leg.meetingTime);
+    const landing = new Date(leg.landing);
+    const takeoff = new Date(leg.takeoff);
+
+    return `
+      Meeting time: <b>${this.getDMYHM(meetingTime)}</b><br>
+      Take off time: <b>${this.getDMYHM(takeoff)}</b><br>
+      Landing time: <b>${this.getDMYHM(landing)}</b><br>
+      Seats taken: <b>${leg.seatsTaken}/${leg.maxSeats}</b><br>
+      Leg duration: <b>${leg.airTime}</b><br>
+    `;
+  }
+
+  private getDMYHM(date: Date): string{
+    return (date.getHours() < 10 ? '0' : '') + date.getHours() + ':' +
+    (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ' ' +
+    date.getDay() + '/' +
+    date.getMonth() + '/' +
+    date.getFullYear();
+  }
 }

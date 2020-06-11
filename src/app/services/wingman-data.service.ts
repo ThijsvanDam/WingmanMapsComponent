@@ -1,3 +1,5 @@
+import { Airstrip } from './../shared/models/airstrip.model';
+import { Flight } from './../shared/models/flight.model';
 
 import { environment } from 'src/environments/environment';
 
@@ -18,13 +20,13 @@ export class WingmanDataService {
     }
 
     // Get the flight number by passed id
-    getFlightbyId(id: string){
+    getFlightbyId(id: string) {
         return flights.filter(flight => {
             return flight.flightId === id;
         })[0];
     }
 
-    getAllFlightNames(){
+    getAllFlightNames() {
         return flights.map(x => x.flightId);
     }
 
@@ -40,23 +42,40 @@ export class WingmanDataService {
         });
     }
 
+    getAirstripById(id: string): Airstrip {
+        return airstrips.filter(airstrip => airstrip.airstripId === id)[0];
+    }
+
     // Get all the airplanes from the assets/json folder.
     getAllAirplanes() {
         return airplanes;
     }
 
-    getAirstripsByFlight(flight) {
-        // Gets the airstrips IDs from the legs
+    getLegAirstripPairByFlight(flight: Flight): [[Airstrip, Airstrip]]{
+        const flightPairs = flight.legs.map(leg =>
+            [
+                this.getAirstripById(leg.startId),
+                this.getAirstripById(leg.destinationId)
+            ]
+        );
+        return flightPairs as [[Airstrip, Airstrip]];
+    }
+
+    getAirstripsByFlight(flight: Flight, filter?: boolean): Airstrip[] {
         let airstripIds = [];
+
+        // Gets the airstrips IDs from the legs
         flight.legs.forEach(leg => {
             airstripIds.push(leg.startId);
             airstripIds.push(leg.destinationId);
         });
 
-        // Filter duplicate ID's
-        airstripIds = airstripIds.filter((value, index, self) => {
-            return self.indexOf(value) === index;
-        });
+        if(filter){
+            // Filter duplicate ID's
+            airstripIds = airstripIds.filter((value, index, self) => {
+                return self.indexOf(value) === index;
+            });
+        }
 
         // Get and return only the relevant airstrip info
         return this.getAirstripsByIdList(airstripIds);

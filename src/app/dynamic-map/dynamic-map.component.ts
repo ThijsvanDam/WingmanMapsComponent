@@ -15,12 +15,10 @@ export class DynamicMapComponent implements AfterViewInit {
   allFlights: string[];
 
   constructor(private dataService: WingmanDataService, private mapService: WingmanMapService) {
-    this.mapService.selectedFlight = this.dataService.getFlightbyId('FPG034671');
+    this.mapService.selectedFlight = this.dataService.getFlightbyId('FPG034707');
     this.currentFlightName = this.mapService.selectedFlight.flightId;
     this.allFlights = this.dataService.getAllFlightNames();
   }
-
-
 
   ngAfterViewInit(): void {
     this.mapService.initializeMap('map');

@@ -15,4 +15,10 @@ export interface Leg {
   maxSeats?: number;
   startId?: string;
   destinationId?: string;
+  offBlock?: string;
+  takeoff?: string;
+  landing?: string;
+  onBlock?: string;
+  estimate?: boolean;
+  airTime?: number;
 }
