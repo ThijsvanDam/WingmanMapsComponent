@@ -7,19 +7,27 @@ import { AppRoutingModule } from './app-routing.module';
 
 // Components
 import { AppComponent } from './app.component';
-import { DynamicMapComponent } from './dynamic-map/dynamic-map.component';
+import { MapComponent } from './components/map/map.component';
 
 // Services
 import { WingmanMapService } from './services/wingman-map.service';
 import { WingmanDataService } from './services/wingman-data.service';
 
 import { environment } from 'src/environments/environment';
+import { MapControlComponent } from './components/map-control/map-control.component';
+import { WingmanMapComponent } from './components/wingman-map/wingman-map.component';
+import { FlightListComponent } from './components/flight-list/flight-list.component';
+import { FlightDetailsComponent } from './components/flight-details/flight-details.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    DynamicMapComponent
+    MapComponent,
+    MapControlComponent,
+    WingmanMapComponent,
+    FlightListComponent,
+    FlightDetailsComponent
   ],
   imports: [
     BrowserModule,

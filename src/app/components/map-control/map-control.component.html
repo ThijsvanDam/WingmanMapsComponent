@@ -1,0 +1,8 @@
+<div>
+
+    <p>Airstrips: 
+        <button color="primary" (click)="handleAllAirstrips()">Show all</button>
+        <button color="primary" (click)="handleRelevantAirstrips()">Show relevant</button>
+    </p>
+    <app-flight-list [flights]="getFlights()"></app-flight-list>
+</div>

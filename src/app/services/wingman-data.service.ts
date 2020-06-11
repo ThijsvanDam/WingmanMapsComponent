@@ -1,5 +1,4 @@
-
-import { environment } from 'src/environments/environment';
+import { environment } from './../../environments/environment';
 
 const airplanes = require('../../assets/json/airplanes.json');
 const airstrips = require('../../assets/json/airstrips.json');

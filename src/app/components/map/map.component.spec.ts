@@ -2,24 +2,24 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
-import { DynamicMapComponent } from './dynamic-map.component';
+import { MapComponent } from './map.component';
 
-import { Flight } from './../shared/models/flight.model';
+import { Flight } from '../../shared/models/flight.model';
 
-import { WingmanDataService } from './../services/wingman-data.service';
-import { WingmanMapService } from '../services/wingman-map.service';
+import { WingmanDataService } from '../../services/wingman-data.service';
+import { WingmanMapService } from '../../services/wingman-map.service';
 
 
-describe('DynamicMapComponent: ', () => {
-    let component: DynamicMapComponent;
-    let fixture: ComponentFixture<DynamicMapComponent>;
+describe('MapComponent: ', () => {
+    let component: MapComponent;
+    let fixture: ComponentFixture<MapComponent>;
 
     let mapService: WingmanMapService;
     let dataService: WingmanDataService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DynamicMapComponent],
+            declarations: [MapComponent],
             providers: [ WingmanMapService,
                 { provide: WingmanDataService }
             ],
@@ -32,7 +32,7 @@ describe('DynamicMapComponent: ', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DynamicMapComponent);
+        fixture = TestBed.createComponent(MapComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

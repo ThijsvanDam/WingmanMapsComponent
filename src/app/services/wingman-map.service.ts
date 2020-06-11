@@ -5,7 +5,7 @@ import * as L from 'leaflet';
 
 import { Flight } from './../shared/models/flight.model';
 import { WingmanDataService } from './wingman-data.service';
-import { WingmanMap } from '../dynamic-map/wingman-map';
+import { WingmanMap } from '../components/map/wingman-map';
 import { NoFlightSelectedException } from '../shared/exceptions/no-flight-selected.exception';
 import { environment } from './../../environments/environment';
 

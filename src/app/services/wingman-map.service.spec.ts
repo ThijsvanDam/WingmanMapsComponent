@@ -10,7 +10,7 @@ import { WingmanMapService } from './wingman-map.service';
 import { Airstrip } from '../shared/models/airstrip.model';
 
 import { NoFlightSelectedException } from './../shared/exceptions/no-flight-selected.exception';
-import { WingmanMap } from './../dynamic-map/wingman-map';
+import { WingmanMap } from '../components/map/wingman-map';
 import { environment } from 'src/environments/environment';
 
 /**
