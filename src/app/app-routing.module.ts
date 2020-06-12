@@ -1,11 +1,12 @@
-import { DynamicMapComponent } from './dynamic-map/dynamic-map.component';
+import { WingmanMapComponent } from './components/wingman-map/wingman-map.component';
+import { MapComponent } from './components/map/map.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 
 const routes: Routes = [
-  { path: 'map', component: DynamicMapComponent},
-  { path: '', redirectTo: '/map', pathMatch: 'full'}
+  { path: '', redirectTo: 'map', pathMatch: 'full' },
+  { path: 'map', component: WingmanMapComponent}
 ];
 
 @NgModule({

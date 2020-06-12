@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import * as L from 'leaflet';
 
-import { WingmanMap } from '../dynamic-map/wingman-map';
+import { WingmanMap } from '../components/map/wingman-map';
 
 import { WingmanDataService } from './wingman-data.service';
 

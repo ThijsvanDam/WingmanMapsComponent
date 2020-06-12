@@ -5,7 +5,7 @@ import { Map, Icon, MapOptions, Control, LayerGroup, Marker } from 'leaflet';
 // Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
 
-import { WingmanDataService } from './../services/wingman-data.service';
+import { WingmanDataService } from '../../services/wingman-data.service';
 
 import { environment } from 'src/environments/environment';
 
