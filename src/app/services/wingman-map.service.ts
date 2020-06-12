@@ -233,7 +233,7 @@ export class WingmanMapService {
     markerContent += `<h3>${airstrip.name} (${airstrip.displayName})</h3>`;
     markerContent += `<p>`;
 
-    if(airstrip.waypointOnly){
+    if (airstrip.waypointOnly){
       markerContent += 'This is a marker!';
     }else{
       markerContent += `

@@ -71,7 +71,7 @@ export class WingmanDataService {
             airstripIds.push(leg.destinationId);
         });
 
-        if(filterDuplicates){
+        if (filterDuplicates){
             // Filter duplicate ID's
             airstripIds = airstripIds.filter((value, index, self) => {
                 return self.indexOf(value) === index;
