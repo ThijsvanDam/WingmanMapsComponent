@@ -4,11 +4,14 @@
   </div>
 </div>
 
-<p>Airstrips:
+<p style="display: inline;">Airstrips:
   <button color="primary" (click)="handleAllAirstrips()">Show all</button>
   <button color="primary" (click)="handleRelevantAirstrips()">Show relevant</button>
 </p>
-
+<p style="display: inline;">
+  Flights:
+  <button color="primary" (click)="showAllFlights()">Show all flights</button>
+</p>
  
 
 <h1><select (change)="option(selectField.value)" #selectField>

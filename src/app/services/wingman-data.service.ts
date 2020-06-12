@@ -1,3 +1,4 @@
+import { Airplane } from './../shared/models/airplane.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Flight } from './../shared/models/flight.model';
 
@@ -10,33 +11,33 @@ const flights = require('../../assets/json/flights.json');
 export class WingmanDataService {
 
     // Get all the flights from the assets/json folder.
-    getAllFlights() {
+    getAllFlights(): Flight[]{
         return flights;
     }
 
     // Get only the first flight from the assets/json folder
-    getFirstFlight() {
+    getFirstFlight(): Flight{
         return flights[0];
     }
 
     // Get the flight number by passed id
-    getFlightbyId(id: string) {
+    getFlightbyId(id: string): Flight{
         return flights.filter(flight => {
             return flight.flightId === id;
         })[0];
     }
 
-    getAllFlightNames() {
+    getAllFlightNames(): string[]{
         return flights.map(x => x.flightId);
     }
 
     // Get all the airstrips from the assets/json folder.
-    getAllAirstrips() {
+    getAllAirstrips(): Airstrip[]{
         return airstrips;
     }
 
     // Get all the airstrips within the idList from the assets/json folder.
-    getAirstripsByIdList(idList: string[]) {
+    getAirstripsByIdList(idList: string[]): Airstrip[]{
         return airstrips.filter(airstrip => {
             return idList.indexOf(airstrip.airstripId) > -1;
         });
@@ -47,11 +48,11 @@ export class WingmanDataService {
     }
 
     // Get all the airplanes from the assets/json folder.
-    getAllAirplanes() {
+    getAllAirplanes(): Airplane[]{
         return airplanes;
     }
 
-    getLegAirstripPairByFlight(flight: Flight): [[Airstrip, Airstrip]]{
+    getAirstripPairsByFlight(flight: Flight): [[Airstrip, Airstrip]]{
         const flightPairs = flight.legs.map(leg =>
             [
                 this.getAirstripById(leg.startId),
@@ -61,7 +62,7 @@ export class WingmanDataService {
         return flightPairs as [[Airstrip, Airstrip]];
     }
 
-    getAirstripsByFlight(flight: Flight, filter?: boolean): Airstrip[] {
+    getAirstripsByFlight(flight: Flight, filterDuplicates?: boolean): Airstrip[] {
         let airstripIds = [];
 
         // Gets the airstrips IDs from the legs
@@ -70,7 +71,7 @@ export class WingmanDataService {
             airstripIds.push(leg.destinationId);
         });
 
-        if(filter){
+        if(filterDuplicates){
             // Filter duplicate ID's
             airstripIds = airstripIds.filter((value, index, self) => {
                 return self.indexOf(value) === index;

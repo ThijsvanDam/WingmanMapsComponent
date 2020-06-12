@@ -15,15 +15,16 @@ export class DynamicMapComponent implements AfterViewInit {
   allFlights: string[];
 
   constructor(private dataService: WingmanDataService, private mapService: WingmanMapService) {
-    this.mapService.selectedFlight = this.dataService.getFlightbyId('FPG034707');
-    this.currentFlightName = this.mapService.selectedFlight.flightId;
+    // this.mapService.setSelectedFlight(this.dataService.getFlightbyId('FPG034707'));
+    this.mapService.selectedFlights = this.dataService.getAllFlights();
+    this.currentFlightName = this.mapService.selectedFlights[0].aircraftId;
     this.allFlights = this.dataService.getAllFlightNames();
   }
 
   ngAfterViewInit(): void {
     this.mapService.initializeMap('map');
-    this.mapService.showRelevantAirstrips();
-    this.mapService.plotFlight();
+    this.mapService.showRelevantAirstripMarkers();
+    this.mapService.drawSelectedFlights();
   }
 
   public handleAllAirstrips() {
@@ -31,12 +32,18 @@ export class DynamicMapComponent implements AfterViewInit {
   }
 
   public handleRelevantAirstrips() {
-    this.mapService.showRelevantAirstrips();
+    this.mapService.showRelevantAirstripMarkers();
   }
 
   public option(selectedFlight) {
-    this.mapService.selectedFlight = this.dataService.getFlightbyId(selectedFlight);
-    this.mapService.showRelevantAirstrips();
-    this.mapService.plotFlight();
+    this.mapService.setSelectedFlight(this.dataService.getFlightbyId(selectedFlight));
+    this.mapService.showRelevantAirstripMarkers();
+    this.mapService.drawSelectedFlights();
+  }
+
+  public showAllFlights(){
+    this.mapService.selectedFlights = this.dataService.getAllFlights();
+    this.mapService.showRelevantAirstripMarkers();
+    this.mapService.drawSelectedFlights();
   }
 }
