@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
+// Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import * as L from 'leaflet';
+import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
 
 import { WingmanMap } from '../components/map/wingman-map';
 
@@ -335,7 +337,7 @@ export class WingmanMapService {
     positionPairs.forEach((pair) => {
       const leg = L.polyline(pair);
 
-      leg.setStyle({color: '#2196F3', weight: 5});
+      leg.setStyle({color: '#2196F3', weight: 3});
       legLines.push(leg);
     });
 
@@ -356,9 +358,9 @@ export class WingmanMapService {
 
     // Make an entire flight change color on mouse hover.
     lineGroup.on('mouseover', function(e){
-      this.setStyle({ color: '#ffa500'});
+      this.setStyle({ color: '#ffa500', weight: 6});
     }).on('mouseout', function(e) {
-      this.setStyle({color: '#2196F3'});
+      this.setStyle({color: '#2196F3', weight: 3});
     });
 
     return lineGroup;

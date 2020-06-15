@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port=4201",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start_pub": "ng serve --host=0.0.0.0 --disable-host-check"
+    "start_pub": "ng serve --port=4201 --host=0.0.0.0 --disable-host-check"
   },
   "private": true,
   "dependencies": {
