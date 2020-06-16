@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { AngularFireModule } from '@angular/fire';
 import { NgModule } from '@angular/core';
+import { FormsModule  } from '@angular/forms';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -32,6 +33,7 @@ import { FlightDetailsComponent } from './components/flight-details/flight-detai
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [

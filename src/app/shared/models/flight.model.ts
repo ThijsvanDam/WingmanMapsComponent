@@ -14,4 +14,5 @@ export interface Flight{
   coPilotId?: string;
   status?: string;
   legs?: Leg[];
+  selected?: boolean;
 }

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
+import { of, Observable } from 'rxjs';
 
 // Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import * as L from 'leaflet';
 import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
+
+import { environment } from './../../environments/environment';
 
 import { WingmanMap } from '../components/map/wingman-map';
 
@@ -14,7 +17,6 @@ import { Leg } from './../shared/models/leg.model';
 
 import { NoFlightSelectedException } from '../shared/exceptions/no-flight-selected.exception';
 
-import { environment } from './../../environments/environment';
 
 @Injectable()
 export class WingmanMapService {
@@ -57,16 +59,20 @@ export class WingmanMapService {
     return this.privateMap;
   }
 
-  public set selectedFlights(flights) {
+  public set selectedFlights(flights: Flight[]){
+    // this.currentlySelectedFlights.map(flight=>{flight.selected = false});
+
+    this.dataService.selectFlights(flights);
+
     this.currentlySelectedFlights = flights;
   }
 
-  public get selectedFlights() {
+  public get selectedFlights(): Flight[]{
     return this.currentlySelectedFlights;
   }
 
   public setSelectedFlight(flight: Flight){
-    this.currentlySelectedFlights = [flight];
+    this.selectedFlights = [flight];
   }
 
   /**
@@ -170,8 +176,10 @@ export class WingmanMapService {
 
     const markerList = [];
     this.currentlySelectedFlights.forEach(flight => {
-      const airstripsList = this.dataService.getAirstripsByFlight(flight, true);
-      this.createAirstripMarkerList(airstripsList).forEach(marker => markerList.push(marker));
+      if(flight.selected){
+        const airstripsList = this.dataService.getAirstripsByFlight(flight, true);
+        this.createAirstripMarkerList(airstripsList).forEach(marker => markerList.push(marker));
+      }
     });
     this.showAirstrips(markerList);
   }
@@ -259,7 +267,7 @@ export class WingmanMapService {
       throw new NoFlightSelectedException();
     }
 
-    this.drawFlights(this.currentlySelectedFlights);
+    this.drawFlights(this.currentlySelectedFlights.filter(x => x.selected));
   }
 
   /**

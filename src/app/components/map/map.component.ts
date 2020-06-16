@@ -1,7 +1,9 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { WingmanDataService } from '../../services/wingman-data.service';
 import { WingmanMapService } from '../../services/wingman-map.service';
+
 
 @Component({
   selector: 'app-map',

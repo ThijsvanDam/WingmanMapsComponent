@@ -1,12 +1,13 @@
+import { Observable, of } from 'rxjs';
 import { Airplane } from './../shared/models/airplane.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Flight } from './../shared/models/flight.model';
 
 import { environment } from 'src/environments/environment';
 
-const airplanes = require('../../assets/json/airplanes.json');
-const airstrips = require('../../assets/json/airstrips.json');
-const flights = require('../../assets/json/flights.json');
+const airplanes: Observable<Airplane[]> = of(require('../../assets/json/airplanes.json'));
+const airstrips: Observable<Airstrip[]> = of(require('../../assets/json/airstrips.json'));
+const flights: Observable<Flight[]> = of(require('../../assets/json/flights.json'));
 
 export class WingmanDataService {
 
@@ -80,5 +81,13 @@ export class WingmanDataService {
 
         // Get and return only the relevant airstrip info
         return this.getAirstripsByIdList(airstripIds);
+    }
+
+    selectFlights(selectedFlights: Flight[]){
+        flights.map(flight => {
+            flight.selected = selectedFlights.indexOf(flight) > -1;
+            // console.log(flight.selected);
+        });
+
     }
 }

@@ -15,10 +15,4 @@ export class FlightDetailsComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  public switch(){
-    console.log();
-
-  }
-
 }
