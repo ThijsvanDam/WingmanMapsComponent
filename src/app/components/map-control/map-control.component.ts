@@ -8,11 +8,10 @@ import { WingmanMapService } from '../../services/wingman-map.service';
   styleUrls: ['./map-control.component.scss']
 })
 export class MapControlComponent {
-  currentFlightName: string;
   allFlights: string[];
 
   constructor(private mapService: WingmanMapService, private dataService: WingmanDataService) {
-    this.currentFlightName = this.mapService.selectedFlights[0].aircraftId;
+    // this.currentFlightName = this.mapService.selectedFlights[0].aircraftId;
     this.allFlights = this.dataService.getAllFlightNames();
    }
 
@@ -30,14 +29,18 @@ export class MapControlComponent {
   }
 
   public option(selectedFlight) {
-    this.mapService.setSelectedFlight(this.dataService.getFlightbyId(selectedFlight));
-    this.mapService.showRelevantAirstripMarkers();
-    this.mapService.drawSelectedFlights();
+    this.dataService.currentlySelectedFlights.next([this.dataService.getFlightbyId(selectedFlight)]);
   }
 
   public showAllFlights(){
-    this.mapService.selectedFlights = this.dataService.getAllFlights();
-    this.mapService.showRelevantAirstripMarkers();
-    this.mapService.drawSelectedFlights();
+    this.dataService.currentlySelectedFlights.next(this.dataService.getAllFlights());
+  }
+
+  public flightsChanged(flightid){
+    this.dataService.currentlySelectedFlights.next(
+      this.dataService.currentlySelectedFlights.getValue().filter(flight => flight.flightId !== flightid)
+      );
+    // this.mapService.showRelevantAirstripMarkers();
+    // this.mapService.drawSelectedFlights();
   }
 }

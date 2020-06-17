@@ -14,7 +14,7 @@
           <option *ngFor="let flightName of allFlights">{{flightName}}</option>
         </select> is de huidig geselecteerde vlucht! </h5>
         
-    <app-flight-list [flights]="getFlights()"></app-flight-list>
+    <app-flight-list [flights]="getFlights()" (flightsChanged)="flightsChanged($event)"></app-flight-list>
 </div>
 
 

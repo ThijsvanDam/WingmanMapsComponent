@@ -43,12 +43,17 @@ export class WingmanMapService {
         popupAnchor: [0, -15]
       })
     };
+
     this.currentlySelectedFlights = [];
   }
 
   public initializeMap(mapId) {
-    this.map = new WingmanMap(this.dataService, mapId);
+    this.map = new WingmanMap(this.dataService, mapId, {
+      center: [51.505, -0.09],
+      zoom: 13
+  });
     this.addLayers();
+    this.dataService.currentlySelectedFlights.subscribe(data => this.drawFlightsAndMarkers(data));
   }
 
   public set map(wingmanMap) {
@@ -60,11 +65,7 @@ export class WingmanMapService {
   }
 
   public set selectedFlights(flights: Flight[]){
-    // this.currentlySelectedFlights.map(flight=>{flight.selected = false});
-
-    this.dataService.selectFlights(flights);
-
-    this.currentlySelectedFlights = flights;
+    this.dataService.currentlySelectedFlights.next(flights);
   }
 
   public get selectedFlights(): Flight[]{
@@ -73,6 +74,16 @@ export class WingmanMapService {
 
   public setSelectedFlight(flight: Flight){
     this.selectedFlights = [flight];
+  }
+
+  public setSelectedFlights(flights: Flight[]){
+    this.currentlySelectedFlights = flights;
+  }
+
+  public drawFlightsAndMarkers(flights){
+    this.currentlySelectedFlights = flights;
+    this.showRelevantAirstripMarkers();
+    this.drawFlights(this.currentlySelectedFlights);
   }
 
   /**
@@ -176,10 +187,8 @@ export class WingmanMapService {
 
     const markerList = [];
     this.currentlySelectedFlights.forEach(flight => {
-      if(flight.selected){
-        const airstripsList = this.dataService.getAirstripsByFlight(flight, true);
-        this.createAirstripMarkerList(airstripsList).forEach(marker => markerList.push(marker));
-      }
+      const airstripsList = this.dataService.getAirstripsByFlight(flight, true);
+      this.createAirstripMarkerList(airstripsList).forEach(marker => markerList.push(marker));
     });
     this.showAirstrips(markerList);
   }
@@ -257,18 +266,18 @@ export class WingmanMapService {
     return markerContent;
   }
 
-  /**
-   * Draw the flights with the currently selected flight list.
-   * If no flight is currently selected, NoFlightSelectedException will be thrown.
-   */
-  public drawSelectedFlights() {
-    // It is possible for the selected flight to not be set.
-    if (this.currentlySelectedFlights.length === 0) {
-      throw new NoFlightSelectedException();
-    }
-
-    this.drawFlights(this.currentlySelectedFlights.filter(x => x.selected));
-  }
+  // /**
+  //  * Draw the flights with the currently selected flight list.
+  //  * If no flight is currently selected, NoFlightSelectedException will be thrown.
+  //  */
+  // public drawSelectedFlights() {
+    
+  //   // It is possible for the selected flight to not be set.
+  //   if (this.currentlySelectedFlights.length === 0) {
+  //     throw new NoFlightSelectedException();
+  //   }
+  //   this.drawFlights(this.currentlySelectedFlights.filter(x => x.selected));
+  // }
 
   /**
    * Generate L.polylines for each flight inside an L.featureGroup.
@@ -309,10 +318,12 @@ export class WingmanMapService {
     // Set the bounds regardless of the amount of groups or shape/bounds
     // of the selected legs.
     // The focus is on modularity.
-    this.currentlyDrawnGroup = L.featureGroup(routes);
-    this.currentlyDrawnGroup.addTo(this.privateMap);
-    const padding = 50;
-    this.privateMap.fitBounds(this.currentlyDrawnGroup.getBounds(), { padding: new L.Point(padding, padding) });
+    if(flights.length > 0){
+      this.currentlyDrawnGroup = L.featureGroup(routes);
+      this.currentlyDrawnGroup.addTo(this.privateMap);
+      const padding = 50;
+      this.privateMap.fitBounds(this.currentlyDrawnGroup.getBounds(), { padding: new L.Point(padding, padding) });
+    }
   }
 
   /**
