@@ -29,14 +29,14 @@ export class WingmanMap extends Map {
       // The control layer requires this to be an object with name:object
       const layerObject = {};
       layerObject[mapName] = leafletBaseLayer;
-      if (options !== undefined) {
-        if (options.enable) {
-          leafletBaseLayer.addTo(this);
-        }
-      }
       this.mapControl = new Control.Layers(layerObject, undefined).addTo(this);
     } else {
       this.mapControl.addBaseLayer(leafletBaseLayer, mapName);
+    }
+    if (options !== undefined) {
+      if (options.enable) {
+        leafletBaseLayer.addTo(this);
+      }
     }
   }
 
@@ -56,6 +56,11 @@ export class WingmanMap extends Map {
       this.mapControl = new Control.Layers(undefined, layerObject).addTo(this);
     } else {
       this.mapControl.addOverlay(leafletOverlayMap, mapName);
+    }
+    if (options !== undefined) {
+      if (options.enable) {
+        leafletOverlayMap.addTo(this);
+      }
     }
   }
 }

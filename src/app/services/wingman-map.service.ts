@@ -151,7 +151,7 @@ export class WingmanMapService {
     });
 
     this.map.addOverlayMap('Clouds', cloudsOverlay);
-    this.map.addOverlayMap('Precipitation', precipitationOverlay);
+    this.map.addOverlayMap('Precipitation', precipitationOverlay, { enable: true });
     this.map.addOverlayMap('Wind speed', windspeedOverlay);
     this.map.addOverlayMap('Temperature', temperatureOverlay);
     this.map.addOverlayMap('Hillshading', hillshadingMap);
