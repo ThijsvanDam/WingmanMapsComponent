@@ -12,12 +12,7 @@
       
       <h5><select (change)="option(selectField.value)" #selectField>
           <option *ngFor="let flightName of allFlights">{{flightName}}</option>
-        </select> is de huidig geselecteerde vlucht! </h5>
+        </select> Selecteer een enkele vlucht. </h5>
         
     <app-flight-list [flights]="getFlights()" (flightsChanged)="flightsChanged($event)"></app-flight-list>
 </div>
-
-
-
-
-  

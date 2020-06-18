@@ -1,3 +1,4 @@
+import { FlightEnabled } from './../flight-details/flight-details.component';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Flight } from 'src/app/shared/models/flight.model';
 
@@ -11,14 +12,14 @@ export class FlightListComponent implements OnInit {
   @Input()
   flights: Flight[] = [];
 
-  @Output() flightsChanged = new EventEmitter<string>();
+  @Output() flightsChanged = new EventEmitter<FlightEnabled>();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  flightClicked(flightid){
-    this.flightsChanged.emit(flightid);
+  flightClicked(flightEnabled){
+    this.flightsChanged.emit(flightEnabled);
   }
 }

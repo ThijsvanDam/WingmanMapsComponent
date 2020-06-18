@@ -72,14 +72,6 @@ export class WingmanMapService {
     return this.currentlySelectedFlights;
   }
 
-  public setSelectedFlight(flight: Flight){
-    this.selectedFlights = [flight];
-  }
-
-  public setSelectedFlights(flights: Flight[]){
-    this.currentlySelectedFlights = flights;
-  }
-
   public drawFlightsAndMarkers(flights){
     this.currentlySelectedFlights = flights;
     this.showRelevantAirstripMarkers();
@@ -266,18 +258,6 @@ export class WingmanMapService {
     return markerContent;
   }
 
-  // /**
-  //  * Draw the flights with the currently selected flight list.
-  //  * If no flight is currently selected, NoFlightSelectedException will be thrown.
-  //  */
-  // public drawSelectedFlights() {
-    
-  //   // It is possible for the selected flight to not be set.
-  //   if (this.currentlySelectedFlights.length === 0) {
-  //     throw new NoFlightSelectedException();
-  //   }
-  //   this.drawFlights(this.currentlySelectedFlights.filter(x => x.selected));
-  // }
 
   /**
    * Generate L.polylines for each flight inside an L.featureGroup.

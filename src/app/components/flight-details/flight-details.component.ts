@@ -11,14 +11,22 @@ export class FlightDetailsComponent implements OnInit {
   @Input()
   flight: Flight;
 
-  @Output() clicked = new EventEmitter<string>();
+  @Output() clicked = new EventEmitter<FlightEnabled>();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  flightSelected(){
-    this.clicked.emit(this.flight.flightId);
+  flightSelected(event){
+    this.clicked.emit({
+      flightId: this.flight.flightId,
+      enabled: event.target.checked
+    });
   }
+}
+
+export interface FlightEnabled{
+  flightId: string;
+  enabled: boolean;
 }

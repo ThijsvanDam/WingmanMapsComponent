@@ -1,3 +1,4 @@
+import { FlightEnabled } from './../flight-details/flight-details.component';
 import { WingmanDataService } from './../../services/wingman-data.service';
 import { Component, OnInit } from '@angular/core';
 import { WingmanMapService } from '../../services/wingman-map.service';
@@ -11,7 +12,6 @@ export class MapControlComponent {
   allFlights: string[];
 
   constructor(private mapService: WingmanMapService, private dataService: WingmanDataService) {
-    // this.currentFlightName = this.mapService.selectedFlights[0].aircraftId;
     this.allFlights = this.dataService.getAllFlightNames();
    }
 
@@ -36,11 +36,15 @@ export class MapControlComponent {
     this.dataService.currentlySelectedFlights.next(this.dataService.getAllFlights());
   }
 
-  public flightsChanged(flightid){
-    this.dataService.currentlySelectedFlights.next(
-      this.dataService.currentlySelectedFlights.getValue().filter(flight => flight.flightId !== flightid)
-      );
-    // this.mapService.showRelevantAirstripMarkers();
-    // this.mapService.drawSelectedFlights();
+  public flightsChanged(flightEnabled: FlightEnabled){
+    let nextFlights;
+
+    if (flightEnabled.enabled){
+        nextFlights = this.dataService.currentlySelectedFlights.getValue();
+        nextFlights.push(this.dataService.getFlightbyId(flightEnabled.flightId));
+    }else{
+        nextFlights = this.dataService.currentlySelectedFlights.getValue().filter(flight => flight.flightId !== flightEnabled.flightId);
+    }
+    this.dataService.currentlySelectedFlights.next(nextFlights);
   }
 }

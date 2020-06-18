@@ -19,7 +19,7 @@ export class WingmanDataService {
     constructor() {
         this.airplanes = airplanesJSON;
         this.airstrips = airstripsJSON;
-        this.flights = flightsJSON;
+        this.flights = flightsJSON.splice(0, 40);
         this.currentlySelectedFlights = new BehaviorSubject<Airplane[]>(this.flights);
         this.currentlySelectedFlights.subscribe(flights => this.selectFlights(flights));
     }
