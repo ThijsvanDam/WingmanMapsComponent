@@ -1,6 +1,6 @@
 import { FlightEnabled } from './../flight-details/flight-details.component';
 import { WingmanDataService } from './../../services/wingman-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WingmanMapService } from '../../services/wingman-map.service';
 
 @Component({
@@ -14,7 +14,6 @@ export class MapControlComponent {
   constructor(private mapService: WingmanMapService, private dataService: WingmanDataService) {
     this.allFlights = this.dataService.getAllFlightNames();
    }
-
 
   public handleAllAirstrips() {
     this.mapService.showAllAirstrips();

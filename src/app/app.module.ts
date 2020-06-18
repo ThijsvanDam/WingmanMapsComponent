@@ -1,3 +1,4 @@
+import { CookieService } from './services/cookie.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { AngularFireModule } from '@angular/fire';
 import { NgModule } from '@angular/core';
@@ -38,7 +39,8 @@ import { FlightDetailsComponent } from './components/flight-details/flight-detai
   ],
   providers: [
     WingmanDataService,
-    WingmanMapService
+    WingmanMapService,
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

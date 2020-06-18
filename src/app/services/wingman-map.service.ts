@@ -10,6 +10,7 @@ import { environment } from './../../environments/environment';
 import { WingmanMap } from '../components/map/wingman-map';
 
 import { WingmanDataService } from './wingman-data.service';
+import { CookieService } from './cookie.service';
 
 import { Flight } from './../shared/models/flight.model';
 import { Airstrip } from './../shared/models/airstrip.model';
@@ -27,7 +28,7 @@ export class WingmanMapService {
   private currentAirstripsGroup: L.FeatureGroup;
   private currentlyDrawnGroup: any;
 
-  constructor(private dataService: WingmanDataService) {
+  constructor(private dataService: WingmanDataService, private cookieService: CookieService) {
 
     this.icons = {
       airstrip: L.icon({
@@ -48,7 +49,7 @@ export class WingmanMapService {
   }
 
   public initializeMap(mapId) {
-    this.map = new WingmanMap(this.dataService, mapId, {
+    this.map = new WingmanMap(this.cookieService, mapId, {
       center: [51.505, -0.09],
       zoom: 13
   });
@@ -155,8 +156,9 @@ export class WingmanMapService {
     this.map.addOverlayMap('Wind speed', windspeedOverlay);
     this.map.addOverlayMap('Temperature', temperatureOverlay);
     this.map.addOverlayMap('Hillshading', hillshadingMap);
+    
+    this.map.saveMapSettingsOnChange();
   }
-
   /**
    * Show leaflet markers for all airstrips.
    */

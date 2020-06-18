@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 
 import { WingmanDataService } from '../../services/wingman-data.service';
 import { WingmanMapService } from '../../services/wingman-map.service';
+import { CookieService } from '../../services/cookie.service';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { WingmanMapService } from '../../services/wingman-map.service';
 })
 export class MapComponent implements AfterViewInit {
 
-  constructor(private dataService: WingmanDataService, private mapService: WingmanMapService) {
+  constructor(private mapService: WingmanMapService) {
   }
 
   ngAfterViewInit(): void {
