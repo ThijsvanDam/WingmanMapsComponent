@@ -1,4 +1,4 @@
-export interface Airplane{
+export interface Aircraft{
   aircraftId?: string;
   displayName?: string;
   aircraftType?: string;

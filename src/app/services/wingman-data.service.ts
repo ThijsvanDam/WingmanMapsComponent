@@ -1,27 +1,31 @@
 import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
-import { Airplane } from './../shared/models/airplane.model';
+import { Aircraft } from './../shared/models/airplane.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Flight } from './../shared/models/flight.model';
 
 import { environment } from 'src/environments/environment';
 
-const airplanesJSON: Airplane[] = require('../../assets/json/airplanes.json');
+const aircraftJSON: Aircraft[] = require('../../assets/json/airplanes.json');
 const airstripsJSON: Airstrip[] = require('../../assets/json/airstrips.json');
 const flightsJSON: Flight[] = require('../../assets/json/flights.json');
 
 export class WingmanDataService {
     currentlySelectedFlights: BehaviorSubject<Flight[]>;
+    currentlySelectedAircrafts: BehaviorSubject<Aircraft[]>;
 
-    private airplanes: Airplane[];
+    private aircrafts: Aircraft[];
     private airstrips: Airstrip[];
     private flights: Flight[];
 
     constructor() {
-        this.airplanes = airplanesJSON;
+        this.aircrafts = aircraftJSON;
         this.airstrips = airstripsJSON;
         this.flights = flightsJSON.splice(0, 40);
-        this.currentlySelectedFlights = new BehaviorSubject<Airplane[]>(this.flights);
+        this.currentlySelectedFlights = new BehaviorSubject<Aircraft[]>(this.flights);
         this.currentlySelectedFlights.subscribe(flights => this.selectFlights(flights));
+
+        // const selectedAircrafts = this.getAircraftsByFlightList(this.currentlySelectedFlights.getValue());
+        // this.currentlySelectedAircrafts = new BehaviorSubject<Aircraft[]>(selectedAircrafts);
     }
 
     // Get all the flights from the assets/json folder.
@@ -61,10 +65,6 @@ export class WingmanDataService {
         return this.airstrips.filter(airstrip => airstrip.airstripId === id)[0];
     }
 
-    // Get all the airplanes from the assets/json folder.
-    getAllAirplanes(): Airplane[]{
-        return this.airplanes;
-    }
 
     getAirstripPairsByFlight(flight: Flight): [[Airstrip, Airstrip]]{
         const flightPairs = flight.legs.map(leg =>
@@ -100,5 +100,37 @@ export class WingmanDataService {
         this.flights.map(flight => {
             flight.selected = selectedFlights.indexOf(flight) > -1;
         });
+    }
+
+    // Get all the airplanes from the assets/json folder.
+    getAllAircrafts(): Aircraft[]{
+        return this.aircrafts;
+    }
+
+    getAircraftById(aircraftId: string){
+        return this.aircrafts.filter(aircraft => {
+            return aircraft.aircraftId === aircraftId;
+        })[0];
+    }
+
+    getAircraftsByFlightList(flights: Flight[]){
+        return flights.map(flight => {
+            return this.getAircraftById(flight.aircraftId);
+        });
+    }
+
+    groupFlightsByAircraftId(flights: Flight[]){
+        return this.groupBy(flights, 'aircraftId');
+    }
+
+    groupBy(list, property){
+        const newList = {};
+        list.map(item => {
+            if(newList[item[property]] === undefined){
+                newList[item[property]] = [];
+            }
+            newList[item[property]].push(item);
+        });
+        return newList;
     }
 }

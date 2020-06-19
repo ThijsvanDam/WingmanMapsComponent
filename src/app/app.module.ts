@@ -19,7 +19,8 @@ import { environment } from 'src/environments/environment';
 import { MapControlComponent } from './components/map-control/map-control.component';
 import { WingmanMapComponent } from './components/wingman-map/wingman-map.component';
 import { FlightListComponent } from './components/flight-list/flight-list.component';
-import { FlightDetailsComponent } from './components/flight-details/flight-details.component';
+import { AircraftListComponent } from './components/aircraft-list/aircraft-list.component';
+import { AircraftComponent } from './components/aircraft/aircraft.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { FlightDetailsComponent } from './components/flight-details/flight-detai
     MapControlComponent,
     WingmanMapComponent,
     FlightListComponent,
-    FlightDetailsComponent
+    AircraftListComponent,
+    AircraftComponent
   ],
   imports: [
     BrowserModule,

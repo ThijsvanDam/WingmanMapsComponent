@@ -1,7 +1,12 @@
-import { FlightEnabled } from './../flight-details/flight-details.component';
-import { WingmanDataService } from './../../services/wingman-data.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { FlightEnabled } from './../flight-list/flight-list.component';
+
+import { WingmanDataService } from './../../services/wingman-data.service';
 import { WingmanMapService } from '../../services/wingman-map.service';
+
+import { Aircraft } from './../../shared/models/airplane.model';
+import { Flight } from 'src/app/shared/models/flight.model';
 
 @Component({
   selector: 'app-map-control',
@@ -10,9 +15,11 @@ import { WingmanMapService } from '../../services/wingman-map.service';
 })
 export class MapControlComponent {
   allFlights: string[];
+  aircrafts: Aircraft[];
 
   constructor(private mapService: WingmanMapService, private dataService: WingmanDataService) {
     this.allFlights = this.dataService.getAllFlightNames();
+    // this.dataService.currentlySelectedFlights.subscribe(flights => this.getAircrafts(flights));
    }
 
   public handleAllAirstrips() {
@@ -25,6 +32,20 @@ export class MapControlComponent {
 
   public getFlights(){
     return this.dataService.getAllFlights();
+  }
+
+  public getAircrafts(){
+    const selectedFlights = this.dataService.getAllFlights().filter(x => x.aircraftId !== null);
+    return this.dataService.getAircraftsByFlightList(selectedFlights);
+  }
+
+  public getFlightsWithoutAircraft(){
+    return this.dataService.getAllFlights().filter(x => x.aircraftId === null);
+  }
+
+  public getFlightsByAircraft(){
+    const flights = this.dataService.getAllFlights().filter(x => x.aircraftId !== null);
+    return this.dataService.groupFlightsByAircraftId(flights);
   }
 
   public option(selectedFlight) {

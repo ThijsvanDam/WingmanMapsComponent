@@ -1,3 +1,12 @@
-<div class="overflow-auto">
-    <app-flight-details *ngFor="let flight of flights" [flight]="flight" (clicked)="flightClicked($event)"></app-flight-details>
-</div>
+  
+  <div class="panel-body">
+      <table class="col-md-12">
+          <tr *ngFor="let flight of flights">
+              <td>
+                  <input type="checkbox" (change)="flightClicked($event, flight)" [(ngModel)]="flight.selected">
+                </td>
+                <td>{{flight.flightId}}</td>
+                <td>{{ flight.route }}</td>
+            </tr>
+        </table>
+    </div>
