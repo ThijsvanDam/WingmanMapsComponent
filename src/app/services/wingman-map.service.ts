@@ -156,7 +156,7 @@ export class WingmanMapService {
     this.map.addOverlayMap('Wind speed', windspeedOverlay);
     this.map.addOverlayMap('Temperature', temperatureOverlay);
     this.map.addOverlayMap('Hillshading', hillshadingMap);
-    
+
     this.map.saveMapSettingsOnChange();
   }
   /**
@@ -179,11 +179,15 @@ export class WingmanMapService {
       throw new NoFlightSelectedException();
     }
 
-    const markerList = [];
+    let markerList = [];
     this.currentlySelectedFlights.forEach(flight => {
       const airstripsList = this.dataService.getAirstripsByFlight(flight, true);
+
+      airstripsList.filter()
+
       this.createAirstripMarkerList(airstripsList).forEach(marker => markerList.push(marker));
     });
+
     this.showAirstrips(markerList);
   }
 
@@ -221,6 +225,7 @@ export class WingmanMapService {
         { icon: Boolean(airstrip.waypointOnly) ? waypointIcon : airstripIcon }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(this.generateMarkerPopupContent(airstrip));
+      marker.bindTooltip(airstrip.displayName, {permanent: true}).openTooltip();
 
       marker.on('mouseover', function(e) {
         this.openPopup();
