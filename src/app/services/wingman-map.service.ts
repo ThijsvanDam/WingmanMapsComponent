@@ -16,7 +16,6 @@ import { Flight } from './../shared/models/flight.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Leg } from './../shared/models/leg.model';
 
-import { NoFlightSelectedException } from '../shared/exceptions/no-flight-selected.exception';
 
 
 @Injectable()
@@ -171,13 +170,9 @@ export class WingmanMapService {
 
   /**
    * Show leaflet markers according to the currently selected flights.
-   * Throws a NoFlightSelectedException if no flight is selected.
    */
   public showRelevantAirstripMarkers(): void {
     // It is possible for the selected flight to not be set.
-    if (this.currentlySelectedFlights.length === 0) {
-      throw new NoFlightSelectedException();
-    }
 
     let airstripIdList = [];
     this.currentlySelectedFlights.forEach(flight => {

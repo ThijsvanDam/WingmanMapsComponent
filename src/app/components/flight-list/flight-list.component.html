@@ -1,12 +1,16 @@
-  
-  <div class="panel-body">
-      <table class="col-md-12">
-          <tr *ngFor="let flight of flights">
-              <td>
-                  <input type="checkbox" (change)="flightClicked($event, flight)" [(ngModel)]="flight.selected">
-                </td>
-                <td>{{flight.flightId}}</td>
-                <td>{{ flight.route }}</td>
-            </tr>
-        </table>
-    </div>
+<div class="panel-body">
+    <table class="col-md-12">
+        <tr>
+            <th class="col-md-1"></th>
+            <th class="col-md-2">Flight ID</th>
+            <th class="col-md-9">Route</th>
+        </tr>
+        <tr *ngFor="let flight of flights">
+            <td class="col-md-1">
+                <input type="checkbox" (change)="flightClicked($event, flight)" [(ngModel)]="flight.selected">
+            </td>
+            <td  class="col-md-2">{{flight.flightId}}</td>
+            <td  class="col-md-9">{{ flight.route }}</td>
+        </tr>
+    </table>
+</div>

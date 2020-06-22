@@ -9,7 +9,6 @@ import { WingmanMapService } from './wingman-map.service';
 // Models
 import { Airstrip } from '../shared/models/airstrip.model';
 
-import { NoFlightSelectedException } from './../shared/exceptions/no-flight-selected.exception';
 import { WingmanMap } from '../components/map/wingman-map';
 import { environment } from 'src/environments/environment';
 
@@ -104,27 +103,6 @@ describe('Wingman map service', () => {
 
     // expect(mapService.map).toBeDefined();
     // expect(addLayersSpy).toHaveBeenCalled();
-  });
-
-
-  it('Should not do anything when showing relevant airstrips if no flight is selected', () => {
-    dataServiceSpy.getAirstripsByIdList = jasmine.createSpy();
-
-    const showAirstripsSpy = spyOn<any>(mapService, 'showAirstrips');
-
-    try {
-      mapService.showRelevantAirstrips();
-    } catch (e) {
-      e.handleError('Could not get relevant airstrips');
-    }
-    /* Another expectation is that showRelevantAirstrips throws a NoFlightSelectedException
-    ** except, for some reason the following does not work:
-    ** expect(mapService.showRelevantAirstrips).toThrow(new NoFlightSelectedException());
-    ** so, we will just check if the methods after the exception are getting called
-    ** whether or not.
-    */
-    expect(dataServiceSpy.getAirstripsByIdList).not.toHaveBeenCalled();
-    expect(showAirstripsSpy).not.toHaveBeenCalled();
   });
 
   it('Should call showAirstrips with correct AirstripMarkers with a given flight', () => {
