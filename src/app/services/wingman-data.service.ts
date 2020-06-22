@@ -125,7 +125,7 @@ export class WingmanDataService {
     groupBy(list, property){
         const newList = {};
         list.map(item => {
-            if(newList[item[property]] === undefined){
+            if (newList[item[property]] === undefined){
                 newList[item[property]] = [];
             }
             newList[item[property]].push(item);

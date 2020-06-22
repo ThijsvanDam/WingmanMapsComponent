@@ -151,7 +151,7 @@ export class WingmanMapService {
     });
 
     this.map.addOverlayMap('Clouds', cloudsOverlay);
-    this.map.addOverlayMap('Precipitation', precipitationOverlay, { enable: true });
+    this.map.addOverlayMap('Precipitation', precipitationOverlay);
     this.map.addOverlayMap('Wind speed', windspeedOverlay);
     this.map.addOverlayMap('Temperature', temperatureOverlay);
     this.map.addOverlayMap('Hillshading', hillshadingMap);
@@ -186,7 +186,7 @@ export class WingmanMapService {
       return self.indexOf(value) === index;
     });
 
-    const airstripList = this.dataService.getAirstripsByIdList(airstripIdList)
+    const airstripList = this.dataService.getAirstripsByIdList(airstripIdList);
     const markerList = this.createAirstripMarkerList(airstripList);
 
     this.showAirstrips(markerList);
@@ -228,11 +228,11 @@ export class WingmanMapService {
       ).bindPopup(this.generateMarkerPopupContent(airstrip));
       marker.bindTooltip(airstrip.displayName, { permanent: true }).openTooltip();
 
-      marker.on('mouseover', function (e) {
+      marker.on('mouseover', function(e) {
         this.openPopup();
       });
 
-      marker.on('mouseout', function (e) {
+      marker.on('mouseout', function(e) {
         this.closePopup();
       });
 
@@ -294,7 +294,7 @@ export class WingmanMapService {
       let count = 0;
       flightLineGroup.eachLayer(leg => {
         leg.bindPopup(this.getLegPopupContent(flight.legs[count], count + 1, flight));
-        leg.on('click', function (e) {
+        leg.on('click', function(e) {
           this.openPopup();
         });
         count++;
@@ -364,9 +364,9 @@ export class WingmanMapService {
     const lineGroup = new L.FeatureGroup(this.getPolyLines(positionPairs));
 
     // Make an entire flight change color on mouse hover.
-    lineGroup.on('mouseover', function (e) {
+    lineGroup.on('mouseover', function(e) {
       this.setStyle({ color: '#ffa500', weight: 6 });
-    }).on('mouseout', function (e) {
+    }).on('mouseout', function(e) {
       this.setStyle({ color: '#2196F3', weight: 3 });
     });
 
