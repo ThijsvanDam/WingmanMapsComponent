@@ -52,7 +52,7 @@ export class WingmanMapService {
     this.map = new WingmanMap(this.cookieService, mapId, {
       center: [51.505, -0.09],
       zoom: 13
-  });
+    });
     this.addLayers();
     this.dataService.currentlySelectedFlights.subscribe(data => this.drawFlightsAndMarkers(data));
   }
@@ -65,15 +65,15 @@ export class WingmanMapService {
     return this.privateMap;
   }
 
-  public set selectedFlights(flights: Flight[]){
+  public set selectedFlights(flights: Flight[]) {
     this.dataService.currentlySelectedFlights.next(flights);
   }
 
-  public get selectedFlights(): Flight[]{
+  public get selectedFlights(): Flight[] {
     return this.currentlySelectedFlights;
   }
 
-  public drawFlightsAndMarkers(flights){
+  public drawFlightsAndMarkers(flights) {
     this.currentlySelectedFlights = flights;
     this.showRelevantAirstripMarkers();
     this.drawFlights(this.currentlySelectedFlights);
@@ -117,7 +117,7 @@ export class WingmanMapService {
     this.map.addBaseMap('Black white', blackWhiteMap);
     this.map.addBaseMap('Water color', watercolor);
 
-    // Add all overla maps:
+    // Add all overlay maps:
     const cloudsOverlay = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {
       useCache: true,
       crossOrigin: true,
@@ -145,7 +145,7 @@ export class WingmanMapService {
     // NOTE: This is only for europe and part of north africa. (Also a little on south/north america)
     // https://www.arcgis.com/home/webmap/viewer.html?useExisting=1&layers=1b243539f4514b6ba35e7d995890db1d
     // arcGIS has a hillshading map that is world wide.
-    const hillshadingMap = L.tileLayer(`http://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png	`, {
+    const hillshadingMap = L.tileLayer(`http://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png`, {
       useCache: true,
       crossOrigin: true,
       attribution: 'OpenWeatherMap'
@@ -179,14 +179,20 @@ export class WingmanMapService {
       throw new NoFlightSelectedException();
     }
 
-    let markerList = [];
+    let airstripIdList = [];
     this.currentlySelectedFlights.forEach(flight => {
-      const airstripsList = this.dataService.getAirstripsByFlight(flight, true);
-
-      airstripsList.filter()
-
-      this.createAirstripMarkerList(airstripsList).forEach(marker => markerList.push(marker));
+      flight.legs.forEach(leg => {
+        airstripIdList.push(leg.startId);
+        airstripIdList.push(leg.destinationId);
+      });
     });
+
+    airstripIdList = airstripIdList.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+
+    const airstripList = this.dataService.getAirstripsByIdList(airstripIdList)
+    const markerList = this.createAirstripMarkerList(airstripList);
 
     this.showAirstrips(markerList);
   }
@@ -225,13 +231,13 @@ export class WingmanMapService {
         { icon: Boolean(airstrip.waypointOnly) ? waypointIcon : airstripIcon }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(this.generateMarkerPopupContent(airstrip));
-      marker.bindTooltip(airstrip.displayName, {permanent: true}).openTooltip();
+      marker.bindTooltip(airstrip.displayName, { permanent: true }).openTooltip();
 
-      marker.on('mouseover', function(e) {
+      marker.on('mouseover', function (e) {
         this.openPopup();
       });
 
-      marker.on('mouseout', function(e){
+      marker.on('mouseout', function (e) {
         this.closePopup();
       });
 
@@ -251,14 +257,14 @@ export class WingmanMapService {
     markerContent += `<h3>${airstrip.name} (${airstrip.displayName})</h3>`;
     markerContent += `<p>`;
 
-    if (airstrip.waypointOnly){
+    if (airstrip.waypointOnly) {
       markerContent += 'This is a marker!';
-    }else{
+    } else {
       markerContent += `
-      This is ` +              (airstrip.mafBase        ? ``                         : `<b>not</b>` ) + ` a maf base.<br>
-      Avgas is <b>` +          (airstrip.avgasAvailable ? 'available'                : 'unavailable') + `<br>
-      </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available'                : 'unavailable') + `</b>.<br>
-      ` +                      (airstrip.notes          ? `Notes: ${airstrip.notes}` : ``           );
+      This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
+      Avgas is <b>` + (airstrip.avgasAvailable ? 'available' : 'unavailable') + `<br>
+      </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available' : 'unavailable') + `</b>.<br>
+      ` + (airstrip.notes ? `Notes: ${airstrip.notes}` : ``);
     }
 
     markerContent += `</p>`;
@@ -272,7 +278,7 @@ export class WingmanMapService {
    * The map must be known locally inside the service under this.privateMap.
    * @param flights the flights that have to be drawn
    */
-  private drawFlights(flights: Flight[]){
+  private drawFlights(flights: Flight[]) {
     // drawFlights implies that the current flights have to be removed.
     if (this.currentlyDrawnGroup !== undefined) {
       this.privateMap.removeLayer(this.currentlyDrawnGroup);
@@ -293,7 +299,7 @@ export class WingmanMapService {
       let count = 0;
       flightLineGroup.eachLayer(leg => {
         leg.bindPopup(this.getLegPopupContent(flight.legs[count], count + 1, flight));
-        leg.on('click', function(e) {
+        leg.on('click', function (e) {
           this.openPopup();
         });
         count++;
@@ -305,7 +311,7 @@ export class WingmanMapService {
     // Set the bounds regardless of the amount of groups or shape/bounds
     // of the selected legs.
     // The focus is on modularity.
-    if(flights.length > 0){
+    if (flights.length > 0) {
       this.currentlyDrawnGroup = L.featureGroup(routes);
       this.currentlyDrawnGroup.addTo(this.privateMap);
       const padding = 50;
@@ -321,7 +327,7 @@ export class WingmanMapService {
    *   \_ this iteration represents a flight
    * @returns a three-dimensional list with lat/long positions.
    */
-  private getLatLongFromFlight(flight: Flight): [[[number, number]]]{
+  private getLatLongFromFlight(flight: Flight): [[[number, number]]] {
     const airstripsPairs: [[Airstrip, Airstrip]] = this.dataService.getAirstripPairsByFlight(flight);
 
     const positionPairs = airstripsPairs.map(pair => [Object.values(pair[0].position), Object.values(pair[1].position)]);
@@ -337,13 +343,13 @@ export class WingmanMapService {
    * @param positionPairs a three-dimensional list considering flights, their legs and the lat/long locations of those legs.
    * @returns a list of leaflet polylines
    */
-  private getPolyLines(positionPairs: [[[number, number]]]): L.Polyline[]{
+  private getPolyLines(positionPairs: [[[number, number]]]): L.Polyline[] {
 
     const legLines: L.Polyline[] = [];
     positionPairs.forEach((pair) => {
       const leg = L.polyline(pair);
 
-      leg.setStyle({color: '#2196F3', weight: 3});
+      leg.setStyle({ color: '#2196F3', weight: 3 });
       legLines.push(leg);
     });
 
@@ -363,10 +369,10 @@ export class WingmanMapService {
     const lineGroup = new L.FeatureGroup(this.getPolyLines(positionPairs));
 
     // Make an entire flight change color on mouse hover.
-    lineGroup.on('mouseover', function(e){
-      this.setStyle({ color: '#ffa500', weight: 6});
-    }).on('mouseout', function(e) {
-      this.setStyle({color: '#2196F3', weight: 3});
+    lineGroup.on('mouseover', function (e) {
+      this.setStyle({ color: '#ffa500', weight: 6 });
+    }).on('mouseout', function (e) {
+      this.setStyle({ color: '#2196F3', weight: 3 });
     });
 
     return lineGroup;
@@ -380,7 +386,7 @@ export class WingmanMapService {
    * @param count count of the current legs according to the entire flight
    * @param flight with the property flightId, route and a list of legs
    */
-  private getLegPopupContent(currentLeg: Leg, count: number, flight: Flight){
+  private getLegPopupContent(currentLeg: Leg, count: number, flight: Flight) {
     const meetingTime = new Date(currentLeg.meetingTime);
     const landing = new Date(currentLeg.landing);
     const takeoff = new Date(currentLeg.takeoff);
@@ -403,13 +409,13 @@ export class WingmanMapService {
    * @param date The date to be parsed
    * @returns a readable string with date information
    */
-  private getDMYHMString(date: Date): string{
+  private getDMYHMString(date: Date): string {
     // Force that the time is always double digit.
     // This isn't needed for the days.
     return (date.getHours() < 10 ? '0' : '') + date.getHours() + ':' +
-    (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ' ' +
-    date.getDay() + '/' +
-    date.getMonth() + '/' +
-    date.getFullYear();
+      (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ' ' +
+      date.getDay() + '/' +
+      date.getMonth() + '/' +
+      date.getFullYear();
   }
 }

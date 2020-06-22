@@ -91,7 +91,6 @@ export class WingmanDataService {
                 return self.indexOf(value) === index;
             });
         }
-
         // Get and return only the relevant airstrip info
         return this.getAirstripsByIdList(airstripIds);
     }

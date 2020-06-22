@@ -40,8 +40,10 @@ export class WingmanMap extends Map {
     } else {
       this.mapControl.addBaseLayer(leafletBaseLayer, baseMapName);
     }
-    const cookie = JSON.parse(this.cookieService.getCookie('control'));
+
+    let cookie = this.cookieService.getCookie('control');
     if(cookie){
+      cookie = JSON.parse(cookie);
       if(cookie[baseMapName]){
         leafletBaseLayer.addTo(this);
       }
@@ -70,8 +72,9 @@ export class WingmanMap extends Map {
       this.mapControl.addOverlay(leafletOverlayMap, layerName);
     }
 
-    const cookie = JSON.parse(this.cookieService.getCookie('control'));
+    let cookie = this.cookieService.getCookie('control');
     if(cookie){
+      cookie = JSON.parse(cookie);
       if(cookie[layerName]){
         leafletOverlayMap.addTo(this);
       }
@@ -88,7 +91,6 @@ export class WingmanMap extends Map {
     this.mapControl._layerControlInputs.forEach((layer, index) => {
       controlOptions[this.mapControl._layers[index].name] = layer.checked;
     });
-    console.log(JSON.stringify(controlOptions));
     this.cookieService.setCookie('control', JSON.stringify(controlOptions), 2);
   }
 }
