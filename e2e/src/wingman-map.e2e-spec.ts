@@ -218,6 +218,7 @@ describe('Wingman maps component', () => {
 
   afterEach(async () => {
     // I have commented this because firebase automatically throws errors.
+    // It doesn't seem worth my time to work around this.
 
     // // Assert that there are no errors emitted from the browser
     // const logs = await browser.manage().logs().get(logging.Type.BROWSER);
