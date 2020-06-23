@@ -25,7 +25,6 @@ export class WingmanMap extends Map {
     this.on('overlayremove', this.saveMapControlOptions);
   }
 
-
   public addBaseMap(baseMapName, leafletBaseMap: L.Layer, options?: AddMapOptions) {
     // Remember the base map locally
     this.baseMaps[baseMapName] = leafletBaseMap;

@@ -16,8 +16,6 @@ import { Flight } from './../shared/models/flight.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Leg } from './../shared/models/leg.model';
 
-
-
 @Injectable()
 export class WingmanMapService {
   public icons;
@@ -157,6 +155,9 @@ export class WingmanMapService {
     this.map.addOverlayMap('Hillshading', hillshadingMap);
 
     this.map.saveMapSettingsOnChange();
+
+    // Add the airstrip labels using a created label class
+    this.map.addOverlayMap('Airstrip labels', new LabelControlLayer(), {enable: true});
   }
   /**
    * Show leaflet markers for all airstrips.
@@ -416,3 +417,16 @@ export class WingmanMapService {
       date.getFullYear();
   }
 }
+
+
+const LabelControlLayer = L.Layer.extend({
+  initialize() {
+    console.log(this);
+  },
+  onAdd() {
+    document.getElementsByClassName('leaflet-tooltip-pane')[0].style.display = 'block';
+  },
+  onRemove(){
+    document.getElementsByClassName('leaflet-tooltip-pane')[0].style.display = 'none';
+  }
+});
