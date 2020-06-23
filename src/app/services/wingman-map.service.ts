@@ -229,7 +229,8 @@ export class WingmanMapService {
         { icon: Boolean(airstrip.waypointOnly) ? waypointIcon : airstripIcon }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(this.generateMarkerPopupContent(airstrip));
-      marker.bindTooltip(airstrip.displayName, { permanent: true }).openTooltip();
+
+      marker.bindTooltip(airstrip.displayName, { permanent: true });
 
       marker.on('mouseover', function(e) {
         this.openPopup();
@@ -418,15 +419,23 @@ export class WingmanMapService {
   }
 }
 
-
 const LabelControlLayer = L.Layer.extend({
+
+  getElement(): HTMLElement{
+    return document.getElementsByClassName('leaflet-tooltip-pane')[0] as HTMLElement;
+  },
+  
   initialize() {
-    console.log(this);
+    // onAdd will automatically be called when this is enabled and this is saved in the cookies
+    // onRemove will obviously not be called when the labels are disabled and this is saved in the cookies.
+    // By setting the pane display to none, it will be still enabled after reload.
+    this.getElement().style.display = 'none';
   },
   onAdd() {
-    document.getElementsByClassName('leaflet-tooltip-pane')[0].style.display = 'block';
+    // This will be automatically called when the option is cached.
+    this.getElement().style.display = 'block';
   },
   onRemove(){
-    document.getElementsByClassName('leaflet-tooltip-pane')[0].style.display = 'none';
+    this.getElement().style.display = 'none';
   }
 });
