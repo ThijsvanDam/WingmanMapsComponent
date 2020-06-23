@@ -217,6 +217,8 @@ describe('Wingman maps component', () => {
 
 
   afterEach(async () => {
+    // I have commented this because firebase automatically throws errors.
+
     // // Assert that there are no errors emitted from the browser
     // const logs = await browser.manage().logs().get(logging.Type.BROWSER);
     // expect(logs).not.toContain(jasmine.objectContaining({
