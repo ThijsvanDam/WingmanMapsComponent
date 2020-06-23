@@ -49,7 +49,7 @@ export class WingmanMap extends Map {
     }
   }
 
-  public addOverlayMap(layerName, leafletOverlayMap, options?: AddMapOptions) {
+  public addOverlayMap(layerName: string, leafletOverlayMap: L.Layer, options?: AddMapOptions) {
     // Remember the overlay locally
     this.overlayMaps[layerName] = leafletOverlayMap;
 
@@ -72,7 +72,7 @@ export class WingmanMap extends Map {
     }
   }
 
-  public addLayerWhenCookie(layerName: string, layer: L.Layer) {
+  public addLayerWhenCookie(layerName: string, layer: L.Layer): boolean {
     let cookie = this.cookieService.getCookie('layer');
     if (cookie) {
       cookie = JSON.parse(cookie);

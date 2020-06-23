@@ -52,7 +52,7 @@ export class WingmanMapService {
       center: [51.505, -0.09],
       zoom: 13
     });
-    this.addLayers();
+    this.addLayersAndControls();
     this.dataService.currentlySelectedFlights.subscribe(data => this.drawFlightsAndMarkers(data));
   }
 
@@ -83,7 +83,7 @@ export class WingmanMapService {
    * This is the place to add new layers!
    * Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
    */
-  private addLayers() {
+  private addLayersAndControls() {
     const OWM_KEY = environment.api_keys.openweathermap;
 
     // Add all base maps:
@@ -168,12 +168,14 @@ export class WingmanMapService {
     this.showAirstrips(airstripMarkers);
   }
 
+  public switchMarkerLabel(){
+    this.privateMap.getPane('tooltipPane').hidden = !this.privateMap.getPane('tooltipPane').hidden;
+  }
+
   /**
    * Show leaflet markers according to the currently selected flights.
    */
   public showRelevantAirstripMarkers(): void {
-    // It is possible for the selected flight to not be set.
-
     let airstripIdList = [];
     this.currentlySelectedFlights.forEach(flight => {
       flight.legs.forEach(leg => {
