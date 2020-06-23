@@ -7,7 +7,7 @@
         </tr>
         <tr *ngFor="let flight of flights">
             <td class="col-md-1">
-                <input type="checkbox" (change)="flightClicked($event, flight)" [(ngModel)]="flight.selected">
+                <input type="checkbox" (ngModelChange)="flightClicked($event, flight)" [(ngModel)]="flight.selected">
             </td>
             <td  class="col-md-2">{{flight.flightId}}</td>
             <td  class="col-md-9">{{ flight.route }}</td>

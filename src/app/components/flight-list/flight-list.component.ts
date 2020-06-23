@@ -21,7 +21,7 @@ export class FlightListComponent implements OnInit {
   flightClicked(event, flight){
     this.flightsChangedHandler.emit({
       flightId: flight.flightId,
-      enabled: event.target.checked
+      enabled: event
     });
   }
 }
