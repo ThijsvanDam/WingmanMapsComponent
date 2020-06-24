@@ -45,6 +45,10 @@ export class WingmanMapService {
     this.currentlySelectedFlights = [];
   }
 
+  /**
+   * Initialize the map, create a WingmanMap instance, adds the layers and controls and subscribes to the observable.
+   * This method makes it possible to load the map after the HTML has been loaded.
+   */
   public initializeMap(mapId) {
     this.map = new WingmanMap(this.cookieService, mapId, {
       center: [51.505, -0.09],
@@ -62,22 +66,26 @@ export class WingmanMapService {
     return this.privateMap;
   }
 
+  /**
+   * Set the currently selected flight of the map.
+   * Note: This will call next on the selected flight observable, providing
+   * the selected flight to each subscriber!
+   */
   public set selectedFlights(flights: Flight[]) {
     this.dataService.currentlySelectedFlights.next(flights);
   }
 
-  public get selectedFlights(): Flight[] {
-    return this.currentlySelectedFlights;
-  }
-
-  public drawFlightsAndMarkers(flights) {
+  /**
+   * Method for the flights observable to hook into, providing all logic to set the new state of the map.
+   */
+  private drawFlightsAndMarkers(flights) {
     this.currentlySelectedFlights = flights;
     this.showRelevantAirstripMarkers();
     this.drawFlights(this.currentlySelectedFlights);
   }
 
   /**
-   * Adds all  layers to the private map using the WingmanMap class
+   * Adds all  layers and controls to the private map using the WingmanMap class
    * This is the place to add new layers!
    * Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
    */
@@ -154,9 +162,10 @@ export class WingmanMapService {
     this.map.addOverlayMap('Temperature', temperatureOverlay);
     this.map.addOverlayMap('Hillshading', hillshadingMap);
 
+    // Make the map cache data on changes.
     this.map.saveMapSettingsOnChange();
 
-    // Add the airstrip labels using a created label class
+    // Add a control for the airstrip labels using an extended label control class.
     this.map.addOverlayMap('Airstrip labels', new LabelControlLayer(), {enable: true});
   }
   /**
@@ -164,13 +173,9 @@ export class WingmanMapService {
    */
   public showAllAirstrips() {
     // The public method for showing all airstrips,
-    // gathering them from the environmentally set airstrip json
+    // gathering them from the data service.
     const airstripMarkers = this.createAirstripMarkerList(this.dataService.getAllAirstrips());
     this.showAirstrips(airstripMarkers);
-  }
-
-  public switchMarkerLabel(){
-    this.privateMap.getPane('tooltipPane').hidden = !this.privateMap.getPane('tooltipPane').hidden;
   }
 
   /**
@@ -185,6 +190,8 @@ export class WingmanMapService {
       });
     });
 
+    // There are many duplicates because obviously the airstrips that are visited often
+    // exist in multiple flights.
     airstripIdList = airstripIdList.filter((value, index, self) => {
       return self.indexOf(value) === index;
     });
@@ -257,7 +264,7 @@ export class WingmanMapService {
     markerContent += `<p>`;
 
     if (airstrip.waypointOnly) {
-      markerContent += 'This is a marker!';
+      markerContent += 'This is a waypoint.';
     } else {
       markerContent += `
       This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
@@ -424,7 +431,7 @@ const LabelControlLayer = L.Layer.extend({
   getElement(): HTMLElement{
     return document.getElementsByClassName('leaflet-tooltip-pane')[0] as HTMLElement;
   },
-  
+
   initialize() {
     // onAdd will automatically be called when this is enabled and this is saved in the cookies
     // onRemove will obviously not be called when the labels are disabled and this is saved in the cookies.

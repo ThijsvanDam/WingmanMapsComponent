@@ -1,4 +1,7 @@
 
-<app-aircraft *ngFor="let aircraftId of getKeys()" [flights]="getFlights(aircraftId)" [aircraft]="getAircraftByAircraftId(aircraftId)" (flightsChangedHandler)="flightsChanged($event)"></app-aircraft>
+<app-aircraft   *ngFor="let aircraftId of getAircraftIds()" 
+                [flights]="getFlights(aircraftId)" 
+                [aircraft]="getAircraftByAircraftId(aircraftId)" 
+                (flightsChangedHandler)="flightsChanged($event)"></app-aircraft>
 
 

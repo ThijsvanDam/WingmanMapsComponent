@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
 
-import { Map, Icon, MapOptions, Control, LayerGroup, Marker, control } from 'leaflet';
+import { Map, MapOptions, Control } from 'leaflet';
 
 import { CookieService } from './../../services/cookie.service';
 
@@ -25,6 +24,13 @@ export class WingmanMap extends Map {
     this.on('overlayremove', this.saveMapControlOptions);
   }
 
+  /**
+   * Add a base map to the map control.
+   * When the map (with the baseMapName) is inside the cookies, the cookie value will be used.
+   * @param baseMapName The name shown in the leaflet map control
+   * @param leafletBaseMap The leaflet base map type of L.Layer
+   * @param options enable: whether the base map has to be added to the map or not
+   */
   public addBaseMap(baseMapName, leafletBaseMap: L.Layer, options?: AddMapOptions) {
     // Remember the base map locally
     this.baseMaps[baseMapName] = leafletBaseMap;
@@ -40,7 +46,8 @@ export class WingmanMap extends Map {
       this.mapControl.addBaseLayer(leafletBaseMap, baseMapName);
     }
 
-    const cookieExisted = this.addLayerWhenCookie(baseMapName, leafletBaseMap);
+    // If the cookie did not exist, add the layer to the map if it's enabled.
+    const cookieExisted = this.setLayersAccordingToCookie(baseMapName, leafletBaseMap);
     if (options) {
       if (!cookieExisted && options.enable) {
         leafletBaseMap.addTo(this);
@@ -48,6 +55,13 @@ export class WingmanMap extends Map {
     }
   }
 
+  /**
+   * Add an overlay map to the map control.
+   * When overlay map (with the leafletOverlayMap) is inside the cookies, the cookie value will be used.
+   * @param layerName The name shown in the leaflet map control
+   * @param leafletOverlayMap The leaflet base map type of L.Layer
+   * @param options enable: whether the base map has to be added to the map or not
+   */
   public addOverlayMap(layerName: string, leafletOverlayMap: L.Layer, options?: AddMapOptions) {
     // Remember the overlay locally
     this.overlayMaps[layerName] = leafletOverlayMap;
@@ -63,7 +77,8 @@ export class WingmanMap extends Map {
       this.mapControl.addOverlay(leafletOverlayMap, layerName);
     }
 
-    const cookieExisted = this.addLayerWhenCookie(layerName, leafletOverlayMap);
+    // If the cookie did not exist, add the layer to the map if it's enabled.
+    const cookieExisted = this.setLayersAccordingToCookie(layerName, leafletOverlayMap);
     if (options) {
       if (!cookieExisted && options.enable) {
         leafletOverlayMap.addTo(this);
@@ -71,7 +86,12 @@ export class WingmanMap extends Map {
     }
   }
 
-  public addLayerWhenCookie(layerName: string, layer: L.Layer): boolean {
+  /**
+   * Add the layer to the map according to the value in the cookie
+   * @param layerName The name of the map layer, which is used in the cookie
+   * @param layer The layer to be added
+   */
+  private setLayersAccordingToCookie(layerName: string, layer: L.Layer): boolean {
     let cookie = this.cookieService.getCookie('layer');
     if (cookie) {
       cookie = JSON.parse(cookie);
@@ -83,7 +103,11 @@ export class WingmanMap extends Map {
     return false;
   }
 
-  public saveMapControlOptions() {
+  /**
+   * Save the current map control options into the cookies.
+   * The current time until cookie expiration is 12 hours.
+   */
+  private saveMapControlOptions() {
     const controlOptions = {};
 
     this.mapControl._layerControlInputs.forEach((layer, index) => {

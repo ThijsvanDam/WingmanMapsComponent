@@ -1,5 +1,5 @@
 import { FlightEnabled } from './../flight-list/flight-list.component';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Aircraft } from 'src/app/shared/models/airplane.model';
 import { Flight } from 'src/app/shared/models/flight.model';
 
@@ -8,7 +8,7 @@ import { Flight } from 'src/app/shared/models/flight.model';
   templateUrl: './aircraft.component.html',
   styleUrls: ['./aircraft.component.scss']
 })
-export class AircraftComponent implements OnInit {
+export class AircraftComponent {
   @Input()
   aircraft: Aircraft;
 
@@ -20,9 +20,9 @@ export class AircraftComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit(): void {
-  }
-
+  /**
+   * Emit a @FlightEnabled event to the parent component if a flight is clicked.
+   */
   flightsChanged(flightEnabled: FlightEnabled){
     this.flightsChangedHandler.emit(flightEnabled);
   }

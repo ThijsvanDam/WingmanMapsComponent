@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { FlightEnabled } from './../flight-list/flight-list.component';
 
@@ -19,44 +19,13 @@ export class MapControlComponent {
 
   constructor(private mapService: WingmanMapService, private dataService: WingmanDataService) {
     this.allFlights = this.dataService.getAllFlightNames();
-    // this.dataService.currentlySelectedFlights.subscribe(flights => this.getAircrafts(flights));
    }
 
-  public handleAllAirstrips() {
-    this.mapService.showAllAirstrips();
-  }
-
-  public handleRelevantAirstrips() {
-    this.mapService.showRelevantAirstripMarkers();
-  }
-
-  public getFlights(){
-    return this.dataService.getAllFlights();
-  }
-
-  public getAircrafts(){
-    const selectedFlights = this.dataService.getAllFlights().filter(x => x.aircraftId !== null);
-    return this.dataService.getAircraftsByFlightList(selectedFlights);
-  }
-
-  public getFlightsWithoutAircraft(){
-    return this.dataService.getAllFlights().filter(x => x.aircraftId === null);
-  }
-
-  public getFlightsByAircraft(){
-    const flights = this.dataService.getAllFlights().filter(x => x.aircraftId !== null);
-    return this.dataService.groupFlightsByAircraftId(flights);
-  }
-
-  public option(selectedFlight) {
-    this.dataService.currentlySelectedFlights.next([this.dataService.getFlightbyId(selectedFlight)]);
-  }
-
-  public showAllFlights(){
-    this.dataService.currentlySelectedFlights.next(this.dataService.getAllFlights());
-  }
-
-  public flightsChanged(flightEnabled: FlightEnabled){
+   /**
+    * Call the dataservice observable with new flight list, with a removed or added flight.
+    * @param flightEnabled containing which flight has been enabled whether or not.
+    */
+  public flightsSelectedChanged(flightEnabled: FlightEnabled){
     let nextFlights;
 
     if (flightEnabled.enabled){
@@ -66,5 +35,47 @@ export class MapControlComponent {
         nextFlights = this.dataService.currentlySelectedFlights.getValue().filter(flight => flight.flightId !== flightEnabled.flightId);
     }
     this.dataService.currentlySelectedFlights.next(nextFlights);
+  }
+
+  // Getting information for the view
+
+  /**
+   * Get aircrafts according to the currently selected flights from the data service.
+   */
+  public getAircrafts(): Aircraft[]{
+    const selectedFlights: Flight[] = this.dataService.getAllFlights().filter(x => x.aircraftId !== null);
+    return this.dataService.getAircraftsByFlightList(selectedFlights);
+  }
+
+  /**
+   * Get the flights from the data service without an aircraft linked to it
+   */
+  public getFlightsWithoutAircraft(): Flight[]{
+    return this.dataService.getAllFlights().filter(x => x.aircraftId === null);
+  }
+
+  /**
+   * Get an object with the flights grouped by their aircraft.
+   */
+  public getFlightsByAircraft(){
+    const flights: Flight[] = this.dataService.getAllFlights().filter(x => x.aircraftId !== null);
+    return this.dataService.groupFlightsByAircraftId(flights);
+  }
+
+  // Input and button handlers for the view
+  public handleAllAirstripsButton(){
+    this.mapService.showAllAirstrips();
+  }
+
+  public handleRelevantAirstripsButton(){
+    this.mapService.showRelevantAirstripMarkers();
+  }
+
+  public handleShowAllFlightsButton(){
+    this.dataService.currentlySelectedFlights.next(this.dataService.getAllFlights());
+  }
+
+  public handleSelectFlightDropdown(selectedFlight: string){
+    this.dataService.currentlySelectedFlights.next([this.dataService.getFlightbyId(selectedFlight)]);
   }
 }

@@ -17,6 +17,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    // The map can only be initialized after the view is done, because leaflet hooks onto the HTML element.
     this.mapService.initializeMap('map');
   }
 }
