@@ -3,8 +3,6 @@ import { Map, MapOptions, Control } from 'leaflet';
 
 import { CookieService } from './../../services/cookie.service';
 
-import { environment } from 'src/environments/environment';
-
 export class WingmanMap extends Map {
   // Everything considering layers of the map
   private attributions = {};
