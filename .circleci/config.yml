@@ -23,12 +23,12 @@ jobs:
       - run: 
           name: Build project
           command: npm run-script build
-      - run: 
-          name: Run tests
-          command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
       - run:
           name: Run e2e
           command: npm run e2e
+      - run: 
+          name: Run tests
+          command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
       - run: 
           name: Run linting
           command: npm run lint
