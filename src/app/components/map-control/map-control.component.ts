@@ -1,5 +1,6 @@
+import { Component } from '@angular/core';
+
 import { WingmanDataService } from './../../services/wingman-data.service';
-import { Component, OnInit } from '@angular/core';
 import { WingmanMapService } from '../../services/wingman-map.service';
 
 @Component({
