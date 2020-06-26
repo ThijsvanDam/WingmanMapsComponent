@@ -4,8 +4,8 @@
 export const environment = {
   production: false,
   marker: {
-    airstrip_image: '../../assets/airstrip.png',
-    waypoint_image: '../../assets/waypoint.jpg'
+    airstrip_image: '../../assets/images/airstrip.png',
+    waypoint_image: '../../assets/images/pin.png'
   },
   api_keys: {
     openweathermap: '669d6d341ee2ac57f0fe2b2218038297'

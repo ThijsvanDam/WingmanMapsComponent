@@ -1,23 +1,23 @@
 <div>
 
-    <p>Airstrips:
-        <button color="primary" (click)="handleAllAirstrips()">Show all</button>
-        <button color="primary" (click)="handleRelevantAirstrips()">Show relevant</button>
-      </p>
-      <p>
-        Flights:
-        <button color="primary" (click)="showAllFlights()">Show all flights</button>
-      </p>
-       
-      
-      <h5><select (change)="option(selectField.value)" #selectField>
-          <option *ngFor="let flightName of allFlights">{{flightName}}</option>
-        </select> is de huidig geselecteerde vlucht! </h5>
-        
-    <app-flight-list [flights]="getFlights()"></app-flight-list>
+  <p>Airstrips:
+    <button color="primary" (click)="handleAllAirstripsButton()">Show all</button>
+    <button color="primary" (click)="handleRelevantAirstripsButton()">Show relevant</button>
+  </p>
+  <p>
+    Flights:
+    <button color="primary" (click)="handleShowAllFlightsButton()">Show all flights</button>
+  </p>
+
+  <h5><select (change)="handleSelectFlightDropdown(selectField.value)" #selectField>
+      <option *ngFor="let flightName of allFlights">{{flightName}}</option>
+    </select> Selecteer een enkele vlucht. </h5>
+  <div class="overflow-auto">
+    <app-flight-list [flights]="getFlightsWithoutAircraft()" (flightsChangedHandler)="flightsSelectedChanged($event)">
+    </app-flight-list>
+
+    <app-aircraft-list [flightsByAircraftId]="getFlightsByAircraft()" [aircrafts]="getAircrafts()"
+      (flightsChangedHandler)="flightsSelectedChanged($event)"></app-aircraft-list>
+  </div>
+
 </div>
-
-
-
-
-  

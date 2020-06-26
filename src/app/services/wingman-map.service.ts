@@ -4,18 +4,21 @@ import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
 
-import { WingmanMap } from '../components/map/wingman-map';
+import { environment } from './../../environments/environment';
 
 import { WingmanDataService } from './wingman-data.service';
+import { CookieService } from './cookie.service';
 
 import { Flight } from './../shared/models/flight.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Leg } from './../shared/models/leg.model';
 
-import { NoFlightSelectedException } from '../shared/exceptions/no-flight-selected.exception';
+import { WingmanMap } from '../components/map/wingman-map';
 
-import { environment } from './../../environments/environment';
-
+/**
+ * The injectable wingman map service.
+ * @note this is dependent on the leaflet library.
+ */
 @Injectable()
 export class WingmanMapService {
   public icons;
@@ -25,7 +28,7 @@ export class WingmanMapService {
   private currentAirstripsGroup: L.FeatureGroup;
   private currentlyDrawnGroup: any;
 
-  constructor(private dataService: WingmanDataService) {
+  constructor(private dataService: WingmanDataService, private cookieService: CookieService) {
 
     this.icons = {
       airstrip: L.icon({
@@ -41,12 +44,21 @@ export class WingmanMapService {
         popupAnchor: [0, -15]
       })
     };
+
     this.currentlySelectedFlights = [];
   }
 
+  /**
+   * Initialize the map, create a WingmanMap instance, adds the layers and controls and subscribes to the observable.
+   * This method makes it possible to load the map after the HTML has been loaded.
+   */
   public initializeMap(mapId) {
-    this.map = new WingmanMap(this.dataService, mapId);
-    this.addLayers();
+    this.map = new WingmanMap(this.cookieService, mapId, {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    this.addLayersAndControls();
+    this.dataService.currentlySelectedFlights.subscribe(data => this.drawFlightsAndMarkers(data));
   }
 
   public set map(wingmanMap) {
@@ -57,24 +69,30 @@ export class WingmanMapService {
     return this.privateMap;
   }
 
-  public set selectedFlights(flights) {
-    this.currentlySelectedFlights = flights;
-  }
-
-  public get selectedFlights() {
-    return this.currentlySelectedFlights;
-  }
-
-  public setSelectedFlight(flight: Flight){
-    this.currentlySelectedFlights = [flight];
+  /**
+   * Set the currently selected flight of the map.
+   * Note: This will call next on the selected flight observable, providing
+   * the selected flight to each subscriber!
+   */
+  public set selectedFlights(flights: Flight[]) {
+    this.dataService.currentlySelectedFlights.next(flights);
   }
 
   /**
-   * Adds all  layers to the private map using the WingmanMap class
+   * Method for the flights observable to hook into, providing all logic to set the new state of the map.
+   */
+  private drawFlightsAndMarkers(flights) {
+    this.currentlySelectedFlights = flights;
+    this.showRelevantAirstripMarkers();
+    this.drawFlights(this.currentlySelectedFlights);
+  }
+
+  /**
+   * Adds all  layers and controls to the private map using the WingmanMap class
    * This is the place to add new layers!
    * Note: First add basemaps and add the overlay maps after, due to the fact that Leaflet doesn't load the overlaymaps otherwise.
    */
-  private addLayers() {
+  private addLayersAndControls() {
     const OWM_KEY = environment.api_keys.openweathermap;
 
     // Add all base maps:
@@ -107,7 +125,7 @@ export class WingmanMapService {
     this.map.addBaseMap('Black white', blackWhiteMap);
     this.map.addBaseMap('Water color', watercolor);
 
-    // Add all overla maps:
+    // Add all overlay maps:
     const cloudsOverlay = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {
       useCache: true,
       crossOrigin: true,
@@ -135,7 +153,7 @@ export class WingmanMapService {
     // NOTE: This is only for europe and part of north africa. (Also a little on south/north america)
     // https://www.arcgis.com/home/webmap/viewer.html?useExisting=1&layers=1b243539f4514b6ba35e7d995890db1d
     // arcGIS has a hillshading map that is world wide.
-    const hillshadingMap = L.tileLayer(`http://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png	`, {
+    const hillshadingMap = L.tileLayer(`http://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png`, {
       useCache: true,
       crossOrigin: true,
       attribution: 'OpenWeatherMap'
@@ -146,33 +164,44 @@ export class WingmanMapService {
     this.map.addOverlayMap('Wind speed', windspeedOverlay);
     this.map.addOverlayMap('Temperature', temperatureOverlay);
     this.map.addOverlayMap('Hillshading', hillshadingMap);
-  }
 
+    // Make the map cache data on changes.
+    this.map.saveMapSettingsOnChange();
+
+    // Add a control for the airstrip labels using an extended label control class.
+    this.map.addOverlayMap('Airstrip labels', new LabelControlLayer(), {enable: true});
+  }
   /**
    * Show leaflet markers for all airstrips.
    */
   public showAllAirstrips() {
     // The public method for showing all airstrips,
-    // gathering them from the environmentally set airstrip json
+    // gathering them from the data service.
     const airstripMarkers = this.createAirstripMarkerList(this.dataService.getAllAirstrips());
     this.showAirstrips(airstripMarkers);
   }
 
   /**
    * Show leaflet markers according to the currently selected flights.
-   * Throws a NoFlightSelectedException if no flight is selected.
    */
   public showRelevantAirstripMarkers(): void {
-    // It is possible for the selected flight to not be set.
-    if (this.currentlySelectedFlights.length === 0) {
-      throw new NoFlightSelectedException();
-    }
-
-    const markerList = [];
+    let airstripIdList = [];
     this.currentlySelectedFlights.forEach(flight => {
-      const airstripsList = this.dataService.getAirstripsByFlight(flight, true);
-      this.createAirstripMarkerList(airstripsList).forEach(marker => markerList.push(marker));
+      flight.legs.forEach(leg => {
+        airstripIdList.push(leg.startId);
+        airstripIdList.push(leg.destinationId);
+      });
     });
+
+    // There are many duplicates because obviously the airstrips that are visited often
+    // exist in multiple flights.
+    airstripIdList = airstripIdList.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+
+    const airstripList = this.dataService.getAirstripsByIdList(airstripIdList);
+    const markerList = this.createAirstripMarkerList(airstripList);
+
     this.showAirstrips(markerList);
   }
 
@@ -211,11 +240,13 @@ export class WingmanMapService {
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(this.generateMarkerPopupContent(airstrip));
 
+      marker.bindTooltip(airstrip.displayName, { permanent: true });
+
       marker.on('mouseover', function(e) {
         this.openPopup();
       });
 
-      marker.on('mouseout', function(e){
+      marker.on('mouseout', function(e) {
         this.closePopup();
       });
 
@@ -235,32 +266,20 @@ export class WingmanMapService {
     markerContent += `<h3>${airstrip.name} (${airstrip.displayName})</h3>`;
     markerContent += `<p>`;
 
-    if (airstrip.waypointOnly){
-      markerContent += 'This is a marker!';
-    }else{
+    if (airstrip.waypointOnly) {
+      markerContent += 'This is a waypoint.';
+    } else {
       markerContent += `
-      This is ` +              (airstrip.mafBase        ? ``                         : `<b>not</b>` ) + ` a maf base.<br>
-      Avgas is <b>` +          (airstrip.avgasAvailable ? 'available'                : 'unavailable') + `<br>
-      </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available'                : 'unavailable') + `</b>.<br>
-      ` +                      (airstrip.notes          ? `Notes: ${airstrip.notes}` : ``           );
+      This is ` + (airstrip.mafBase ? `` : `<b>not</b>`) + ` a maf base.<br>
+      Avgas is <b>` + (airstrip.avgasAvailable ? 'available' : 'unavailable') + `<br>
+      </b> and jetA1 is <b>` + (airstrip.jetA1Available ? 'available' : 'unavailable') + `</b>.<br>
+      ` + (airstrip.notes ? `Notes: ${airstrip.notes}` : ``);
     }
 
     markerContent += `</p>`;
     return markerContent;
   }
 
-  /**
-   * Draw the flights with the currently selected flight list.
-   * If no flight is currently selected, NoFlightSelectedException will be thrown.
-   */
-  public drawSelectedFlights() {
-    // It is possible for the selected flight to not be set.
-    if (this.currentlySelectedFlights.length === 0) {
-      throw new NoFlightSelectedException();
-    }
-
-    this.drawFlights(this.currentlySelectedFlights);
-  }
 
   /**
    * Generate L.polylines for each flight inside an L.featureGroup.
@@ -268,7 +287,7 @@ export class WingmanMapService {
    * The map must be known locally inside the service under this.privateMap.
    * @param flights the flights that have to be drawn
    */
-  private drawFlights(flights: Flight[]){
+  private drawFlights(flights: Flight[]) {
     // drawFlights implies that the current flights have to be removed.
     if (this.currentlyDrawnGroup !== undefined) {
       this.privateMap.removeLayer(this.currentlyDrawnGroup);
@@ -301,10 +320,12 @@ export class WingmanMapService {
     // Set the bounds regardless of the amount of groups or shape/bounds
     // of the selected legs.
     // The focus is on modularity.
-    this.currentlyDrawnGroup = L.featureGroup(routes);
-    this.currentlyDrawnGroup.addTo(this.privateMap);
-    const padding = 50;
-    this.privateMap.fitBounds(this.currentlyDrawnGroup.getBounds(), { padding: new L.Point(padding, padding) });
+    if (flights.length > 0) {
+      this.currentlyDrawnGroup = L.featureGroup(routes);
+      this.currentlyDrawnGroup.addTo(this.privateMap);
+      const padding = 50;
+      this.privateMap.fitBounds(this.currentlyDrawnGroup.getBounds(), { padding: new L.Point(padding, padding) });
+    }
   }
 
   /**
@@ -315,7 +336,7 @@ export class WingmanMapService {
    *   \_ this iteration represents a flight
    * @returns a three-dimensional list with lat/long positions.
    */
-  private getLatLongFromFlight(flight: Flight): [[[number, number]]]{
+  private getLatLongFromFlight(flight: Flight): [[[number, number]]] {
     const airstripsPairs: [[Airstrip, Airstrip]] = this.dataService.getAirstripPairsByFlight(flight);
 
     const positionPairs = airstripsPairs.map(pair => [Object.values(pair[0].position), Object.values(pair[1].position)]);
@@ -331,13 +352,13 @@ export class WingmanMapService {
    * @param positionPairs a three-dimensional list considering flights, their legs and the lat/long locations of those legs.
    * @returns a list of leaflet polylines
    */
-  private getPolyLines(positionPairs: [[[number, number]]]): L.Polyline[]{
+  private getPolyLines(positionPairs: [[[number, number]]]): L.Polyline[] {
 
     const legLines: L.Polyline[] = [];
     positionPairs.forEach((pair) => {
       const leg = L.polyline(pair);
 
-      leg.setStyle({color: '#2196F3', weight: 3});
+      leg.setStyle({ color: '#2196F3', weight: 3 });
       legLines.push(leg);
     });
 
@@ -357,10 +378,10 @@ export class WingmanMapService {
     const lineGroup = new L.FeatureGroup(this.getPolyLines(positionPairs));
 
     // Make an entire flight change color on mouse hover.
-    lineGroup.on('mouseover', function(e){
-      this.setStyle({ color: '#ffa500', weight: 6});
+    lineGroup.on('mouseover', function(e) {
+      this.setStyle({ color: '#ffa500', weight: 6 });
     }).on('mouseout', function(e) {
-      this.setStyle({color: '#2196F3', weight: 3});
+      this.setStyle({ color: '#2196F3', weight: 3 });
     });
 
     return lineGroup;
@@ -374,7 +395,7 @@ export class WingmanMapService {
    * @param count count of the current legs according to the entire flight
    * @param flight with the property flightId, route and a list of legs
    */
-  private getLegPopupContent(currentLeg: Leg, count: number, flight: Flight){
+  private getLegPopupContent(currentLeg: Leg, count: number, flight: Flight) {
     const meetingTime = new Date(currentLeg.meetingTime);
     const landing = new Date(currentLeg.landing);
     const takeoff = new Date(currentLeg.takeoff);
@@ -397,13 +418,34 @@ export class WingmanMapService {
    * @param date The date to be parsed
    * @returns a readable string with date information
    */
-  private getDMYHMString(date: Date): string{
+  private getDMYHMString(date: Date): string {
     // Force that the time is always double digit.
     // This isn't needed for the days.
     return (date.getHours() < 10 ? '0' : '') + date.getHours() + ':' +
-    (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ' ' +
-    date.getDay() + '/' +
-    date.getMonth() + '/' +
-    date.getFullYear();
+      (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ' ' +
+      date.getDay() + '/' +
+      date.getMonth() + '/' +
+      date.getFullYear();
   }
 }
+
+const LabelControlLayer = L.Layer.extend({
+
+  getElement(): HTMLElement{
+    return document.getElementsByClassName('leaflet-tooltip-pane')[0] as HTMLElement;
+  },
+
+  initialize() {
+    // onAdd will automatically be called when this is enabled and this is saved in the cookies
+    // onRemove will obviously not be called when the labels are disabled and this is saved in the cookies.
+    // By setting the pane display to none, it will be still enabled after reload.
+    this.getElement().style.display = 'none';
+  },
+  onAdd() {
+    // This will be automatically called when the option is cached.
+    this.getElement().style.display = 'block';
+  },
+  onRemove(){
+    this.getElement().style.display = 'none';
+  }
+});

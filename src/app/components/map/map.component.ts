@@ -1,7 +1,10 @@
+import { Observable } from 'rxjs';
 import { Component, AfterViewInit } from '@angular/core';
 
 import { WingmanDataService } from '../../services/wingman-data.service';
 import { WingmanMapService } from '../../services/wingman-map.service';
+import { CookieService } from '../../services/cookie.service';
+
 
 @Component({
   selector: 'app-map',
@@ -10,13 +13,11 @@ import { WingmanMapService } from '../../services/wingman-map.service';
 })
 export class MapComponent implements AfterViewInit {
 
-  constructor(private dataService: WingmanDataService, private mapService: WingmanMapService) {
-    this.mapService.selectedFlights = this.dataService.getAllFlights();
+  constructor(private mapService: WingmanMapService) {
   }
 
   ngAfterViewInit(): void {
+    // The map can only be initialized after the view is done, because leaflet hooks onto the HTML element.
     this.mapService.initializeMap('map');
-    this.mapService.showRelevantAirstripMarkers();
-    this.mapService.drawSelectedFlights();
   }
 }

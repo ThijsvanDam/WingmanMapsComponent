@@ -1,5 +1,5 @@
 jobs:
-  test:
+  check:
     working_directory: ~/my-project
     docker:
       - image: circleci/node:10-browsers
@@ -23,6 +23,9 @@ jobs:
       - run: 
           name: Build project
           command: npm run-script build
+      - run:
+          name: Run e2e
+          command: npm run e2e
       - run: 
           name: Run tests
           command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
@@ -65,10 +68,10 @@ workflows:
   version: 2
   test_and_deploy:
     jobs:
-      - test
+      - check
       - deploy:
           requires:
-              - test
+              - check
           filters:
             branches:
               only:

@@ -1,0 +1,9 @@
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ aircraft.aircraftId }} - {{ aircraft.displayName }}</h3>
+    </div>
+
+    <app-flight-list [flights]="flights" (flightsChangedHandler)="flightsChanged($event)"></app-flight-list>
+
+  </div>

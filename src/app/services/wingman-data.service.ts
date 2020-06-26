@@ -1,57 +1,93 @@
-import { Airplane } from './../shared/models/airplane.model';
+import { BehaviorSubject } from 'rxjs';
+
+import { Aircraft } from '../shared/models/aircraft.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Flight } from './../shared/models/flight.model';
 
-import { environment } from 'src/environments/environment';
+const aircraftJSON: Aircraft[] = require('../../assets/json/airplanes.json');
+const airstripsJSON: Airstrip[] = require('../../assets/json/airstrips.json');
+const flightsJSON: Flight[] = require('../../assets/json/flights.json');
 
-const airplanes = require('../../assets/json/airplanes.json');
-const airstrips = require('../../assets/json/airstrips.json');
-const flights = require('../../assets/json/flights.json');
-
+/**
+ * The injectable angular service providing wingman data to each unit of the WingmanMapsComponent.
+ * 
+ * @note Current data sources are local .json files.
+ */
 export class WingmanDataService {
+    public currentlySelectedFlights: BehaviorSubject<Flight[]>;
 
-    // Get all the flights from the assets/json folder.
+    private aircrafts: Aircraft[];
+    private airstrips: Airstrip[];
+    private flights: Flight[];
+
+    constructor() {
+        // The data can be passed through the parameters of the constructor.
+        this.aircrafts = aircraftJSON;
+        this.airstrips = airstripsJSON;
+        // The splice has to be removed in production.
+        this.flights = flightsJSON.splice(0, 40);
+
+        // Create the obserable and straight up subscribe to set the local flight list in this service.
+        this.currentlySelectedFlights = new BehaviorSubject<Aircraft[]>(this.flights);
+        this.currentlySelectedFlights.subscribe(flights => this.selectFlights(flights));
+    }
+
+    /**
+     * Get all flights.
+     */
     getAllFlights(): Flight[]{
-        return flights;
+        return this.flights;
     }
 
-    // Get only the first flight from the assets/json folder
+    /**
+     * Get the first flight.
+     */
     getFirstFlight(): Flight{
-        return flights[0];
+        return this.flights[0];
     }
 
-    // Get the flight number by passed id
-    getFlightbyId(id: string): Flight{
-        return flights.filter(flight => {
-            return flight.flightId === id;
+    /**
+     * Get the flight number by passed id.
+     */
+    getFlightbyId(flightId: string): Flight{
+        return this.flights.filter(flight => {
+            return flight.flightId === flightId;
         })[0];
     }
 
+    /**
+     * Get the flight names.
+     */
     getAllFlightNames(): string[]{
-        return flights.map(x => x.flightId);
+        return this.flights.map(x => x.flightId);
     }
 
-    // Get all the airstrips from the assets/json folder.
+    /**
+     * Get all the airstrips.
+     */
     getAllAirstrips(): Airstrip[]{
-        return airstrips;
+        return this.airstrips;
     }
 
-    // Get all the airstrips within the idList from the assets/json folder.
-    getAirstripsByIdList(idList: string[]): Airstrip[]{
-        return airstrips.filter(airstrip => {
-            return idList.indexOf(airstrip.airstripId) > -1;
+    /**
+     * Get only the airstrips which id's are given inside the idList.
+     */
+    getAirstripsByIdList(airstripIdList: string[]): Airstrip[]{
+        return this.airstrips.filter(airstrip => {
+            return airstripIdList.indexOf(airstrip.airstripId) > -1;
         });
     }
 
-    getAirstripById(id: string): Airstrip {
-        return airstrips.filter(airstrip => airstrip.airstripId === id)[0];
+    /**
+     * Get the airstrip by the given id.
+     */
+    getAirstripById(airstripId: string): Airstrip {
+        return this.airstrips.filter(airstrip => airstrip.airstripId === airstripId)[0];
     }
 
-    // Get all the airplanes from the assets/json folder.
-    getAllAirplanes(): Airplane[]{
-        return airplanes;
-    }
-
+    /**
+     * Get a list of airstrip pairs for each leg of the given flight.
+     */
     getAirstripPairsByFlight(flight: Flight): [[Airstrip, Airstrip]]{
         const flightPairs = flight.legs.map(leg =>
             [
@@ -62,6 +98,9 @@ export class WingmanDataService {
         return flightPairs as [[Airstrip, Airstrip]];
     }
 
+    /**
+     * Get a list of airstrips according to the airtripIds inside the given flight legs.
+     */
     getAirstripsByFlight(flight: Flight, filterDuplicates?: boolean): Airstrip[] {
         let airstripIds = [];
 
@@ -77,8 +116,63 @@ export class WingmanDataService {
                 return self.indexOf(value) === index;
             });
         }
-
         // Get and return only the relevant airstrip info
         return this.getAirstripsByIdList(airstripIds);
+    }
+
+    /**
+     * Method the observable will call on 'next', to set the local flights.
+     */
+    private selectFlights(selectedFlights: Flight[]){
+        this.flights.map(flight => {
+            flight.selected = selectedFlights.indexOf(flight) > -1;
+        });
+    }
+
+    /**
+     * Get all aircrafts.
+     */
+    getAllAircrafts(): Aircraft[]{
+        return this.aircrafts;
+    }
+
+    /**
+     * Get all aircrafts by the given id.
+     */
+    getAircraftById(aircraftId: string){
+        return this.aircrafts.filter(aircraft => {
+            return aircraft.aircraftId === aircraftId;
+        })[0];
+    }
+
+    /**
+     * Get all aircrafts according to the given flights.
+     */
+    getAircraftsByFlightList(flights: Flight[]){
+        return flights.map(flight => {
+            return this.getAircraftById(flight.aircraftId);
+        });
+    }
+
+    /**
+     * Group flights by aircraftId property.
+     */
+    groupFlightsByAircraftId(flights: Flight[]){
+        return this.groupBy(flights, 'aircraftId');
+    }
+
+    /**
+     * Group items of a list by a given property.
+     * This will return an object with a property for each group.
+     */
+    private groupBy(list, property){
+        const newList = {};
+        list.map(listItem => {
+            if (newList[listItem[property]] === undefined){
+                newList[listItem[property]] = [];
+            }
+            newList[listItem[property]].push(listItem);
+        });
+        return newList;
     }
 }
