@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
+
 import { Flight } from 'src/app/shared/models/flight.model';
 
 @Component({

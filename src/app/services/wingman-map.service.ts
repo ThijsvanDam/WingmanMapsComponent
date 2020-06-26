@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 
-
 // Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import * as L from 'leaflet';
 import 'src/assets/javascript/L.TileLayer.PouchDBCached.js';
 
 import { environment } from './../../environments/environment';
-
-import { WingmanMap } from '../components/map/wingman-map';
 
 import { WingmanDataService } from './wingman-data.service';
 import { CookieService } from './cookie.service';
@@ -16,9 +13,11 @@ import { Flight } from './../shared/models/flight.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Leg } from './../shared/models/leg.model';
 
+import { WingmanMap } from '../components/map/wingman-map';
+
 /**
- * The injectable wingman map service. 
- * @note this is dependent on the leaflet library. 
+ * The injectable wingman map service.
+ * @note this is dependent on the leaflet library.
  */
 @Injectable()
 export class WingmanMapService {

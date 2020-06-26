@@ -1,5 +1,7 @@
-import { FlightEnabled } from './../flight-list/flight-list.component';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+import { FlightEnabled } from './../flight-list/flight-list.component';
+
 import { Aircraft } from 'src/app/shared/models/aircraft.model';
 import { Flight } from 'src/app/shared/models/flight.model';
 

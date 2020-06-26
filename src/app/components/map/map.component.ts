@@ -1,5 +1,5 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Component, AfterViewInit } from '@angular/core';
 
 import { WingmanDataService } from '../../services/wingman-data.service';
 import { WingmanMapService } from '../../services/wingman-map.service';

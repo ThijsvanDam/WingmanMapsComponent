@@ -1,7 +1,9 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
+
+import { FlightEnabled } from './../flight-list/flight-list.component';
+
 import { Aircraft } from 'src/app/shared/models/aircraft.model';
 import { Flight } from 'src/app/shared/models/flight.model';
-import { FlightEnabled } from './../flight-list/flight-list.component';
 
 @Component({
   selector: 'app-aircraft-list',
