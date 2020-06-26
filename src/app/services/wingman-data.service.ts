@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { Aircraft } from './../shared/models/airplane.model';
+import { Aircraft } from '../shared/models/aircraft.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Flight } from './../shared/models/flight.model';
 
@@ -8,8 +8,13 @@ const aircraftJSON: Aircraft[] = require('../../assets/json/airplanes.json');
 const airstripsJSON: Airstrip[] = require('../../assets/json/airstrips.json');
 const flightsJSON: Flight[] = require('../../assets/json/flights.json');
 
+/**
+ * The injectable angular service providing wingman data to each unit of the WingmanMapsComponent.
+ * 
+ * @note Current data sources are local .json files.
+ */
 export class WingmanDataService {
-    currentlySelectedFlights: BehaviorSubject<Flight[]>;
+    public currentlySelectedFlights: BehaviorSubject<Flight[]>;
 
     private aircrafts: Aircraft[];
     private airstrips: Airstrip[];

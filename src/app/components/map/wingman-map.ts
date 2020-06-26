@@ -1,11 +1,10 @@
 
-import { Map, MapOptions, Control } from 'leaflet';
+import { Map, MapOptions, Control, Layer } from 'leaflet';
 
 import { CookieService } from './../../services/cookie.service';
 
 export class WingmanMap extends Map {
   // Everything considering layers of the map
-  private attributions = {};
   private overlayMaps = {};
   private baseMaps = {};
 
@@ -26,10 +25,10 @@ export class WingmanMap extends Map {
    * Add a base map to the map control.
    * When the map (with the baseMapName) is inside the cookies, the cookie value will be used.
    * @param baseMapName The name shown in the leaflet map control
-   * @param leafletBaseMap The leaflet base map type of L.Layer
+   * @param leafletBaseMap The leaflet base map type of Layer
    * @param options enable: whether the base map has to be added to the map or not
    */
-  public addBaseMap(baseMapName, leafletBaseMap: L.Layer, options?: AddMapOptions) {
+  public addBaseMap(baseMapName, leafletBaseMap: Layer, options?: AddMapOptions) {
     // Remember the base map locally
     this.baseMaps[baseMapName] = leafletBaseMap;
 
@@ -57,10 +56,10 @@ export class WingmanMap extends Map {
    * Add an overlay map to the map control.
    * When overlay map (with the leafletOverlayMap) is inside the cookies, the cookie value will be used.
    * @param layerName The name shown in the leaflet map control
-   * @param leafletOverlayMap The leaflet base map type of L.Layer
+   * @param leafletOverlayMap The leaflet base map type of Layer
    * @param options enable: whether the base map has to be added to the map or not
    */
-  public addOverlayMap(layerName: string, leafletOverlayMap: L.Layer, options?: AddMapOptions) {
+  public addOverlayMap(layerName: string, leafletOverlayMap: Layer, options?: AddMapOptions) {
     // Remember the overlay locally
     this.overlayMaps[layerName] = leafletOverlayMap;
 
@@ -89,7 +88,7 @@ export class WingmanMap extends Map {
    * @param layerName The name of the map layer, which is used in the cookie
    * @param layer The layer to be added
    */
-  private setLayersAccordingToCookie(layerName: string, layer: L.Layer): boolean {
+  private setLayersAccordingToCookie(layerName: string, layer: Layer): boolean {
     let cookie = this.cookieService.getCookie('layer');
     if (cookie) {
       cookie = JSON.parse(cookie);

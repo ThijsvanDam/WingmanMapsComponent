@@ -5,7 +5,7 @@ import { FlightEnabled } from './../flight-list/flight-list.component';
 import { WingmanDataService } from './../../services/wingman-data.service';
 import { WingmanMapService } from '../../services/wingman-map.service';
 
-import { Aircraft } from './../../shared/models/airplane.model';
+import { Aircraft } from '../../shared/models/aircraft.model';
 import { Flight } from 'src/app/shared/models/flight.model';
 
 @Component({

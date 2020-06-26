@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of, Observable } from 'rxjs';
+
 
 // Downloaded from https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached
 import * as L from 'leaflet';
@@ -16,6 +16,10 @@ import { Flight } from './../shared/models/flight.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Leg } from './../shared/models/leg.model';
 
+/**
+ * The injectable wingman map service. 
+ * @note this is dependent on the leaflet library. 
+ */
 @Injectable()
 export class WingmanMapService {
   public icons;
