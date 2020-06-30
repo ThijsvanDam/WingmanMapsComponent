@@ -40,10 +40,17 @@ export class WingmanMapService {
       }),
       waypoint: L.icon({
         iconUrl: environment.marker.waypoint_image,
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
         popupAnchor: [0, -15]
-      })
+      }),
+      maf_base: L.icon({
+        iconUrl: environment.marker.maf_base_image,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10]
+      }),
+
     };
 
     this.currentlySelectedFlights = [];
@@ -230,16 +237,22 @@ export class WingmanMapService {
    * @returns Leaflet marker list
    */
   private createAirstripMarkerList(airstrips: Airstrip[]): L.Marker[] {
-    const waypointIcon = this.icons.waypoint;
-    const airstripIcon = this.icons.airstrip;
-
     // Map all relevant data of the airstrip to the airstripArray
     const airstripMarkerArray = airstrips.map(airstrip => {
+
+      let icon;
+      if (Boolean(airstrip.waypointOnly)) {
+        icon = this.icons.waypoint;
+      } else if (airstrip.mafBase) {
+        icon = this.icons.maf_base;
+      } else {
+        icon = this.icons.airstrip;
+      }
       const marker = L.marker(
         // Set the position of the marker to the position of the airstrip
         [airstrip.position.latDeg, airstrip.position.longDeg],
         // The icon is an airstrip or a waypoint according to the value of waypointOnly
-        { icon: Boolean(airstrip.waypointOnly) ? waypointIcon : airstripIcon }
+        { icon }
         // Bind a popup with the airstrip name to the marker
       ).bindPopup(this.generateMarkerPopupContent(airstrip));
 
@@ -358,7 +371,7 @@ export class WingmanMapService {
   private getPolyLines(positionPairs: [[[number, number]]]): L.Polyline[] {
 
     const legLines: L.Polyline[] = [];
-    positionPairs.forEach((pair) => {
+    positionPairs.forEach((pair, index) => {
       const leg = L.polyline(pair);
 
       leg.setStyle({ color: '#2196F3', weight: 3 });
@@ -376,6 +389,7 @@ export class WingmanMapService {
   private getFlightLineGroup(flight: Flight): L.FeatureGroup {
     // Get  the lat/longs from the airstrips flight legs.
     const positionPairs = this.getLatLongFromFlight(flight);
+
     // Create leaflet polylines and add them to a feature group.
     // The legs can now be addressed separately.
     const lineGroup = new L.FeatureGroup(this.getPolyLines(positionPairs));
