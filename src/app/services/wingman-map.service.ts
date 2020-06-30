@@ -17,6 +17,7 @@ import { WingmanMap } from '../components/map/wingman-map';
 
 /**
  * The injectable wingman map service.
+ * This service contains all map logic.
  * @note this is dependent on the leaflet library.
  */
 @Injectable()
@@ -169,7 +170,7 @@ export class WingmanMapService {
     this.map.saveMapSettingsOnChange();
 
     // Add a control for the airstrip labels using an extended label control class.
-    this.map.addOverlayMap('Airstrip labels', new LabelControlLayer(), {enable: true});
+    this.map.addOverlayMap('Airstrip labels', new LabelControlLayer(), { enable: true });
   }
   /**
    * Show leaflet markers for all airstrips.
@@ -431,7 +432,7 @@ export class WingmanMapService {
 
 const LabelControlLayer = L.Layer.extend({
 
-  getElement(): HTMLElement{
+  getElement(): HTMLElement {
     return document.getElementsByClassName('leaflet-tooltip-pane')[0] as HTMLElement;
   },
 
@@ -445,7 +446,7 @@ const LabelControlLayer = L.Layer.extend({
     // This will be automatically called when the option is cached.
     this.getElement().style.display = 'block';
   },
-  onRemove(){
+  onRemove() {
     this.getElement().style.display = 'none';
   }
 });

@@ -19,20 +19,20 @@ export class MapControlComponent {
 
   constructor(private mapService: WingmanMapService, private dataService: WingmanDataService) {
     this.allFlights = this.dataService.getAllFlightNames();
-   }
+  }
 
-   /**
-    * Call the dataservice observable with new flight list, with a removed or added flight.
-    * @param flightEnabled containing which flight has been enabled whether or not.
-    */
-  public flightsSelectedChanged(flightEnabled: FlightEnabled){
+  /**
+   * Call the dataservice observable with new flight list, with a removed or added flight.
+   * @param flightEnabled containing which flight has been enabled whether or not.
+   */
+  public flightsSelectedChanged(flightEnabled: FlightEnabled) {
     let nextFlights;
 
-    if (flightEnabled.enabled){
-        nextFlights = this.dataService.currentlySelectedFlights.getValue();
-        nextFlights.push(this.dataService.getFlightbyId(flightEnabled.flightId));
-    }else{
-        nextFlights = this.dataService.currentlySelectedFlights.getValue().filter(flight => flight.flightId !== flightEnabled.flightId);
+    if (flightEnabled.enabled) {
+      nextFlights = this.dataService.currentlySelectedFlights.getValue();
+      nextFlights.push(this.dataService.getFlightbyId(flightEnabled.flightId));
+    } else {
+      nextFlights = this.dataService.currentlySelectedFlights.getValue().filter(flight => flight.flightId !== flightEnabled.flightId);
     }
     this.dataService.currentlySelectedFlights.next(nextFlights);
   }
@@ -42,7 +42,7 @@ export class MapControlComponent {
   /**
    * Get aircrafts according to the currently selected flights from the data service.
    */
-  public getAircrafts(): Aircraft[]{
+  public getAircrafts(): Aircraft[] {
     const selectedFlights: Flight[] = this.dataService.getAllFlights().filter(x => x.aircraftId !== null);
     return this.dataService.getAircraftsByFlightList(selectedFlights);
   }
@@ -50,32 +50,32 @@ export class MapControlComponent {
   /**
    * Get the flights from the data service without an aircraft linked to it
    */
-  public getFlightsWithoutAircraft(): Flight[]{
+  public getFlightsWithoutAircraft(): Flight[] {
     return this.dataService.getAllFlights().filter(x => x.aircraftId === null);
   }
 
   /**
    * Get an object with the flights grouped by their aircraft.
    */
-  public getFlightsByAircraft(){
+  public getFlightsByAircraft() {
     const flights: Flight[] = this.dataService.getAllFlights().filter(x => x.aircraftId !== null);
     return this.dataService.groupFlightsByAircraftId(flights);
   }
 
   // Input and button handlers for the view
-  public handleAllAirstripsButton(){
+  public handleAllAirstripsButton() {
     this.mapService.showAllAirstrips();
   }
 
-  public handleRelevantAirstripsButton(){
+  public handleRelevantAirstripsButton() {
     this.mapService.showRelevantAirstripMarkers();
   }
 
-  public handleShowAllFlightsButton(){
+  public handleShowAllFlightsButton() {
     this.dataService.currentlySelectedFlights.next(this.dataService.getAllFlights());
   }
 
-  public handleSelectFlightDropdown(selectedFlight: string){
+  public handleSelectFlightDropdown(selectedFlight: string) {
     this.dataService.currentlySelectedFlights.next([this.dataService.getFlightbyId(selectedFlight)]);
   }
 }

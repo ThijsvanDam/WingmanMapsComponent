@@ -25,7 +25,7 @@ export class AircraftComponent {
   /**
    * Emit a @FlightEnabled event to the parent component if a flight is clicked.
    */
-  flightsChanged(flightEnabled: FlightEnabled){
+  flightsChanged(flightEnabled: FlightEnabled) {
     this.flightsChangedHandler.emit(flightEnabled);
   }
 

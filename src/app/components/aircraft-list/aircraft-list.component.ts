@@ -22,14 +22,14 @@ export class AircraftListComponent {
 
   constructor() { }
 
-  getAircraftIds(){
+  getAircraftIds() {
     return Object.keys(this.flightsByAircraftId);
   }
 
   /**
    * Get aircraft by aircraft ID from the passed through aircrafts list.
    */
-  getAircraftByAircraftId(aircraftId: string){
+  getAircraftByAircraftId(aircraftId: string) {
     return this.aircrafts.filter(aircraft => aircraft.aircraftId === aircraftId)[0];
   }
 

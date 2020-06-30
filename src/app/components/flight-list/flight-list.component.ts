@@ -19,7 +19,7 @@ export class FlightListComponent {
   /**
    * Emit a @FlightEnabled event to the parent component if a flight is clicked.
    */
-  flightClicked(enabled, flight){
+  flightClicked(enabled, flight) {
     this.flightsChangedHandler.emit({
       flightId: flight.flightId,
       enabled
@@ -30,7 +30,7 @@ export class FlightListComponent {
 /**
  * Interface to pass information through about which flight has been enabled whether or not.
  */
-export interface FlightEnabled{
+export interface FlightEnabled {
   flightId: string;
   enabled: boolean;
 }

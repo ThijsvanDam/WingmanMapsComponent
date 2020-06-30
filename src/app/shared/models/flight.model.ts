@@ -1,6 +1,6 @@
 import { Leg } from './leg.model';
 
-export interface Flight{
+export interface Flight {
   flightId?: string;
   mainBookingId?: string;
   flightDescription?: string;

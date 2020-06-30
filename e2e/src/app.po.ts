@@ -2,7 +2,6 @@ import { browser, by, element } from 'protractor';
 
 export class WingmanMapPage {
 
-  
   /**
    * Go to the url set in the protractor config.
    */
@@ -47,7 +46,7 @@ export class WingmanMapPage {
 
     appflightListRows.each((row, index) => {
       // Skip the TH row.
-      if(index > 0) {
+      if (index > 0) {
         row.getText().then((text: string) => {
         });
         // The second TD contains the ID of the flight.
@@ -56,7 +55,7 @@ export class WingmanMapPage {
         // Get the text of the second TD and check if it's equal to the flightID param.
         // If so, click the checkbox of that same flight.
         childId.getText().then((text: string) => {
-          if(text[0] === flightId){
+          if (text[0] === flightId){
             row.all(by.css('td:nth-child(1)')).click();
           }
         });

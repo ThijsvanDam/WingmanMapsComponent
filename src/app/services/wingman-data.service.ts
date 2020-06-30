@@ -10,7 +10,6 @@ const flightsJSON: Flight[] = require('../../assets/json/flights.json');
 
 /**
  * The injectable angular service providing wingman data to each unit of the WingmanMapsComponent.
- * 
  * @note Current data sources are local .json files.
  */
 export class WingmanDataService {
@@ -35,21 +34,21 @@ export class WingmanDataService {
     /**
      * Get all flights.
      */
-    getAllFlights(): Flight[]{
+    getAllFlights(): Flight[] {
         return this.flights;
     }
 
     /**
      * Get the first flight.
      */
-    getFirstFlight(): Flight{
+    getFirstFlight(): Flight {
         return this.flights[0];
     }
 
     /**
      * Get the flight number by passed id.
      */
-    getFlightbyId(flightId: string): Flight{
+    getFlightbyId(flightId: string): Flight {
         return this.flights.filter(flight => {
             return flight.flightId === flightId;
         })[0];
@@ -58,21 +57,21 @@ export class WingmanDataService {
     /**
      * Get the flight names.
      */
-    getAllFlightNames(): string[]{
+    getAllFlightNames(): string[] {
         return this.flights.map(x => x.flightId);
     }
 
     /**
      * Get all the airstrips.
      */
-    getAllAirstrips(): Airstrip[]{
+    getAllAirstrips(): Airstrip[] {
         return this.airstrips;
     }
 
     /**
      * Get only the airstrips which id's are given inside the idList.
      */
-    getAirstripsByIdList(airstripIdList: string[]): Airstrip[]{
+    getAirstripsByIdList(airstripIdList: string[]): Airstrip[] {
         return this.airstrips.filter(airstrip => {
             return airstripIdList.indexOf(airstrip.airstripId) > -1;
         });
@@ -88,7 +87,7 @@ export class WingmanDataService {
     /**
      * Get a list of airstrip pairs for each leg of the given flight.
      */
-    getAirstripPairsByFlight(flight: Flight): [[Airstrip, Airstrip]]{
+    getAirstripPairsByFlight(flight: Flight): [[Airstrip, Airstrip]] {
         const flightPairs = flight.legs.map(leg =>
             [
                 this.getAirstripById(leg.startId),
@@ -110,7 +109,7 @@ export class WingmanDataService {
             airstripIds.push(leg.destinationId);
         });
 
-        if (filterDuplicates){
+        if (filterDuplicates) {
             // Filter duplicate ID's
             airstripIds = airstripIds.filter((value, index, self) => {
                 return self.indexOf(value) === index;
@@ -123,7 +122,7 @@ export class WingmanDataService {
     /**
      * Method the observable will call on 'next', to set the local flights.
      */
-    private selectFlights(selectedFlights: Flight[]){
+    private selectFlights(selectedFlights: Flight[]) {
         this.flights.map(flight => {
             flight.selected = selectedFlights.indexOf(flight) > -1;
         });
@@ -132,14 +131,14 @@ export class WingmanDataService {
     /**
      * Get all aircrafts.
      */
-    getAllAircrafts(): Aircraft[]{
+    getAllAircrafts(): Aircraft[] {
         return this.aircrafts;
     }
 
     /**
      * Get all aircrafts by the given id.
      */
-    getAircraftById(aircraftId: string){
+    getAircraftById(aircraftId: string) {
         return this.aircrafts.filter(aircraft => {
             return aircraft.aircraftId === aircraftId;
         })[0];
@@ -148,7 +147,7 @@ export class WingmanDataService {
     /**
      * Get all aircrafts according to the given flights.
      */
-    getAircraftsByFlightList(flights: Flight[]){
+    getAircraftsByFlightList(flights: Flight[]) {
         return flights.map(flight => {
             return this.getAircraftById(flight.aircraftId);
         });
@@ -157,7 +156,7 @@ export class WingmanDataService {
     /**
      * Group flights by aircraftId property.
      */
-    groupFlightsByAircraftId(flights: Flight[]){
+    groupFlightsByAircraftId(flights: Flight[]) {
         return this.groupBy(flights, 'aircraftId');
     }
 
@@ -165,10 +164,10 @@ export class WingmanDataService {
      * Group items of a list by a given property.
      * This will return an object with a property for each group.
      */
-    private groupBy(list, property){
+    private groupBy(list, property) {
         const newList = {};
         list.map(listItem => {
-            if (newList[listItem[property]] === undefined){
+            if (newList[listItem[property]] === undefined) {
                 newList[listItem[property]] = [];
             }
             newList[listItem[property]].push(listItem);

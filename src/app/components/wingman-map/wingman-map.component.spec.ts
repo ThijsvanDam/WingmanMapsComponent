@@ -8,9 +8,9 @@ describe('WingmanMapComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WingmanMapComponent ]
+      declarations: [WingmanMapComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

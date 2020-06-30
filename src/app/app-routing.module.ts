@@ -6,7 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: 'map', pathMatch: 'full' },
-  { path: 'map', component: WingmanMapComponent}
+  { path: 'map', component: WingmanMapComponent }
 ];
 
 @NgModule({
