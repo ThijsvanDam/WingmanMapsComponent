@@ -32,7 +32,7 @@ export class WingmanDataService {
     }
 
     /**
-     * Get all flights.
+     * Get all currently selected flights.
      */
     getAllFlights(): Flight[] {
         return this.flights;

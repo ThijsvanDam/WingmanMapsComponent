@@ -81,6 +81,8 @@ export class WingmanMapService {
 
   /**
    * Method for the flights observable to hook into, providing all logic to set the new state of the map.
+   * This method is to be used by the observable only, because it uses the private currentlySelectedFlights
+   * in stead of the public selectedFlights property.
    */
   private drawFlightsAndMarkers(flights) {
     this.currentlySelectedFlights = flights;
