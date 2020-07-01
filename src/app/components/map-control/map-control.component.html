@@ -11,7 +11,7 @@
 
   <h5><select (change)="handleSelectFlightDropdown(selectField.value)" #selectField>
       <option *ngFor="let flightName of allFlights">{{flightName}}</option>
-    </select> Selecteer een enkele vlucht. </h5>
+    </select> Select a single flight. </h5>
   <div class="overflow-auto">
     <app-flight-list [flights]="getFlightsWithoutAircraft()" (flightsChangedHandler)="flightsSelectedChanged($event)">
     </app-flight-list>
