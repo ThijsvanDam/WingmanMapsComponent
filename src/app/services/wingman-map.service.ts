@@ -110,25 +110,25 @@ export class WingmanMapService {
       useCache: true,
       crossOrigin: true,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    });
+    } as any);
 
     const satelliteMap = L.tileLayer(`http://{s}.sat.owm.io/sql/{z}/{x}/{y}/?appid=${OWM_KEY}&overzoom=true&op=rgb&from=cloudless&select=b4,b3,b2`, {
       useCache: true,
       crossOrigin: true,
       attribution: 'vane?'
-    });
+    } as any);
 
     const blackWhiteMap = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
       useCache: true,
       crossOrigin: true,
       attribution: ''
-    });
+    } as any);
 
     const watercolor = L.tileLayer('http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg	', {
       useCache: true,
       crossOrigin: true,
       attribution: ''
-    });
+    } as any);
 
     this.map.addBaseMap('Topographic map', topographicMap, { enable: true });
     this.map.addBaseMap('Sat map', satelliteMap);
@@ -140,25 +140,25 @@ export class WingmanMapService {
       useCache: true,
       crossOrigin: true,
       attribution: 'OpenWeatherMap'
-    });
+    } as any);
 
     const precipitationOverlay = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {
       useCache: true,
       crossOrigin: true,
       attribution: 'OpenWeatherMap'
-    });
+    } as any);
 
     const windspeedOverlay = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {
       useCache: true,
       crossOrigin: true,
       attribution: 'OpenWeatherMap'
-    });
+    } as any);
 
     const temperatureOverlay = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {
       useCache: true,
       crossOrigin: true,
       attribution: 'OpenWeatherMap'
-    });
+    } as any);
 
     // NOTE: This is only for europe and part of north africa. (Also a little on south/north america)
     // https://www.arcgis.com/home/webmap/viewer.html?useExisting=1&layers=1b243539f4514b6ba35e7d995890db1d
@@ -167,7 +167,7 @@ export class WingmanMapService {
       useCache: true,
       crossOrigin: true,
       attribution: 'OpenWeatherMap'
-    });
+    } as any);
 
     this.map.addOverlayMap('Clouds', cloudsOverlay);
     this.map.addOverlayMap('Precipitation', precipitationOverlay);
