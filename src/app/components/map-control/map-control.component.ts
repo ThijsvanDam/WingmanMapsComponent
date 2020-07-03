@@ -30,7 +30,7 @@ export class MapControlComponent {
 
     if (flightEnabled.enabled) {
       nextFlights = this.dataService.currentlySelectedFlights.getValue();
-      nextFlights.push(this.dataService.getFlightbyId(flightEnabled.flightId));
+      nextFlights.push(this.dataService.getFlightById(flightEnabled.flightId));
     } else {
       nextFlights = this.dataService.currentlySelectedFlights.getValue().filter(flight => flight.flightId !== flightEnabled.flightId);
     }
@@ -76,6 +76,6 @@ export class MapControlComponent {
   }
 
   public handleSelectFlightDropdown(selectedFlight: string) {
-    this.dataService.currentlySelectedFlights.next([this.dataService.getFlightbyId(selectedFlight)]);
+    this.dataService.currentlySelectedFlights.next([this.dataService.getFlightById(selectedFlight)]);
   }
 }

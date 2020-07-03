@@ -1,10 +1,10 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { Aircraft } from '../shared/models/aircraft.model';
+import { Aircraft } from './../shared/models/aircraft.model';
 import { Airstrip } from './../shared/models/airstrip.model';
 import { Flight } from './../shared/models/flight.model';
 
-const aircraftJSON: Aircraft[] = require('../../assets/json/airplanes.json');
+const aircraftJSON: Aircraft[] = require('../../assets/json/aircrafts.json');
 const airstripsJSON: Airstrip[] = require('../../assets/json/airstrips.json');
 const flightsJSON: Flight[] = require('../../assets/json/flights.json');
 
@@ -39,16 +39,9 @@ export class WingmanDataService {
     }
 
     /**
-     * Get the first flight.
-     */
-    getFirstFlight(): Flight {
-        return this.flights[0];
-    }
-
-    /**
      * Get the flight number by passed id.
      */
-    getFlightbyId(flightId: string): Flight {
+    getFlightById(flightId: string): Flight {
         return this.flights.filter(flight => {
             return flight.flightId === flightId;
         })[0];
@@ -98,41 +91,12 @@ export class WingmanDataService {
     }
 
     /**
-     * Get a list of airstrips according to the airtripIds inside the given flight legs.
-     */
-    getAirstripsByFlight(flight: Flight, filterDuplicates?: boolean): Airstrip[] {
-        let airstripIds = [];
-
-        // Gets the airstrips IDs from the legs
-        flight.legs.forEach(leg => {
-            airstripIds.push(leg.startId);
-            airstripIds.push(leg.destinationId);
-        });
-
-        if (filterDuplicates) {
-            // Filter duplicate ID's
-            airstripIds = airstripIds.filter((value, index, self) => {
-                return self.indexOf(value) === index;
-            });
-        }
-        // Get and return only the relevant airstrip info
-        return this.getAirstripsByIdList(airstripIds);
-    }
-
-    /**
      * Method the observable will call on 'next', to set the local flights.
      */
     private selectFlights(selectedFlights: Flight[]) {
         this.flights.map(flight => {
             flight.selected = selectedFlights.indexOf(flight) > -1;
         });
-    }
-
-    /**
-     * Get all aircrafts.
-     */
-    getAllAircrafts(): Aircraft[] {
-        return this.aircrafts;
     }
 
     /**
