@@ -24,7 +24,9 @@ export class WingmanDataService {
         this.aircrafts = aircraftJSON;
         this.airstrips = airstripsJSON;
         // The splice has to be removed in production.
-        this.flights = flightsJSON.splice(0, 40);
+        this.flights = flightsJSON;
+        // this.flights = flightsJSON.splice(0, 40);
+
         // Create the obserable and straight up subscribe to set the local flight list in this service.
         this.currentlySelectedFlights = new BehaviorSubject<Aircraft[]>(this.flights);
         this.currentlySelectedFlights.subscribe(flights => this.selectFlights(flights));
