@@ -52,10 +52,6 @@ export class WingmanDataService {
      * Get the flight names.
      */
     getAllFlightNames(): string[] {
-        let a = this.flights.map(x => x.flightId);
-        console.log('askimibi');
-        console.log(a);
-        
         return this.flights.map(x => x.flightId);
     }
 

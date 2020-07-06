@@ -12,10 +12,6 @@ describe('Wingman maps component', () => {
     browser.waitForAngular();
   });
 
-  it('should display welcome message', () => {
-    expect(page.getTitleText()).toEqual('Welcome to the Wingman maps component!');
-  });
-
   it('[1/6] Shows correct amount of legs and markers on selecting a flight through the dropdown.', () => {
 
     const flight = flights[8];
@@ -213,6 +209,10 @@ describe('Wingman maps component', () => {
       flight.legs.length + flightTwo.legs.length + flightThree.legs.length);
     expect(markers.all(by.tagName('img')).count()).toEqual(legIds.length);
 
+  });
+
+  it('Should be able to hide and show markers.', () => {
+    
   });
 
 

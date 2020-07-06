@@ -24,22 +24,15 @@ describe('Wingman map service', () => {
   let dataServiceSpy: jasmine.SpyObj<WingmanDataService>;
   let cookieServiceSpy: jasmine.SpyObj<CookieService>;
 
-  const mouseFunction = function (e) {
+  const mouseFunction = function(e) {
     this.openPopup();
   };
 
   beforeEach(() => {
-    // const spy = jasmine.createSpyObj('WingmanDataService', ['getAllAirstrips'], {
-      // currentlySelectedFlights: new BehaviorSubjectMock()
-    // });
-
-    // spy.currentlySelectedFlights.and.returnValue(new BehaviorSubjectMock());
-    
-    // { provide: WingmanDataService, useValue: spy },
     TestBed.configureTestingModule({
       providers: [WingmanMapService,
-                  WingmanDataService,
-                  CookieService,
+        WingmanDataService,
+        CookieService,
       ]
     });
 
@@ -51,10 +44,10 @@ describe('Wingman map service', () => {
 
   const markerAddMethods = (marker, popupValue = `Test return message`, tooltipValue = `display`) => {
     return marker
-    .bindPopup(popupValue)
-    .on('mouseover', mouseFunction)
-    .on('mouseout', mouseFunction)
-    .bindTooltip(tooltipValue, { permanent : true });
+      .bindPopup(popupValue)
+      .on('mouseover', mouseFunction)
+      .on('mouseout', mouseFunction)
+      .bindTooltip(tooltipValue, { permanent: true });
   };
 
   it('Should be able to call showAirstrips with correctly created airstrip markers', () => {
@@ -96,8 +89,6 @@ describe('Wingman map service', () => {
     // This is all the flight data needed by the function,
     // calling showRelevantAirstrips will not need more data.
     spyOn(mapService, 'initializeMap').and.callFake(function(mapId) {
-      // console.log('a');
-      
       this.dataService.currentlySelectedFlights.subscribe(data => this.drawFlightsAndMarkers(data));
     });
 
@@ -187,12 +178,14 @@ describe('Wingman map service', () => {
   });
 
   it('Filter the airstripIDs of a given flight correctly', () => {
-    // This is all the flight data needed by the function,
-    // calling showRelevantAirstrips will not need more data.
+    // The only way to access the private method drawFlightsAndMarkers with the correct data.
+    // initializeMap has to be overwritten because it initializes the wingman map, which should be avoided..
     spyOn(mapService, 'initializeMap').and.callFake(function(mapId) {
       this.dataService.currentlySelectedFlights.subscribe(data => this.drawFlightsAndMarkers(data));
     });
 
+    // This is all the flight data needed by the function,
+    // calling showRelevantAirstrips will not require more data.
     mapService.selectedFlights = [{
       flightId: 'F1',
       legs: [

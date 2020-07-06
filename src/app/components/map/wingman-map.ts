@@ -3,7 +3,14 @@ import { Map, MapOptions, Control, Layer } from 'leaflet';
 
 import { CookieService } from './../../services/cookie.service';
 
+/**
+ * The WingMan extension of the Leaflet map.
+ */
 export class WingmanMap extends Map {
+  /**
+   * @note Only E2E tests are available for this class, the public units can't be tested due to the instance being dependent on a view..
+   */
+
   // Everything considering layers of the map
   private overlayMaps = {};
   private baseMaps = {};
@@ -12,9 +19,11 @@ export class WingmanMap extends Map {
 
   constructor(private cookieService: CookieService, mapId: string, options?: MapOptions) {
     super(mapId, options);
-
   }
 
+  /**
+   * Execute saveMapControlOptions every time a layer or overlay is changed, added or removed
+   */
   public saveMapSettingsOnChange() {
     this.on('baselayerchange', this.saveMapControlOptions);
     this.on('overlayadd', this.saveMapControlOptions);
