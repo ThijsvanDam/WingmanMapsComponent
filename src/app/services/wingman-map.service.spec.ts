@@ -96,6 +96,8 @@ describe('Wingman map service', () => {
     // This is all the flight data needed by the function,
     // calling showRelevantAirstrips will not need more data.
     spyOn(mapService, 'initializeMap').and.callFake(function(mapId) {
+      // console.log('a');
+      
       this.dataService.currentlySelectedFlights.subscribe(data => this.drawFlightsAndMarkers(data));
     });
 

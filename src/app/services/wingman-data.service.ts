@@ -25,7 +25,6 @@ export class WingmanDataService {
         this.airstrips = airstripsJSON;
         // The splice has to be removed in production.
         this.flights = flightsJSON.splice(0, 40);
-
         // Create the obserable and straight up subscribe to set the local flight list in this service.
         this.currentlySelectedFlights = new BehaviorSubject<Aircraft[]>(this.flights);
         this.currentlySelectedFlights.subscribe(flights => this.selectFlights(flights));
@@ -51,6 +50,10 @@ export class WingmanDataService {
      * Get the flight names.
      */
     getAllFlightNames(): string[] {
+        let a = this.flights.map(x => x.flightId);
+        console.log('askimibi');
+        console.log(a);
+        
         return this.flights.map(x => x.flightId);
     }
 
@@ -91,15 +94,6 @@ export class WingmanDataService {
     }
 
     /**
-     * Method the observable will call on 'next', to set the local flights.
-     */
-    private selectFlights(selectedFlights: Flight[]) {
-        this.flights.map(flight => {
-            flight.selected = selectedFlights.indexOf(flight) > -1;
-        });
-    }
-
-    /**
      * Get all aircrafts by the given id.
      */
     getAircraftById(aircraftId: string) {
@@ -122,6 +116,15 @@ export class WingmanDataService {
      */
     groupFlightsByAircraftId(flights: Flight[]) {
         return this.groupBy(flights, 'aircraftId');
+    }
+
+    /**
+     * Method the observable will call on 'next', to set the local flights.
+     */
+    private selectFlights(selectedFlights: Flight[]) {
+        this.flights.map(flight => {
+            flight.selected = selectedFlights.indexOf(flight) > -1;
+        });
     }
 
     /**

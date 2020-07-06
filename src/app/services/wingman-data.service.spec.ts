@@ -95,7 +95,7 @@ describe('Wingman data service', () => {
     expect(expectedAirstrips).toEqual(retrievedAirstrips);
   });
 
-  it('Should be able gather an airstrip by its ID.s', () => {
+  it('Should be able gather an airstrip by its ID', () => {
     const expectedAirstrip =
     {
       airstripId: 'AS000137',
@@ -124,7 +124,7 @@ describe('Wingman data service', () => {
     expect(retrievedAirstrip).toEqual(expectedAirstrip);
   });
 
-  it('Should be able gather an aircraft by its ID.s', () => {
+  it('Should be able gather an aircraft by its ID', () => {
     const expectedAircraft = {
       aircraftId: 'AC000033',
       displayName: 'MAF',
@@ -245,7 +245,7 @@ describe('Wingman data service', () => {
     expect(retrievedFlights).toEqual(flightsJSON);
   });
 
-  it('Should be a flight by its id', () => {
+  it('Should be able to get a flight by its id', () => {
 
     const expectedFlight = {
       flightId: 'FPG034951',
@@ -307,7 +307,7 @@ describe('Wingman data service', () => {
           landing: '2020-03-09T11:56',
           onBlock: '2020-03-09T11:59',
           estimate: false,
-          airTime: 0.5
+          airTime: 0.5,
         }
       ]
     };
@@ -323,6 +323,8 @@ describe('Wingman data service', () => {
     expectedFlightNames = expectedFlightNames.splice(0, 40);
 
     const retrievedFlightNames: string[] = dataService.getAllFlightNames();
+    console.log(retrievedFlightNames);
+    
 
     expect(expectedFlightNames).toEqual(retrievedFlightNames);
   });
