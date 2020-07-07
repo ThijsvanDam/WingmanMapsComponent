@@ -86,6 +86,7 @@ describe('Wingman map service', () => {
   });
 
   it('Should call showAirstrips with correct AirstripMarkers with a given flight', () => {
+
     // This is all the flight data needed by the function,
     // calling showRelevantAirstrips will not need more data.
     spyOn(mapService, 'initializeMap').and.callFake(function(mapId) {
@@ -162,6 +163,7 @@ describe('Wingman map service', () => {
     idListSpy.and.returnValue(returnRelevantAirstrips);
     spyOn<any>(mapService, 'generateMarkerPopupContent').and.returnValue('Test return message');
     const showAirstripsSpy = spyOn<any>(mapService, 'showAirstrips');
+    spyOn<any>(mapService, 'drawFlights');
 
     // Execute our actual code
     mapService.initializeMap('mapId');
@@ -237,6 +239,7 @@ describe('Wingman map service', () => {
     idListSpy.and.returnValue(returnRelevantAirstrips);
     spyOn<any>(mapService, 'generateMarkerPopupContent').and.returnValue('Test return message');
     const showAirstripsSpy = spyOn<any>(mapService, 'showAirstrips');
+    spyOn<any>(mapService, 'drawFlights');
 
     // Execute our actual code
     mapService.initializeMap('mapId');
