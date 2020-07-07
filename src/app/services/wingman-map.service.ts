@@ -354,9 +354,7 @@ export class WingmanMapService {
    */
   private getLatLongFromFlight(flight: Flight): [[[number, number]]] {
     const airstripsPairs: [[Airstrip, Airstrip]] = this.dataService.getAirstripPairsByFlight(flight);
-    console.log(airstripsPairs);
 
-    
     const positionPairs = airstripsPairs.map(pair => [Object.values(pair[0].position), Object.values(pair[1].position)]);
 
     return positionPairs as [[[number, number]]];

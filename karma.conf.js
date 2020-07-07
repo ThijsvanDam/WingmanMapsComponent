@@ -22,7 +22,7 @@ module.exports = function (config) {
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
-    exclude: ['src/components/map/wingman-map.ts'],
+    exclude: ['src/app/components/map/wingman-map.ts'],
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
