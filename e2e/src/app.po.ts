@@ -85,10 +85,6 @@ export class WingmanMapPage {
     flightDropDown.all(by.cssContainingText('option', flightId)).click();
   }
 
-  // switchAirstripLabelCheckbox(){
-  //   let airstripLabelCheck
-  // }
-
   /**
    * Select the flights inside the flight list on the right side of the page.
    * Do this by just clicking the checkbox.
