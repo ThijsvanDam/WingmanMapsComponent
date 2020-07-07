@@ -14,6 +14,13 @@ export class WingmanMapPage {
   }
 
   /**
+   * Refresh the page
+   */
+  refresh(){
+    browser.refresh();
+  }
+
+  /**
    * Get the leaflet overlay pane
    */
   getCurrentRoutes(){
@@ -27,6 +34,47 @@ export class WingmanMapPage {
     return element(by.css('.leaflet-marker-pane'));
   }
 
+  getTooltipPane(){
+    return element(by.css('.leaflet-tooltip-pane'));
+  }
+
+  /**
+   * Get a checkbox inside the layers control by the given css selector
+   */
+  getOverlayLayersControlCheckbox(selector){
+    return element.all(by.css('.leaflet-control-layers-overlays label:' + selector)).all(by.css('input'));
+  }
+
+  /**
+   * Hover the control layers element and click the layers control checkbox corresponding to the given overlay layer selector.
+   */
+  clickOverlayLayersControlCheckbox(selector){
+    this.hoverControlLayersDiv();
+    this.getOverlayLayersControlCheckbox(selector).click();
+  }
+
+  /**
+   * Get a checkbox inside the layers control by the given css selector
+   */
+  getBaseLayersControlItem(selector){
+    return element.all(by.css('.leaflet-control-layers-base label:' + selector)).all(by.css('input'));
+  }
+
+  /**
+   * Hover the control layers element and click the layers control radio button corresponding to the given control layer selector.
+   */
+  clickBaseLayersControl(selector){
+    this.hoverControlLayersDiv();
+    this.getBaseLayersControlItem(selector).click();
+  }
+
+  /**
+   * Hover the leaflet control layers div with the mouse.
+   */
+  hoverControlLayersDiv(){
+    browser.actions().mouseMove(element(by.css('.leaflet-control-layers'))).perform();
+  }
+
   /**
    * Select the flights inside the dropdown on the right side of the page.
    */
@@ -36,6 +84,10 @@ export class WingmanMapPage {
 
     flightDropDown.all(by.cssContainingText('option', flightId)).click();
   }
+
+  // switchAirstripLabelCheckbox(){
+  //   let airstripLabelCheck
+  // }
 
   /**
    * Select the flights inside the flight list on the right side of the page.

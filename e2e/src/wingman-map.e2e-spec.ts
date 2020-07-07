@@ -212,9 +212,69 @@ describe('Wingman maps component', () => {
   });
 
   it('Should be able to hide and show markers.', () => {
+    page.getOverlayLayersControlCheckbox('last-child').isSelected().then(tooltipsChecked => {
+      const tooltipsShown = tooltipsChecked[0];
 
+      // If the tooltips checkbox is enabled
+      if (tooltipsChecked[0]){
+
+        // The tooltips are shown
+        expect(page.getTooltipPane().isDisplayed()).toBe(tooltipsShown);
+
+        // Click the airstrip labels checkbox
+        page.clickOverlayLayersControlCheckbox('last-child');
+
+        // The tooltips shouldnt be shown anymore
+        expect(page.getTooltipPane().isDisplayed()).toBe(!tooltipsShown);
+      }else{
+        // If the tooltips checkbox is not enabled
+
+        // The tooltips are not shown
+        expect(page.getTooltipPane().isDisplayed()).toBe(!tooltipsShown);
+
+        // Click the airstrip labels checkbox
+        page.clickOverlayLayersControlCheckbox('last-child');
+
+        // The tooltips should be shown now
+        expect(page.getTooltipPane().isDisplayed()).toBe(tooltipsShown);
+      }
+    });
   });
 
+  it('Should be able to remember label choices after refresh', () => {
+    const baseLayer = 'nth-child(2)';
+    const overlayLayers = ['nth-child(3)', 'nth-child(1)'];
+
+    // The control items should be disabled upon the first load without cache.
+    page.getBaseLayersControlItem(baseLayer).getAttribute('checked').then(checked => {
+      expect(checked[0]).toBe(null);
+    });
+
+    overlayLayers.forEach(overlayLayer => {
+      page.getOverlayLayersControlCheckbox(overlayLayer).getAttribute('checked').then(checked => {
+        expect(checked[0]).toBe(null);
+      });
+    });
+
+    // Click (enable) all the items that we are going to test.
+    page.clickBaseLayersControl(baseLayer);
+    overlayLayers.forEach(overlayLayer => {
+      page.clickOverlayLayersControlCheckbox(overlayLayer);
+    });
+
+    // Refresh the page
+    page.refresh();
+
+    // Check if the items are still disabled (they should be checked, so true)
+    page.getBaseLayersControlItem(baseLayer).getAttribute('checked').then(checked => {
+      expect(checked[0]).toBe('true');
+    });
+    overlayLayers.forEach(overlayLayer => {
+      page.getOverlayLayersControlCheckbox(overlayLayer).getAttribute('checked').then(checked => {
+        expect(checked[0]).toBe('true');
+      });
+    });
+  });
 
   afterEach(async () => {
     // I have commented this because firebase automatically throws errors.
