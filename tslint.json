@@ -75,6 +75,10 @@
     ],
     "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
+    "no-conditional-assignment": true,
+    "no-sparse-arrays": true,
+    "no-boolean-literal-compare": true,
+    "cyclomatic-complexity": [true, 8],
     "no-switch-case-fall-through": true,
     "no-var-requires": false,
     "object-literal-key-quotes": [

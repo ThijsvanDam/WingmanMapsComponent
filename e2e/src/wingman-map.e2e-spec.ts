@@ -212,7 +212,7 @@ describe('Wingman maps component', () => {
   });
 
   it('Should be able to hide and show markers.', () => {
-    
+
   });
 
 
