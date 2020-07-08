@@ -243,6 +243,35 @@ describe('Wingman data service', () => {
     expect(retrievedAircrafts).toEqual(expectedAircrafts);
   });
 
+  it('Should be able to get the airstrip pairs by flight', () => {
+
+    const flight = {
+      // All the information required to gather airstrips for a flight
+      flightId: 'FPG034707',
+      legs: [
+        {
+          startId: 'AS000394',
+          destinationId: 'AS000546'
+        },
+        {
+          startId: 'AS000546',
+          destinationId: 'AS000052',
+        }
+      ]
+    };
+
+    // Gather the expected airstrips, which is an array of airstrips per leg
+    const expectedAirstripPair = [
+      [dataService.getAirstripById(flight.legs[0].startId), dataService.getAirstripById(flight.legs[0].destinationId)],
+      [dataService.getAirstripById(flight.legs[1].startId), dataService.getAirstripById(flight.legs[1].destinationId)]
+    ];
+
+    // Execute the code
+    const retrievedAirstripPair = dataService.getAirstripPairsByFlight(flight);
+
+    expect(expectedAirstripPair).toEqual(retrievedAirstripPair);
+  });
+
   it('Should be able to get all flights', () => {
     const flightsJSON: Flight[] = require('../../assets/json/flights.json');
 
