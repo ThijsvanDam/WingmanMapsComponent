@@ -12,149 +12,31 @@ describe('Wingman maps component', () => {
     browser.waitForAngular();
   });
 
-  it('[1/6] Shows correct amount of legs and markers on selecting a flight through the dropdown.', () => {
+  it('Shows the correct amount of legs and markers on selecting a flight through the dropdown.', () => {
 
-    const flight = flights[8];
+    for (let i = 7; i < 14; i++) {
+      const flight = flights[i];
+      // Get all the distinct legIds so you can count them.
+      let legIds = [];
+      flight.legs.forEach(leg => {
+        legIds.push(leg.startId);
+        legIds.push(leg.destinationId);
+      });
 
-    // Get all the distinct legIds so you can count them.
-    let legIds = [];
-    flight.legs.forEach(leg => {
-      legIds.push(leg.startId);
-      legIds.push(leg.destinationId);
-    });
+      legIds = legIds.filter((legId, index) => {
+        return legIds.indexOf(legId) === index;
+      });
 
-    legIds = legIds.filter((legId, index) => {
-      return legIds.indexOf(legId) === index;
-    });
+      page.selectFlightFromDropdown(flight.flightId);
+      const routes = page.getCurrentRoutes();
+      const markers = page.getCurrentMarkers();
 
-    page.selectFlightFromDropdown(flight.flightId);
-    const routes = page.getCurrentRoutes();
-    const markers = page.getCurrentMarkers();
-
-    expect(routes.all(by.tagName('path')).count()).toEqual(flight.legs.length);
-    expect(markers.all(by.tagName('img')).count()).toEqual(legIds.length);
+      expect(routes.all(by.tagName('path')).count()).toEqual(flight.legs.length);
+      expect(markers.all(by.tagName('img')).count()).toEqual(legIds.length);
+    }
   });
 
-  it('[2/6] Shows correct amount of legs and markers on selecting a flight through the dropdown.', () => {
-
-    const flight = flights[1];
-
-    // Get all the distinct legIds so you can count them.
-    let legIds = [];
-    flight.legs.forEach(leg => {
-      legIds.push(leg.startId);
-      legIds.push(leg.destinationId);
-    });
-
-    legIds = legIds.filter((legId, index) => {
-      return legIds.indexOf(legId) === index;
-    });
-
-    page.selectFlightFromDropdown(flight.flightId);
-    const routes = page.getCurrentRoutes();
-    const markers = page.getCurrentMarkers();
-
-    expect(routes.all(by.tagName('path')).count()).toEqual(flight.legs.length);
-    expect(markers.all(by.tagName('img')).count()).toEqual(legIds.length);
-  });
-
-  it('[3/6] Shows correct amount of legs and markers on selecting a flight through the dropdown.', () => {
-
-    const flight = flights[2];
-
-    // Get all the distinct legIds so you can count them.
-    let legIds = [];
-    flight.legs.forEach(leg => {
-      legIds.push(leg.startId);
-      legIds.push(leg.destinationId);
-    });
-
-    legIds = legIds.filter((legId, index) => {
-      return legIds.indexOf(legId) === index;
-    });
-
-    page.selectFlightFromDropdown(flight.flightId);
-    const routes = page.getCurrentRoutes();
-    const markers = page.getCurrentMarkers();
-
-    expect(routes.all(by.tagName('path')).count()).toEqual(flight.legs.length);
-    expect(markers.all(by.tagName('img')).count()).toEqual(legIds.length);
-  });
-
-  it('[4/6] Shows correct amount of legs and markers on selecting a flight through the dropdown.', () => {
-
-    const flight = flights[3];
-
-    // Get all the distinct legIds so you can count them.
-    let legIds = [];
-    flight.legs.forEach(leg => {
-      legIds.push(leg.startId);
-      legIds.push(leg.destinationId);
-    });
-
-    legIds = legIds.filter((legId, index) => {
-      return legIds.indexOf(legId) === index;
-    });
-
-    page.selectFlightFromDropdown(flight.flightId);
-    const routes = page.getCurrentRoutes();
-    const markers = page.getCurrentMarkers();
-
-    expect(routes.all(by.tagName('path')).count()).toEqual(flight.legs.length);
-    expect(markers.all(by.tagName('img')).count()).toEqual(legIds.length);
-  });
-
-
-  it('[5/6] Shows correct amount of legs and markers on selecting a flight through the dropdown.', () => {
-
-    const flight = flights[4];
-
-    // Get all the distinct legIds so you can count them.
-    let legIds = [];
-    flight.legs.forEach(leg => {
-      legIds.push(leg.startId);
-      legIds.push(leg.destinationId);
-    });
-
-    legIds = legIds.filter((legId, index) => {
-      return legIds.indexOf(legId) === index;
-    });
-
-    page.selectFlightFromDropdown(flight.flightId);
-    const routes = page.getCurrentRoutes();
-    const markers = page.getCurrentMarkers();
-
-    expect(routes.all(by.tagName('path')).count()).toEqual(flight.legs.length);
-    expect(markers.all(by.tagName('img')).count()).toEqual(legIds.length);
-  });
-
-
-
-  it('[6/6] Shows correct amount of legs and markers on selecting a flight through the dropdown.', () => {
-
-    const flight = flights[5];
-
-    // Get all the distinct legIds so you can count them.
-    let legIds = [];
-    flight.legs.forEach(leg => {
-      legIds.push(leg.startId);
-      legIds.push(leg.destinationId);
-    });
-
-    legIds = legIds.filter((legId, index) => {
-      return legIds.indexOf(legId) === index;
-    });
-
-    page.selectFlightFromDropdown(flight.flightId);
-    const routes = page.getCurrentRoutes();
-    const markers = page.getCurrentMarkers();
-
-    expect(routes.all(by.tagName('path')).count()).toEqual(flight.legs.length);
-    expect(markers.all(by.tagName('img')).count()).toEqual(legIds.length);
-  });
-
-
-  it('Shows correct amount of legs and markers on selecting a flight inside the list', () => {
+  it('Shows the correct amount of legs and markers on selecting a flight inside the list', () => {
     const flightId = 'FPG034689';
 
     const flight = flights[5];
@@ -211,12 +93,12 @@ describe('Wingman maps component', () => {
 
   });
 
-  it('Should be able to hide and show markers.', () => {
+  it('Should hide and show markers when clicking the layer control.', () => {
     page.getOverlayLayersControlCheckbox('last-child').isSelected().then(tooltipsChecked => {
       const tooltipsShown = tooltipsChecked[0];
 
       // If the tooltips checkbox is enabled
-      if (tooltipsChecked[0]){
+      if (tooltipsChecked[0]) {
 
         // The tooltips are shown
         expect(page.getTooltipPane().isDisplayed()).toBe(tooltipsShown);
@@ -226,7 +108,7 @@ describe('Wingman maps component', () => {
 
         // The tooltips shouldnt be shown anymore
         expect(page.getTooltipPane().isDisplayed()).toBe(!tooltipsShown);
-      }else{
+      } else {
         // If the tooltips checkbox is not enabled
 
         // The tooltips are not shown
@@ -241,7 +123,7 @@ describe('Wingman maps component', () => {
     });
   });
 
-  it('Should be able to remember label choices after refresh', () => {
+  it('Should remember label choices after refresh', () => {
     const baseLayer = 'nth-child(2)';
     const overlayLayers = ['nth-child(3)', 'nth-child(1)'];
 

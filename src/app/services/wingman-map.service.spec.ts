@@ -50,7 +50,7 @@ describe('Wingman map service', () => {
       .bindTooltip(tooltipValue, { permanent: true });
   };
 
-  it('Should be able to call showAirstrips with correctly created airstrip markers', () => {
+  it('Should  call showAirstrips with correctly created airstrip markers', () => {
     // Make these values comparable by inputting and expecting them.
     const latValue = 10;
     const longValue = 20;
@@ -179,7 +179,7 @@ describe('Wingman map service', () => {
     expect(showAirstripsSpy).toHaveBeenCalledWith(expectedMarkerList);
   });
 
-  it('Filter the airstripIDs of a given flight correctly', () => {
+  it('Should filter the airstripIDs of a given flight correctly', () => {
     // The only way to access the private method drawFlightsAndMarkers with the correct data.
     // initializeMap has to be overwritten because it initializes the wingman map, which should be avoided..
     spyOn(mapService, 'initializeMap').and.callFake(function(mapId) {

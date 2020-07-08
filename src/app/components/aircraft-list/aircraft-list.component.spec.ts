@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AircraftListComponent } from './aircraft-list.component';
 
-describe('AirplaneListComponent', () => {
+describe('Aircraft list component', () => {
     let component: AircraftListComponent;
     let fixture: ComponentFixture<AircraftListComponent>;
 
@@ -39,7 +39,7 @@ describe('AirplaneListComponent', () => {
         };
     });
 
-    it('should be able to get aircrafts by their id', () => {
+    it('Should get aircrafts by their id', () => {
         const expectedAircraft = component.aircrafts[0];
 
         const retrievedAircraft = component.getAircraftByAircraftId('A1');
@@ -47,7 +47,7 @@ describe('AirplaneListComponent', () => {
         expect(expectedAircraft).toEqual(retrievedAircraft);
     });
 
-    it('should be able to get the correct aircraft ids', () => {
+    it('Should get the correct aircraft ids', () => {
         const expectedAircraftIds = ['A1', 'A2'];
 
         const retrievedAircraftIds = component.getAircraftIds();
@@ -55,7 +55,7 @@ describe('AirplaneListComponent', () => {
         expect(retrievedAircraftIds).toEqual(expectedAircraftIds);
     });
 
-    it('should be able to get a flight list by an aircraft id', () => {
+    it('Should get a flight list by an aircraft id', () => {
         const aircraftId = 'A2';
 
         const expectedFlightList = {
@@ -65,7 +65,7 @@ describe('AirplaneListComponent', () => {
             ]
         };
 
-        const retrievedFlights = component.getFlights(aircraftId)
+        const retrievedFlights = component.getFlights(aircraftId);
 
         expect(retrievedFlights).toEqual(expectedFlightList.A2);
     });

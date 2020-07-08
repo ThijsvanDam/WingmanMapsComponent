@@ -19,7 +19,7 @@ describe('Wingman data service', () => {
   });
 
 
-  it('Should be able to only return the airstrips from the ID list', () => {
+  it('Should  only return the airstrips from the ID list', () => {
 
     const idList: string[] = ['AS000130', 'AS000137', 'AS000159'
     ];
@@ -95,7 +95,7 @@ describe('Wingman data service', () => {
     expect(expectedAirstrips).toEqual(retrievedAirstrips);
   });
 
-  it('Should be able to get all airstrips', () => {
+  it('Should  get all airstrips', () => {
     const airstripsJSON: Airstrip[] = require('../../assets/json/airstrips.json');
 
     const retrievedAirstrips: Airstrip[] = dataService.getAllAirstrips();
@@ -103,7 +103,7 @@ describe('Wingman data service', () => {
     expect(retrievedAirstrips).toEqual(airstripsJSON);
   });
 
-  it('Should be able gather an airstrip by its ID', () => {
+  it('Should  get an airstrip by its ID', () => {
     const expectedAirstrip =
     {
       airstripId: 'AS000137',
@@ -132,7 +132,7 @@ describe('Wingman data service', () => {
     expect(retrievedAirstrip).toEqual(expectedAirstrip);
   });
 
-  it('Should be able gather an aircraft by its ID', () => {
+  it('Should  get an aircraft by its ID', () => {
     const expectedAircraft = {
       aircraftId: 'AC000033',
       displayName: 'MAF',
@@ -167,7 +167,7 @@ describe('Wingman data service', () => {
     expect(retrievedAircraft).toEqual(expectedAircraft);
   });
 
-  it('Should be able to get aircrafts by flight list', () => {
+  it('Should  get aircrafts by flight list', () => {
     const flightList: Flight[] = [
       {
         flightId: 'FPG034707',
@@ -243,7 +243,7 @@ describe('Wingman data service', () => {
     expect(retrievedAircrafts).toEqual(expectedAircrafts);
   });
 
-  it('Should be able to get the airstrip pairs by flight', () => {
+  it('Should  get the airstrip pairs by flight', () => {
 
     const flight = {
       // All the information required to gather airstrips for a flight
@@ -272,7 +272,7 @@ describe('Wingman data service', () => {
     expect(expectedAirstripPair).toEqual(retrievedAirstripPair);
   });
 
-  it('Should be able to get all flights', () => {
+  it('Should  get all flights', () => {
     const flightsJSON: Flight[] = require('../../assets/json/flights.json');
 
     const retrievedFlights: Flight[] = dataService.getAllFlights();
@@ -281,7 +281,7 @@ describe('Wingman data service', () => {
   });
 
 
-  it('Should be able to get a flight by its id', () => {
+  it('Should  get a flight by its id', () => {
 
     const expectedFlight = {
       flightId: 'FPG034707',
@@ -354,7 +354,7 @@ describe('Wingman data service', () => {
     expect(retrievedFlight).toEqual(expectedFlight);
   });
 
-  it('Should be able to get all flight names', () => {
+  it('Should  get all flight names', () => {
     const expectedFlightNames = ['FPG034707', 'FPG034664', 'FPG034951', 'FPG034751', 'FPG034907', 'FPG034882', 'FPG034752', 'FPG034715', 'FPG034879', 'FPG034753', 'FPG034884', 'FPG034897', 'FPG034688', 'FPG034966', 'FPG034891', 'FPG034665', 'FPG034757', 'FPG035008', 'FPG035020', 'FPG034978', 'FPG034689', 'FPG034618', 'FPG034933', 'FPG034695', 'FPG034760', 'FPG035014', 'FPG034941', 'FPG034799', 'FPG034761', 'FPG035021', 'FPG034990', 'FPG034982', 'FPG035015', 'FPG035065', 'FPG034985', 'FPG034999', 'FPG034964', 'FPG034958', 'FPG034957', 'FPG034887', 'FPG034929', 'FPG034873', 'FPG034797', 'FPG034885', 'FPG034911', 'FPG034889', 'FPG034909', 'FPG034878', 'FPG034927', 'FPG034908', 'FPG034663', 'FPG034817', 'FPG034560', 'FPG034919', 'FPG034325', 'FPG034831', 'FPG034888', 'FPG034905', 'FPG034728', 'FPG034702', 'FPG034050', 'FPG034916', 'FPG034866', 'FPG034872', 'FPG034839', 'FPG034915', 'FPG034727', 'FPG034838', 'FPG034739', 'FPG034820', 'FPG034856', 'FPG034842', 'FPG034749', 'FPG034349', 'FPG034830', 'FPG034829', 'FPG034818', 'FPG034717', 'FPG034893', 'FPG034747', 'FPG034372', 'FPG034828', 'FPG034716', 'FPG034501', 'FPG034819', 'FPG034604', 'FPG034690', 'FPG034865', 'FPG034870', 'FPG034748', 'FPG034858', 'FPG034855', 'FPG034834', 'FPG034722', 'FPG034745', 'FPG034833', 'FPG034824', 'FPG034784', 'FPG034851', 'FPG034849', 'FPG034721', 'FPG034812', 'FPG034661', 'FPG034822', 'FPG034802', 'FPG034850', 'FPG034803', 'FPG034746', 'FPG034801', 'FPG034811', 'FPG034479', 'FPG034520', 'FPG034809', 'FPG034554', 'FPG034489', 'FPG034790', 'FPG034808', 'FPG034701', 'FPG034738', 'FPG034700', 'FPG034816', 'FPG034807', 'FPG034729', 'FPG034806', 'FPG034709', 'FPG034345', 'FPG034737', 'FPG034671', 'FPG035025', 'FPG034968', 'FPG034973', 'FPG034987', 'FPG034823', 'FPG035063', 'FPG035023', 'FPG035033', 'FPG035029', 'FPG034974', 'FPG034972', 'FPG035038', 'FPG034913', 'FPG035037', 'FPG033614', 'FPG034955', 'FPG034928', 'FPG035034', 'FPG035053', 'FPG035072', 'FPG034914', 'FPG035004', 'FPG035039', 'FPG035041', 'FPG035054', 'FPG034765', 'FPG035040', 'FPG035077', 'FPG035007', 'FPG035044', 'FPG035006', 'FPG035089', 'FPG034950', 'FPG034918', 'FPG035084', 'FPG034883', 'FPG035009', 'FPG034965', 'FPG035088', 'FPG034768', 'FPG035046', 'FPG035056', 'FPG035050', 'FPG034962', 'FPG034910', 'FPG034674', 'FPG034777', 'FPG034917', 'FPG035012', 'FPG035013', 'FPG034826', 'FPG035092', 'FPG035107', 'FPG034769', 'FPG035016', 'FPG035091', 'FPG035093', 'FPG034976', 'FPG035096', 'FPG034770', 'FPG035026', 'FPG035094', 'FPG035078', 'FPG034758', 'FPG035108', 'FPG035098', 'FPG035024', 'FPG035095', 'FPG035116', 'FPG034759', 'FPG034773', 'FPG035106', 'FPG035081', 'FPG034848', 'FPG034774', 'FPG034947', 'FPG035103', 'FPG034775', 'FPG035129', 'FPG035130', 'FPG035002', 'FPG035113', 'FPG035125', 'FPG034948', 'FPG035111', 'FPG035138', 'FPG035099', 'FPG035139', 'FPG035083', 'FPG034875', 'FPG035136', 'FPG035156', 'FPG035043', 'FPG035109', 'FPG034452', 'FPG034735', 'FPG035105', 'FPG035076', 'FPG035144', 'FPG035115', 'FPG035074', 'FPG035141', 'FPG035147', 'FPG035157', 'FPG034854', 'FPG035132', 'FPG035117', 'FPG035159', 'FPG035148', 'FPG035191', 'FPG035190', 'FPG035158', 'FPG035162', 'FPG034608', 'FPG035164', 'FPG035163', 'FPG035165', 'FPG034655', 'FPG034654', 'FPG035153', 'FPG034459', 'FPG035133', 'FPG035166'];
 
     const retrievedFlightNames: string[] = dataService.getAllFlightNames();
@@ -362,7 +362,7 @@ describe('Wingman data service', () => {
     expect(expectedFlightNames).toEqual(retrievedFlightNames);
   });
 
-  it('Should be able to group flights by aircraft', () => {
+  it('Should  group flights by aircraft', () => {
 
     const flightList: Flight[] = [
       {
