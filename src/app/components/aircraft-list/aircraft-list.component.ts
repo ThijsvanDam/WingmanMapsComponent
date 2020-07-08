@@ -15,7 +15,7 @@ export class AircraftListComponent {
   aircrafts: Aircraft[] = [];
 
   @Input()
-  flightsByAircraftId: [] = [];
+  flightsByAircraftId = {};
 
   @Output()
   flightsChangedHandler = new EventEmitter<FlightEnabled>();
